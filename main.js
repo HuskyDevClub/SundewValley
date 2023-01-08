@@ -10,13 +10,12 @@ const JSON_MANAGER = new JsonManager();
 JSON_MANAGER.queueDownload("./images/sprites/player.json");
 JSON_MANAGER.queueDownload("./images/sprites/chicken.json");
 
+Tile.queueNecessaryAssets(ASSET_MANAGER, JSON_MANAGER)
+
 JSON_MANAGER.downloadAll(() => {
     ASSET_MANAGER.downloadAll(() => {
         const canvas = document.getElementById("gameWorld");
         const ctx = canvas.getContext("2d");
-
-        gameEngine.level.addEntity(new Player(10, 10));
-        gameEngine.level.addEntity(new Chicken(50, 50));
 
         gameEngine.init(ctx);
 

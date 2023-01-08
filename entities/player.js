@@ -2,7 +2,7 @@ class Player extends Entity {
     constructor(x, y) {
         super("player", x, y)
         this.setMovingSpeed(5)
-        this.setScale(4)
+        this.setSize(Tile.getTileSize() * 1.5, Tile.getTileSize() * 1.5)
     }
 
     update() {

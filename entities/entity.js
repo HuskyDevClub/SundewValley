@@ -4,7 +4,6 @@ class Entity {
     #y
     #w
     #h
-    #scale
     #moving_speed
     #animations
     #current_action
@@ -17,7 +16,6 @@ class Entity {
         this.#y = y
         this.#w = 0
         this.#h = 0
-        this.#scale = 1
         this.#moving_speed = 1
         this.#animations = {}
         this.setCurrentAction("idle")
@@ -85,14 +83,6 @@ class Entity {
         this.setHeight(height)
     }
 
-    getScale() {
-        return this.#scale;
-    }
-
-    setScale(value) {
-        this.#scale = value;
-    }
-
     getMovingSpeed() {
         return this.#moving_speed
     }
@@ -134,6 +124,6 @@ class Entity {
     }
 
     draw(ctx) {
-        this.getCurrentAnimation().drawFrame(gameEngine.clockTick, ctx, this.getX(), this.getY(), this.getScale())
+        this.getCurrentAnimation().drawFrame(gameEngine.clockTick, ctx, this.getX(), this.getY(), this.getWidth(), this.getHeight())
     };
 }

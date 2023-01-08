@@ -4,7 +4,7 @@ class Chicken extends Entity {
         this.__moving_speed_x = 0
         this.__moving_speed_y = 0
         this.__action_count_down = 0
-        this.setScale(5)
+        this.setSize(Tile.getTileSize() * 0.75, Tile.getTileSize() * 0.75)
     }
 
     update() {

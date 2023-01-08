@@ -1,12 +1,17 @@
 // This game shell was happily modified from Googler Seth Ladd's "Bad Aliens" game and his Google IO talk in 2011
 
 class GameEngine {
+
+    static isDebugging = false
+
+    #level
+
     constructor(options) {
         // What you will use to draw
         // Documentation: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
         this.ctx = null;
 
-        this.level = new Level([[]]);
+        this.#level = new Level([["grass1", "grass2", "grass3"]]);
 
         // Information on the input
         this.click = null;
@@ -24,12 +29,18 @@ class GameEngine {
 
     };
 
-    static isDebugging() {
-        return document.querySelector("debug");
+    static switchDebugMode() {
+        GameEngine.isDebugging = document.getElementById("debug").checked;
+    }
+
+    initEntities() {
+        this.#level.addEntity(new Player(10, 10));
+        this.#level.addEntity(new Chicken(50, 50));
     }
 
     init(ctx) {
         this.ctx = ctx;
+        this.initEntities()
         this.startInput();
         this.timer = new Timer();
     };
@@ -162,11 +173,11 @@ class GameEngine {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
         // Draw the latest things first
-        this.level.draw(this)
+        this.#level.draw(this.ctx)
     };
 
     update() {
-        this.level.update()
+        this.#level.update()
     };
 
     loop() {

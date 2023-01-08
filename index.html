@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>The Untitled Farm</title>
+    <!-- html icon -->
+    <link href="./images/portrait_cow_kigurumi.png" rel="icon" type="image/png"/>
+    <!-- level js files -->
+    <script src="./level/level.js" type="text/javascript"></script>
+    <!-- framework js files -->
+    <script src="./framework/assetManager.js" type="text/javascript"></script>
+    <script src="./framework/jsonManager.js" type="text/javascript"></script>
+    <script src="./framework/timer.js" type="text/javascript"></script>
+    <script src="./framework/gameEngine.js" type="text/javascript"></script>
+    <script src="./framework/util.js" type="text/javascript"></script>
+    <!-- source js files -->
+    <script src="./src/directions.js" type="text/javascript"></script>
+    <script src="./src/animator.js" type="text/javascript"></script>
+    <!-- entity js files -->
+    <script src="./entities/entity.js" type="text/javascript"></script>
+    <script src="./entities/player.js" type="text/javascript"></script>
+    <script src="./entities/chicken.js" type="text/javascript"></script>
+    <!-- main -->
+    <script src="./main.js" type="text/javascript"></script>
+</head>
+<body>
+<p>Move: w a s d; Water: Q; Dig: E</p>
+<p>The chicken suppose to have random action and movement</p>
+<canvas autofocus height="768" id="gameWorld" style="background: white; border: 1px solid black" tabindex="0"
+        width="1024"></canvas>
+<br>
+<label for="debug">
+    <input id="debug" type="checkbox"> Debug
+</label>
+<label for="mute">
+    <input id="mute" type="checkbox"> Mute
+</label>
+<label for="volume">
+    <input id="volume" max="1" min="0" step="0.05" type="range" value="0.1"> Volume
+</label>
+</body>
+</html>

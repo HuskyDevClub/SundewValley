@@ -1,0 +1,14 @@
+{
+  "columns": 5,
+  "imageheight": 52,
+  "imagewidth": 130,
+  "margin": 0,
+  "name": "goat",
+  "spacing": 0,
+  "tilecount": 10,
+  "tiledversion": "1.9.2",
+  "tileheight": 26,
+  "tilewidth": 26,
+  "type": "tileset",
+  "version": "1.9"
+}

@@ -2,8 +2,6 @@
 
 class GameEngine {
 
-    static isDebugging = false
-
     #level
 
     constructor(options) {
@@ -11,7 +9,7 @@ class GameEngine {
         // Documentation: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
         this.ctx = null;
 
-        this.#level = new Level([["grass1", "grass2", "grass3"]]);
+        this.#level = new Level([[]]);
 
         // Information on the input
         this.click = null;
@@ -29,13 +27,8 @@ class GameEngine {
 
     };
 
-    static switchDebugMode() {
-        GameEngine.isDebugging = document.getElementById("debug").checked;
-    }
-
     initEntities() {
         this.#level.addEntity(new Player(10, 10));
-        this.#level.addEntity(new Chicken(50, 50));
     }
 
     init(ctx) {
@@ -58,7 +51,7 @@ class GameEngine {
         this.keyboardActive = false;
         let that = this;
 
-        let getXandY = function (e) {
+        let getPixelXandY = function (e) {
             let x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
             let y = e.clientY - that.ctx.canvas.getBoundingClientRect().top;
 
@@ -66,12 +59,12 @@ class GameEngine {
         }
 
         function mouseListener(e) {
-            that.mouse = getXandY(e);
+            that.mouse = getPixelXandY(e);
         }
 
         function mouseClickListener(e) {
-            that.click = getXandY(e);
-            if (GameEngine.isDebugging()) console.log(that.click);
+            that.click = getPixelXandY(e);
+            if (Debugger.isDebugging) console.log(that.click);
         }
 
         function wheelListener(e) {
@@ -177,6 +170,7 @@ class GameEngine {
     };
 
     update() {
+        Debugger.update()
         this.#level.update()
     };
 

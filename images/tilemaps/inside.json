@@ -1,0 +1,15 @@
+{
+  "columns": 6,
+  "image": "inside.png",
+  "imageheight": 160,
+  "imagewidth": 100,
+  "margin": 0,
+  "name": "inside",
+  "spacing": 0,
+  "tilecount": 60,
+  "tiledversion": "1.9.2",
+  "tileheight": 16,
+  "tilewidth": 16,
+  "type": "tileset",
+  "version": "1.9"
+}

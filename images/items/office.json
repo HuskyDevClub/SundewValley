@@ -1,0 +1,15 @@
+{
+  "columns": 6,
+  "image": "office.png",
+  "imageheight": 160,
+  "imagewidth": 96,
+  "margin": 0,
+  "name": "office",
+  "spacing": 0,
+  "tilecount": 60,
+  "tiledversion": "1.9.2",
+  "tileheight": 16,
+  "tilewidth": 16,
+  "type": "tileset",
+  "version": "1.9"
+}

@@ -10,8 +10,8 @@ class Chicken extends Entity {
     update() {
         if (this.__action_count_down > 0) {
             this.__action_count_down -= 1
-            this.setX(this.getX() + this.__moving_speed_x)
-            this.setY(this.getY() + this.__moving_speed_y)
+            this.setPixelX(this.getPixelX() + this.__moving_speed_x)
+            this.setPixelY(this.getPixelY() + this.__moving_speed_y)
         } else {
             this.__moving_speed_x = 0
             this.__moving_speed_y = 0
@@ -51,8 +51,8 @@ class Chicken extends Entity {
     };
 
     draw(ctx) {
-        this.setX(Math.min(Math.max(this.getX(), 0), ctx.canvas.clientWidth))
-        this.setY(Math.min(Math.max(this.getY(), 0), ctx.canvas.clientHeight))
+        this.setPixelX(Math.min(Math.max(this.getPixelX(), 0), ctx.canvas.clientWidth))
+        this.setPixelY(Math.min(Math.max(this.getPixelY(), 0), ctx.canvas.clientHeight))
         super.draw(ctx)
     };
 }

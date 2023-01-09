@@ -10,21 +10,21 @@ class Player extends Entity {
         if (gameEngine.left === true) {
             this.setDirectionFacing("l")
             this.setCurrentAction("move")
-            this.setX(this.getX() - this.getMovingSpeed())
+            this.setPixelX(this.getPixelX() - this.getMovingSpeed())
             is_idle = false
         } else if (gameEngine.right === true) {
             this.setDirectionFacing("r")
             this.setCurrentAction("move")
-            this.setX(this.getX() + this.getMovingSpeed())
+            this.setPixelX(this.getPixelX() + this.getMovingSpeed())
             is_idle = false
         }
         if (gameEngine.up === true) {
             this.setCurrentAction("move")
-            this.setY(this.getY() - this.getMovingSpeed())
+            this.setPixelY(this.getPixelY() - this.getMovingSpeed())
             is_idle = false
         } else if (gameEngine.down === true) {
             this.setCurrentAction("move")
-            this.setY(this.getY() + this.getMovingSpeed())
+            this.setPixelY(this.getPixelY() + this.getMovingSpeed())
             is_idle = false
         }
 
@@ -42,8 +42,8 @@ class Player extends Entity {
     };
 
     draw(ctx) {
-        this.setX(Math.min(Math.max(this.getX(), 0), ctx.canvas.clientWidth - this.getWidth()))
-        this.setY(Math.min(Math.max(this.getY(), 0), ctx.canvas.clientHeight - this.getHeight()))
+        this.setPixelX(Math.min(Math.max(this.getPixelX(), 0), ctx.canvas.clientWidth - this.getWidth()))
+        this.setPixelY(Math.min(Math.max(this.getPixelY(), 0), ctx.canvas.clientHeight - this.getHeight()))
         super.draw(ctx)
     };
 }

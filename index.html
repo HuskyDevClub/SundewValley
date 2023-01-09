@@ -17,6 +17,7 @@
     <script src="./src/tile.js" type="text/javascript"></script>
     <script src="./src/level.js" type="text/javascript"></script>
     <!-- framework js files -->
+    <script src="./framework/debugger.js" type="text/javascript"></script>
     <script src="./framework/assetManager.js" type="text/javascript"></script>
     <script src="./framework/jsonManager.js" type="text/javascript"></script>
     <script src="./framework/timer.js" type="text/javascript"></script>
@@ -35,7 +36,7 @@
             width="960"></canvas>
     <br>
     <label for="debug">
-        <input id="debug" onclick="GameEngine.switchDebugMode()" type="checkbox"> Debug
+        <input id="debug" onclick="Debugger.switchDebugMode()" type="checkbox"> Debug
     </label>
     <label for="mute">
         <input id="mute" type="checkbox"> Mute
@@ -44,6 +45,6 @@
         <input id="volume" max="1" min="0" step="0.05" type="range" value="0.1"> Volume
     </label>
 </div>
-<p id="timeDebug"></p>
+<ul id="debugDashboard"></ul>
 </body>
 </html>

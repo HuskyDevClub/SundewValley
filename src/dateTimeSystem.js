@@ -30,7 +30,9 @@ class DateTimeSystem {
             }
         }
         this.#checkToReset("month", "year", 13, 1)
-        document.getElementById('timeDebug').innerText = GameEngine.isDebugging ? `${this.#data["hour"]}:${this.#data["minute"]}:${this.#data["second"]} ${this.#data["month"]}/${this.#data["day"]}/${this.#data["year"]} ${this.getSeason()}` : ""
+        if (Debugger.isDebugging) {
+            Debugger.pushInfo(`${this.#data["hour"]}:${this.#data["minute"]}:${this.#data["second"]} ${this.#data["month"]}/${this.#data["day"]}/${this.#data["year"]} ${this.getSeason()}`)
+        }
     }
 
     isLeapYear() {

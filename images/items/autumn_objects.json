@@ -1,0 +1,15 @@
+{
+  "columns": 8,
+  "image": "autumn_objects.png",
+  "imageheight": 208,
+  "imagewidth": 128,
+  "margin": 0,
+  "name": "autumn_objects",
+  "spacing": 0,
+  "tilecount": 104,
+  "tiledversion": "1.9.2",
+  "tileheight": 16,
+  "tilewidth": 16,
+  "type": "tileset",
+  "version": "1.9"
+}

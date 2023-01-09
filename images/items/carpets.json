@@ -1,0 +1,15 @@
+{
+  "columns": 13,
+  "image": "carpets.png",
+  "imageheight": 160,
+  "imagewidth": 208,
+  "margin": 0,
+  "name": "carpets",
+  "spacing": 0,
+  "tilecount": 130,
+  "tiledversion": "1.9.2",
+  "tileheight": 16,
+  "tilewidth": 16,
+  "type": "tileset",
+  "version": "1.9"
+}

@@ -36,13 +36,13 @@ class Level {
         // sort entities based on coordinates
         this.#entities.sort(
             function (firstItem, secondItem) {
-                if (firstItem.getY() < secondItem.getY()) {
+                if (firstItem.getPixelY() < secondItem.getPixelY()) {
                     return -1
-                } else if (firstItem.getY() > secondItem.getY()) {
+                } else if (firstItem.getPixelY() > secondItem.getPixelY()) {
                     return 1
-                } else if (firstItem.getX() < secondItem.getX()) {
+                } else if (firstItem.getPixelX() < secondItem.getPixelX()) {
                     return -1
-                } else if (firstItem.getX() > secondItem.getX()) {
+                } else if (firstItem.getPixelX() > secondItem.getPixelX()) {
                     return 1
                 } else {
                     return 0
@@ -66,5 +66,13 @@ class Level {
             }
         }
         this.#dateTimeSystem.update()
+        if (Debugger.isDebugging) {
+            this.#entities.forEach(entity => {
+                Debugger.pushInfo("--------------------")
+                Debugger.pushInfo(`type: ${entity.getType()}; size: [${entity.getWidth()}, ${entity.getHeight()}]`)
+                Debugger.pushInfo(`pixel pos: [${entity.getPixelX()}, ${entity.getPixelY()}]; block pos: [${Math.round(entity.getBlockX() * 100) / 100}, ${Math.round(entity.getBlockY() * 100) / 100}]`)
+                Debugger.pushInfo(`speed: ${entity.getMovingSpeed()}; current action: ${entity.getCurrentAction()}`)
+            });
+        }
     }
 }

@@ -1,4 +1,5 @@
 class Entity {
+    #type
     #sprite_sheet
     #x
     #y
@@ -11,7 +12,8 @@ class Entity {
     removeFromWorld = false
 
     constructor(type, x, y) {
-        this.#sprite_sheet = ASSET_MANAGER.getAsset(`./images/sprites/${type}.png`)
+        this.#type = type
+        this.#sprite_sheet = ASSET_MANAGER.getAsset(`./images/characters/${this.#type}.png`)
         this.#x = x
         this.#y = y
         this.#w = 0
@@ -19,27 +21,39 @@ class Entity {
         this.#moving_speed = 1
         this.#animations = {}
         this.setCurrentAction("idle")
-        let data = JSON_MANAGER.getJson(`./images/sprites/${type}.json`)
+        let data = JSON_MANAGER.getJson(`./images/characters/${this.#type}.json`)
         this.setSize(data["size"][0], data["size"][1])
         for (const [key, value] of Object.entries(data["animations"])) {
             this.setAnimation(key, value[0] * this.#w, value[1] * this.#h, value[2], 1 / value[2], true);
         }
     }
 
-    getX() {
+    getType() {
+        return this.#type
+    }
+
+    getPixelX() {
         return this.#x
     }
 
-    getY() {
+    getPixelY() {
         return this.#y
     }
 
-    setX(x) {
+    setPixelX(x) {
         this.#x = x
     }
 
-    setY(y) {
+    setPixelY(y) {
         this.#y = y
+    }
+
+    getBlockX() {
+        return this.#x / Tile.getTileSize()
+    }
+
+    getBlockY() {
+        return this.#y / Tile.getTileSize()
     }
 
     getRight() {
@@ -64,10 +78,6 @@ class Entity {
 
     getHeight() {
         return this.#h
-    }
-
-    getSize() {
-        return [this.#w, this.#h]
     }
 
     setWidth(width) {
@@ -124,6 +134,6 @@ class Entity {
     }
 
     draw(ctx) {
-        this.getCurrentAnimation().drawFrame(gameEngine.clockTick, ctx, this.getX(), this.getY(), this.getWidth(), this.getHeight())
+        this.getCurrentAnimation().drawFrame(gameEngine.clockTick, ctx, this.getPixelX(), this.getPixelY(), this.getWidth(), this.getHeight())
     };
 }

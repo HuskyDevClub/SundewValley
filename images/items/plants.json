@@ -1,0 +1,15 @@
+{
+  "columns": 10,
+  "image": "plants.png",
+  "imageheight": 144,
+  "imagewidth": 160,
+  "margin": 0,
+  "name": "plants",
+  "spacing": 0,
+  "tilecount": 90,
+  "tiledversion": "1.9.2",
+  "tileheight": 16,
+  "tilewidth": 16,
+  "type": "tileset",
+  "version": "1.9"
+}

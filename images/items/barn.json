@@ -1,0 +1,15 @@
+{
+  "columns": 18,
+  "image": "barn.png",
+  "imageheight": 192,
+  "imagewidth": 288,
+  "margin": 0,
+  "name": "barn",
+  "spacing": 0,
+  "tilecount": 216,
+  "tiledversion": "1.9.2",
+  "tileheight": 16,
+  "tilewidth": 16,
+  "type": "tileset",
+  "version": "1.9"
+}

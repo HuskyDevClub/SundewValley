@@ -1,0 +1,15 @@
+{
+  "columns": 8,
+  "image": "bedroom.png",
+  "imageheight": 96,
+  "imagewidth": 128,
+  "margin": 0,
+  "name": "bedroom",
+  "spacing": 0,
+  "tilecount": 48,
+  "tiledversion": "1.9.2",
+  "tileheight": 16,
+  "tilewidth": 16,
+  "type": "tileset",
+  "version": "1.9"
+}

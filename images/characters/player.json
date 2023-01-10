@@ -51,8 +51,6 @@
       2
     ]
   },
-  "size": [
-    24,
-    24
-  ]
+  "tileheight": 24,
+  "tilewidth": 24
 }

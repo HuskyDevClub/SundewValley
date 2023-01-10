@@ -1,35 +1,53 @@
 class Entity {
+    #category
     #type
-    #sprite_sheet
+    #subType
+    #sprite_sheet = null
+    #json = null
     #x
     #y
     #w
     #h
-    #moving_speed
-    #animations
-    #current_action
     #direction_facing = "r"
-    removeFromWorld = false
 
-    constructor(type, x, y) {
+
+    constructor(category, type, subType, x, y) {
+        this.#category = category
         this.#type = type
-        this.#sprite_sheet = ASSET_MANAGER.getAsset(`./images/characters/${this.#type}.png`)
+        this.#subType = subType
         this.#x = x
         this.#y = y
         this.#w = 0
         this.#h = 0
-        this.#moving_speed = 1
-        this.#animations = {}
-        this.setCurrentAction("idle")
-        let data = JSON_MANAGER.getJson(`./images/characters/${this.#type}.json`)
-        this.setSize(data["size"][0], data["size"][1])
-        for (const [key, value] of Object.entries(data["animations"])) {
-            this.setAnimation(key, value[0] * this.#w, value[1] * this.#h, value[2], 1 / value[2], true);
+        this.removeFromWorld = false
+        this.setSize(this.getJson()["tilewidth"], this.getJson()["tileheight"])
+
+    }
+
+    getSpriteSheet() {
+        if (this.#sprite_sheet == null) {
+            this.#sprite_sheet = ASSET_MANAGER.getAsset(this.getSubType() ? `./images/${this.getCategory()}/${this.getType()}/${this.getSubType()}.png` : `./images/${this.#category}/${this.#type}.png`)
         }
+        return this.#sprite_sheet
+    }
+
+    getJson() {
+        if (this.#json == null) {
+            this.#json = JSON_MANAGER.getJson(this.getSubType() ? `./images/${this.#category}/${this.#type}/${this.#type}.json` : `./images/${this.#category}/${this.#type}.json`)
+        }
+        return this.#json
+    }
+
+    getCategory() {
+        return this.#category
     }
 
     getType() {
         return this.#type
+    }
+
+    getSubType() {
+        return this.#subType
     }
 
     getPixelX() {
@@ -93,38 +111,6 @@ class Entity {
         this.setHeight(height)
     }
 
-    getMovingSpeed() {
-        return this.#moving_speed
-    }
-
-    setMovingSpeed(speed) {
-        this.#moving_speed = speed
-    }
-
-    setAnimation(name, xStart, yStart, frameCount, frameDuration, loop) {
-        this.#animations[name] = new Animator(this.#sprite_sheet, xStart, yStart, this.getWidth(), this.getHeight(), frameCount, frameDuration, 0, false, loop)
-    }
-
-    getAnimation(name) {
-        return this.#animations[name];
-    }
-
-    getCurrentAnimation() {
-        return this.getAnimation(this.getCurrentAction());
-    }
-
-    getCurrentAction() {
-        return this.#current_action;
-    }
-
-    setCurrentAction(action, widthDirectionFacing) {
-        if (widthDirectionFacing === undefined || widthDirectionFacing === true) {
-            this.#current_action = action + "_" + this.getDirectionFacing();
-        } else {
-            this.#current_action = action;
-        }
-    }
-
     getDirectionFacing() {
         return this.#direction_facing;
     }
@@ -132,8 +118,4 @@ class Entity {
     setDirectionFacing(dirt) {
         this.#direction_facing = dirt;
     }
-
-    draw(ctx) {
-        this.getCurrentAnimation().drawFrame(gameEngine.clockTick, ctx, this.getPixelX(), this.getPixelY(), this.getWidth(), this.getHeight())
-    };
 }

@@ -1,4 +1,26 @@
 {
+  "animations": {
+    "idle_l": [
+      4,
+      0,
+      1
+    ],
+    "idle_r": [
+      4,
+      1,
+      1
+    ],
+    "move_l": [
+      0,
+      0,
+      4
+    ],
+    "move_r": [
+      0,
+      1,
+      4
+    ]
+  },
   "columns": 5,
   "imageheight": 52,
   "imagewidth": 130,

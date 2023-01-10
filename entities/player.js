@@ -1,4 +1,4 @@
-class Player extends Entity {
+class Player extends Character {
     constructor(x, y) {
         super("player", x, y)
         this.setMovingSpeed(5)

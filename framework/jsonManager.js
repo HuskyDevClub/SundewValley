@@ -7,7 +7,7 @@ class JsonManager {
     };
 
     queueDownload(path) {
-        console.log("Queueing Json" + path);
+        if (Debugger.isDebugging) console.log("Queueing Json" + path);
         this.downloadQueue.push(path);
     };
 
@@ -23,12 +23,12 @@ class JsonManager {
                 .then((response) => response.json())
                 .then((data) => {
                     this.cache[path] = data;
-                    console.log("Loaded " + path);
+                    if (Debugger.isDebugging) console.log("Loaded " + path);
                     this.successCount++;
                     if (this.isDone()) callback();
                 })
                 .catch((error) => {
-                    console.error('There has been a problem with your fetch operation:', error);
+                    if (Debugger.isDebugging) console.error('There has been a problem with your fetch operation:', error);
                     this.errorCount++;
                     if (this.isDone()) callback();
                 })

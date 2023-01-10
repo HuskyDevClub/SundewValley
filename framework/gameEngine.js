@@ -29,6 +29,11 @@ class GameEngine {
 
     initEntities() {
         this.#level.addEntity(new Player(10, 10));
+        this.#level.addEntity(new Chicken("black_chicken", 10, 10));
+        this.#level.addEntity(new Cow("strawberry_cow", 10, 10));
+        this.#level.addEntity(new Goat("brown_goat", 10, 10));
+        this.#level.addEntity(new Pig("pink_pig", 10, 10));
+        this.#level.addEntity(new Sheep("fluffy_white_sheep_sheet", 10, 10));
     }
 
     init(ctx) {

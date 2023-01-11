@@ -1,50 +1,54 @@
 class Animal extends Creature {
 
+    #current_moving_speed_x
+    #current_moving_speed_y
+    #current_action_count_down
+
     constructor(type, subType, x, y) {
         super("animals", type, subType, x, y);
-        this.__moving_speed_x = 0
-        this.__moving_speed_y = 0
-        this.__action_count_down = 0
+        this.#current_moving_speed_x = 0
+        this.#current_moving_speed_y = 0
+        this.#current_action_count_down = 0
     }
 
     update() {
-        if (this.__action_count_down > 0) {
-            this.__action_count_down -= 1
-            this.setPixelX(this.getPixelX() + this.__moving_speed_x)
-            this.setPixelY(this.getPixelY() + this.__moving_speed_y)
+        if (this.#current_action_count_down > 0) {
+            this.#current_action_count_down -= 1
+            this.setPixelX(this.getPixelX() + this.#current_moving_speed_x)
+            this.setPixelY(this.getPixelY() + this.#current_moving_speed_y)
         } else {
-            this.__moving_speed_x = 0
-            this.__moving_speed_y = 0
+            this.#current_moving_speed_x = 0
+            this.#current_moving_speed_y = 0
             switch (getRandomIntInclusive(0, 4)) {
                 case 0:
                     this.setCurrentAction("idle")
-                    this.__action_count_down = getRandomIntInclusive(50, 200)
+                    this.#current_action_count_down = getRandomIntInclusive(50, 200)
                     break
                 // up
                 case 1:
-                    this.__moving_speed_y = -this.getMovingSpeed()
+                    this.#current_moving_speed_y = -this.getMovingSpeed()
                     this.setCurrentAction("move")
-                    this.__action_count_down = getRandomIntInclusive(50, 200)
+                    this.#current_action_count_down = getRandomIntInclusive(50, 200)
                     break
                 // down
                 case 2:
-                    this.__moving_speed_y = this.getMovingSpeed()
+                    this.#current_moving_speed_y = this.getMovingSpeed()
                     this.setCurrentAction("move")
-                    this.__action_count_down = getRandomIntInclusive(50, 200)
+                    this.#current_action_count_down = getRandomIntInclusive(50, 200)
                     break
                 // left
                 case 3:
-                    this.__moving_speed_x = -this.getMovingSpeed()
+                    this.#current_moving_speed_x = -this.getMovingSpeed()
                     this.setDirectionFacing("l")
                     this.setCurrentAction("move")
-                    this.__action_count_down = getRandomIntInclusive(50, 200)
+                    this.#current_action_count_down = getRandomIntInclusive(50, 200)
                     break
                 // right
                 case 4:
-                    this.__moving_speed_x = this.getMovingSpeed()
+                    this.#current_moving_speed_x = this.getMovingSpeed()
                     this.setDirectionFacing("r")
                     this.setCurrentAction("move")
-                    this.__action_count_down = getRandomIntInclusive(50, 200)
+                    this.#current_action_count_down = getRandomIntInclusive(50, 200)
                     break
             }
         }

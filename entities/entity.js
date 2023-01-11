@@ -11,17 +11,18 @@ class Entity {
     #direction_facing = "r"
 
 
-    constructor(category, type, subType, x, y) {
+    constructor(category, type, subType, blockX, blockY) {
         this.#category = category
         this.#type = type
         this.#subType = subType
-        this.#x = x
-        this.#y = y
+        this.#x = 0
+        this.#y = 0
         this.#w = 0
         this.#h = 0
         this.removeFromWorld = false
         this.setSize(this.getJson()["tilewidth"], this.getJson()["tileheight"])
-
+        this.setBlockX(blockX)
+        this.setBlockY(blockY)
     }
 
     getSpriteSheet() {
@@ -67,18 +68,26 @@ class Entity {
     }
 
     getBlockX() {
-        return this.#x / Tile.getTileSize()
+        return this.getPixelBottom() / Tile.getTileSize()
     }
 
     getBlockY() {
-        return this.#y / Tile.getTileSize()
+        return (this.#y + this.#w / 2) / Tile.getTileSize()
+    }
+
+    setBlockX(value) {
+        this.setPixelBottom(value * Tile.getTileSize())
+    }
+
+    setBlockY(value) {
+        this.setRight(value * Tile.getTileSize() + this.#w / 2)
     }
 
     getRight() {
         return this.#x + this.#w
     }
 
-    getBottom() {
+    getPixelBottom() {
         return this.#y + this.#h
     }
 
@@ -86,7 +95,7 @@ class Entity {
         this.#x = right - this.#w
     }
 
-    setBottom(bottom) {
+    setPixelBottom(bottom) {
         this.#y = bottom - this.#h
     }
 
@@ -117,5 +126,9 @@ class Entity {
 
     setDirectionFacing(dirt) {
         this.#direction_facing = dirt;
+    }
+
+    collideWith(o) {
+        return Math.max(this.getPixelX(), o.getPixelX()) < Math.min(this.getRight(), o.getRight()) && Math.max(this.getPixelY(), o.getPixelY()) < Math.min(this.getPixelBottom(), o.getPixelBottom())
     }
 }

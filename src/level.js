@@ -5,6 +5,7 @@ class Level {
     #column
     #entities = []
     #dateTimeSystem = new DateTimeSystem()
+    #player
 
     constructor(map) {
         this.#row = map.length
@@ -22,6 +23,28 @@ class Level {
     addEntity(entity) {
         this.#entities.push(entity);
     };
+
+    initEntities() {
+        this.#player = new Player(10, 10)
+        this.addEntity(this.#player);
+        this.addEntity(new Chicken("black_chicken", 10, 10));
+        this.addEntity(new Cow("strawberry_cow", 10, 10));
+        this.addEntity(new Goat("brown_goat", 10, 10));
+        this.addEntity(new Pig("pink_pig", 10, 10));
+        this.addEntity(new Sheep("fluffy_white_sheep_sheet", 10, 10));
+    };
+
+    getEntitiesThatCollideWith(entity) {
+        const _entities = []
+        this.#entities.forEach(_entity => {
+            if (entity !== _entity) {
+                if (entity.collideWith(_entity)) {
+                    _entities.push(_entity)
+                }
+            }
+        });
+        return _entities
+    }
 
     draw(ctx) {
         let y = 0
@@ -65,7 +88,9 @@ class Level {
                 this.#entities.splice(i, 1);
             }
         }
+
         this.#dateTimeSystem.update()
+
         if (Debugger.isDebugging) {
             this.#entities.forEach(entity => {
                 Debugger.pushInfo("--------------------")
@@ -73,6 +98,14 @@ class Level {
                 Debugger.pushInfo(`pixel pos: [${entity.getPixelX()}, ${entity.getPixelY()}]; block pos: [${Math.round(entity.getBlockX() * 100) / 100}, ${Math.round(entity.getBlockY() * 100) / 100}]`)
                 Debugger.pushInfo(`speed: ${entity.getMovingSpeed()}; current action: ${entity.getCurrentAction()}`)
             });
+            Debugger.pushInfo("--------------------")
+            const entitiesThatCollideWithPlayer = this.getEntitiesThatCollideWith(this.#player)
+            Debugger.pushInfo(`Total entities that collide with the player: ${entitiesThatCollideWithPlayer.length}`)
+            if (entitiesThatCollideWithPlayer.length > 0) {
+                const names = []
+                entitiesThatCollideWithPlayer.forEach(_entity => names.push(_entity.getType()))
+                Debugger.pushInfo(`Entities that collide with the player: ${names}`)
+            }
         }
     }
 }

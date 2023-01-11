@@ -7,10 +7,10 @@ const JSON_MANAGER = new JsonManager();
 fetch("./additional.json")
     .then(response => response.json())
     .then(data => {
-        data["jsons"].forEach(_path => {
+        Array.from(data["jsons"]).forEach(_path => {
             JSON_MANAGER.queueDownload(_path);
         });
-        data["images"].forEach(_path => {
+        Array.from(data["images"]).forEach(_path => {
             ASSET_MANAGER.queueDownload(_path);
         });
         JSON_MANAGER.downloadAll(() => {

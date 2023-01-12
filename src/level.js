@@ -96,7 +96,7 @@ class Level {
                 Debugger.pushInfo("--------------------")
                 Debugger.pushInfo(`type: ${entity.getType()}; size: [${entity.getWidth()}, ${entity.getHeight()}]`)
                 Debugger.pushInfo(`pixel pos: [${entity.getPixelX()}, ${entity.getPixelY()}]; block pos: [${Math.round(entity.getBlockX() * 100) / 100}, ${Math.round(entity.getBlockY() * 100) / 100}]`)
-                Debugger.pushInfo(`speed: ${entity.getMovingSpeed()}; current action: ${entity.getCurrentAction()}`)
+                Debugger.pushInfo(`current speed: [${entity.getCurrentMovingSpeedX()} ${entity.getCurrentMovingSpeedY()}]; current action: ${entity.getCurrentAction()}`)
             });
             Debugger.pushInfo("--------------------")
             const entitiesThatCollideWithPlayer = this.getEntitiesThatCollideWith(this.#player)

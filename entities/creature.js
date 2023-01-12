@@ -1,12 +1,18 @@
 /* A Creature is a entity that can can move*/
 class Creature extends Entity {
-    #moving_speed
+    #moving_speed_x
+    #moving_speed_y
+    #current_moving_speed_x
+    #current_moving_speed_y
     #animations
     #current_action
 
     constructor(category, type, subType, x, y) {
         super(category, type, subType, x, y);
-        this.#moving_speed = 1
+        this.#moving_speed_x = 1
+        this.#moving_speed_y = 1
+        this.#current_moving_speed_x = 0
+        this.#current_moving_speed_y = 0
         this.#animations = {}
         this.setCurrentAction("idle")
         for (const [key, value] of Object.entries(this.getJson()["animations"])) {
@@ -14,12 +20,37 @@ class Creature extends Entity {
         }
     }
 
-    getMovingSpeed() {
-        return this.#moving_speed
+    getMovingSpeedX() {
+        return this.#moving_speed_x
     }
 
-    setMovingSpeed(speed) {
-        this.#moving_speed = speed
+
+    getMovingSpeedY() {
+        return this.#moving_speed_y
+    }
+
+    setMovingSpeedX(speed) {
+        this.#moving_speed_x = speed
+    }
+
+    setMovingSpeedY(speed) {
+        this.#moving_speed_y = speed
+    }
+
+    getCurrentMovingSpeedX() {
+        return this.#current_moving_speed_x
+    }
+
+    setCurrentMovingSpeedX(speed) {
+        this.#current_moving_speed_x = speed
+    }
+
+    getCurrentMovingSpeedY() {
+        return this.#current_moving_speed_y
+    }
+
+    setCurrentMovingSpeedY(speed) {
+        this.#current_moving_speed_y = speed
     }
 
     setAnimation(name, xStart, yStart, frameCount, frameDuration, loop) {
@@ -44,6 +75,11 @@ class Creature extends Entity {
         } else {
             this.#current_action = action;
         }
+    }
+
+    update() {
+        this.setPixelX(this.getPixelX() + this.getCurrentMovingSpeedX())
+        this.setPixelY(this.getPixelY() + this.getCurrentMovingSpeedY())
     }
 
     draw(ctx) {

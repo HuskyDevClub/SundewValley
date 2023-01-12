@@ -1,24 +1,18 @@
 class Animal extends Creature {
 
-    #current_moving_speed_x
-    #current_moving_speed_y
     #current_action_count_down
 
     constructor(type, subType, x, y) {
         super("animals", type, subType, x, y);
-        this.#current_moving_speed_x = 0
-        this.#current_moving_speed_y = 0
         this.#current_action_count_down = 0
     }
 
     update() {
         if (this.#current_action_count_down > 0) {
             this.#current_action_count_down -= 1
-            this.setPixelX(this.getPixelX() + this.#current_moving_speed_x)
-            this.setPixelY(this.getPixelY() + this.#current_moving_speed_y)
         } else {
-            this.#current_moving_speed_x = 0
-            this.#current_moving_speed_y = 0
+            this.setCurrentMovingSpeedX(0)
+            this.setCurrentMovingSpeedY(0)
             switch (getRandomIntInclusive(0, 4)) {
                 case 0:
                     this.setCurrentAction("idle")
@@ -26,32 +20,33 @@ class Animal extends Creature {
                     break
                 // up
                 case 1:
-                    this.#current_moving_speed_y = -this.getMovingSpeed()
+                    this.setCurrentMovingSpeedY(-this.getMovingSpeedY())
                     this.setCurrentAction("move")
                     this.#current_action_count_down = getRandomIntInclusive(50, 200)
                     break
                 // down
                 case 2:
-                    this.#current_moving_speed_y = this.getMovingSpeed()
+                    this.setCurrentMovingSpeedY(this.getMovingSpeedY())
                     this.setCurrentAction("move")
                     this.#current_action_count_down = getRandomIntInclusive(50, 200)
                     break
                 // left
                 case 3:
-                    this.#current_moving_speed_x = -this.getMovingSpeed()
+                    this.setCurrentMovingSpeedX(-this.getMovingSpeedX())
                     this.setDirectionFacing("l")
                     this.setCurrentAction("move")
                     this.#current_action_count_down = getRandomIntInclusive(50, 200)
                     break
                 // right
                 case 4:
-                    this.#current_moving_speed_x = this.getMovingSpeed()
+                    this.setCurrentMovingSpeedX(this.getMovingSpeedX())
                     this.setDirectionFacing("r")
                     this.setCurrentAction("move")
                     this.#current_action_count_down = getRandomIntInclusive(50, 200)
                     break
             }
         }
+        super.update()
     };
 
     draw(ctx) {

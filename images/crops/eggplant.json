@@ -1,0 +1,15 @@
+{
+  "columns": 5,
+  "image": "eggplant.png",
+  "imageheight": 16,
+  "imagewidth": 80,
+  "margin": 0,
+  "name": "eggplant",
+  "spacing": 0,
+  "tilecount": 5,
+  "tiledversion": "1.9.2",
+  "tileheight": 16,
+  "tilewidth": 16,
+  "type": "tileset",
+  "version": "1.9"
+}

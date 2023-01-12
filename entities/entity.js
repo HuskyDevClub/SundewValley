@@ -10,7 +10,6 @@ class Entity {
     #h
     #direction_facing = "r"
 
-
     constructor(category, type, subType, blockX, blockY) {
         this.#category = category
         this.#type = type
@@ -68,19 +67,19 @@ class Entity {
     }
 
     getBlockX() {
-        return this.getPixelBottom() / Tile.getTileSize()
+        return (this.#x + this.#w / 2) / Tile.getTileSize()
     }
 
     getBlockY() {
-        return (this.#y + this.#w / 2) / Tile.getTileSize()
+        return this.getPixelBottom() / Tile.getTileSize()
     }
 
     setBlockX(value) {
-        this.setPixelBottom(value * Tile.getTileSize())
+        this.setRight(value * Tile.getTileSize() + this.#w / 2)
     }
 
     setBlockY(value) {
-        this.setRight(value * Tile.getTileSize() + this.#w / 2)
+        this.setPixelBottom(value * Tile.getTileSize())
     }
 
     getRight() {

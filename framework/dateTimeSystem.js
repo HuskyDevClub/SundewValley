@@ -9,7 +9,8 @@ class DateTimeSystem {
     }
     #bigMonths = [1, 3, 5, 7, 8, 10, 12]
 
-    constructor() {
+    constructor(yearStarted) {
+        this.#data["year"] = Math.max(yearStarted, this.#data["year"])
     }
 
     update() {

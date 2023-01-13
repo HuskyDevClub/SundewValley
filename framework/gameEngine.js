@@ -167,6 +167,7 @@ class GameEngine {
 
     update() {
         Debugger.update()
+        if (Debugger.isDebugging) Debugger.pushInfo(`current in game time: ${Math.round(this.timer.gameTime)}s`)
         this.#level.update()
     };
 

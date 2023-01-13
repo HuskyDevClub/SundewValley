@@ -32,6 +32,7 @@ class Level {
         this.addEntity(new Goat("brown_goat", 10, 10));
         this.addEntity(new Pig("pink_pig", 10, 10));
         this.addEntity(new Sheep("fluffy_white_sheep_sheet", 10, 10));
+        this.addEntity(new Crop("potato", 10, 10));
     };
 
     getEntitiesThatCollideWith(entity) {
@@ -96,7 +97,11 @@ class Level {
                 Debugger.pushInfo("--------------------")
                 Debugger.pushInfo(`type: ${entity.getType()}; size: [${entity.getWidth()}, ${entity.getHeight()}]`)
                 Debugger.pushInfo(`pixel pos: [${entity.getPixelX()}, ${entity.getPixelY()}]; block pos: [${Math.round(entity.getBlockX() * 100) / 100}, ${Math.round(entity.getBlockY() * 100) / 100}]`)
-                Debugger.pushInfo(`current speed: [${entity.getCurrentMovingSpeedX()} ${entity.getCurrentMovingSpeedY()}]; current action: ${entity.getCurrentAction()}`)
+                if (entity instanceof Creature) {
+                    Debugger.pushInfo(`current speed: [${entity.getCurrentMovingSpeedX()} ${entity.getCurrentMovingSpeedY()}]; current action: ${entity.getCurrentAction()}`)
+                } else if (entity instanceof Crop) {
+                    Debugger.pushInfo(`current stage: ${entity.getStage()}; time until stage: ${entity.getTimeUntilNextStage()}`)
+                }
             });
             Debugger.pushInfo("--------------------")
             const entitiesThatCollideWithPlayer = this.getEntitiesThatCollideWith(this.#player)

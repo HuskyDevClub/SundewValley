@@ -8,7 +8,8 @@ class Entity {
     #y
     #w
     #h
-    #direction_facing = "r"
+    #tile_w
+    #tile_h
 
     constructor(category, type, subType, blockX, blockY) {
         this.#category = category
@@ -19,7 +20,9 @@ class Entity {
         this.#w = 0
         this.#h = 0
         this.removeFromWorld = false
-        this.setSize(this.getJson()["tilewidth"], this.getJson()["tileheight"])
+        this.#tile_w = this.getJson()["tilewidth"]
+        this.#tile_h = this.getJson()["tileheight"]
+        this.setSize(this.#tile_w, this.#tile_h)
         this.setBlockX(blockX)
         this.setBlockY(blockY)
     }
@@ -114,17 +117,17 @@ class Entity {
         this.#h = parseInt(height)
     }
 
+    getTileWidth() {
+        return this.#tile_w
+    }
+
+    getTileHeight() {
+        return this.#tile_h
+    }
+
     setSize(width, height) {
         this.setWidth(width)
         this.setHeight(height)
-    }
-
-    getDirectionFacing() {
-        return this.#direction_facing;
-    }
-
-    setDirectionFacing(dirt) {
-        this.#direction_facing = dirt;
     }
 
     collideWith(o) {

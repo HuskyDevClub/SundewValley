@@ -6,6 +6,7 @@ class Creature extends Entity {
     #current_moving_speed_y
     #animations
     #current_action
+    #direction_facing
 
     constructor(category, type, subType, x, y) {
         super(category, type, subType, x, y);
@@ -14,6 +15,7 @@ class Creature extends Entity {
         this.#current_moving_speed_x = 0
         this.#current_moving_speed_y = 0
         this.#animations = {}
+        this.#direction_facing = "r"
         this.setCurrentAction("idle")
         for (const [key, value] of Object.entries(this.getJson()["animations"])) {
             this.setAnimation(key, value[0] * this.getWidth(), value[1] * this.getHeight(), value[2], 1 / value[2], true);
@@ -54,7 +56,7 @@ class Creature extends Entity {
     }
 
     setAnimation(name, xStart, yStart, frameCount, frameDuration, loop) {
-        this.#animations[name] = new Animator(this.getSpriteSheet(), xStart, yStart, this.getWidth(), this.getHeight(), frameCount, frameDuration, 0, false, loop)
+        this.#animations[name] = new Animator(this.getSpriteSheet(), xStart, yStart, this.getTileWidth(), this.getTileHeight(), frameCount, frameDuration, 0, false, loop)
     }
 
     getAnimation(name) {
@@ -63,6 +65,14 @@ class Creature extends Entity {
 
     getCurrentAnimation() {
         return this.getAnimation(this.getCurrentAction());
+    }
+
+    getDirectionFacing() {
+        return this.#direction_facing;
+    }
+
+    setDirectionFacing(dirt) {
+        this.#direction_facing = dirt;
     }
 
     getCurrentAction() {

@@ -1,50 +1,35 @@
 class DateTimeSystem {
-    #data = {
-        "second": 0,
-        "minute": 0,
-        "hour": 0,
-        "day": 1,
-        "month": 3,
-        "year": 0
-    }
-    #bigMonths = [1, 3, 5, 7, 8, 10, 12]
+    static #data
 
-    constructor(yearStarted) {
-        this.#data["year"] = Math.max(yearStarted, this.#data["year"])
+    static init(yearStarted) {
+        this.#data = new Date(yearStarted, 2, 1, 6, 0, 0, 0)
     }
 
-    update() {
-        this.#data["second"] += 1
-        this.#checkToReset("second", "minute", 60)
-        this.#checkToReset("minute", "hour", 60)
-        this.#checkToReset("hour", "day", 24)
-
-        if (this.#data["month"] in this.#bigMonths) {
-            this.#checkToReset("day", "month", 32, 1)
-        } else if (this.#data["month"] !== 2) {
-            this.#checkToReset("day", "month", 31, 1)
-        } else {
-            if (!this.isLeapYear()) {
-                this.#checkToReset("day", "month", 30, 1)
-            } else {
-                this.#checkToReset("day", "month", 29, 1)
-            }
-        }
-        this.#checkToReset("month", "year", 13, 1)
-        if (Debugger.isDebugging) {
-            Debugger.pushInfo(`${this.#data["hour"]}:${this.#data["minute"]}:${this.#data["second"]} ${this.#data["month"]}/${this.#data["day"]}/${this.#data["year"]} ${this.getSeason()}`)
-        }
+    static getDateObject() {
+        return this.#data
     }
 
-    isLeapYear() {
-        return this.#data["year"] % 4 === 0
+    static now() {
+        return new Date(this.#data.getTime());
     }
 
-    getMonth() {
-        return this.#data["month"]
+    static getDifferenceInMs(_date) {
+        return this.#data.getTime() - _date.getTime();
     }
 
-    getSeason() {
+    static update(time_in_seconds) {
+        this.#data.setTime(this.#data.getTime() + time_in_seconds * 60000)
+    }
+
+    static getMonth() {
+        return this.#data.getMonth() + 1
+    }
+
+    static toLocaleString() {
+        return this.#data.toLocaleString()
+    }
+
+    static getSeason() {
         if (3 <= this.getMonth() && this.getMonth() <= 5) {
             return "spring"
         } else if (6 <= this.getMonth() && this.getMonth() <= 8) {
@@ -53,13 +38,6 @@ class DateTimeSystem {
             return "autumn"
         } else {
             return "winter"
-        }
-    }
-
-    #checkToReset(source, target, sourceMaxExc, resetTo = 0) {
-        if (this.#data[source] >= sourceMaxExc) {
-            this.#data[source] = resetTo
-            this.#data[target] += 1
         }
     }
 

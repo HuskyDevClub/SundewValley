@@ -1,6 +1,6 @@
 class Player extends Character {
-    constructor(x, y) {
-        super("player", x, y)
+    constructor(name, x, y) {
+        super(name, "player", x, y)
         this.setMovingSpeedX(5)
         this.setMovingSpeedY(5)
         this.setSize(Tile.getTileSize() * 1.5, Tile.getTileSize() * 1.5)
@@ -48,8 +48,12 @@ class Player extends Character {
     };
 
     draw(ctx) {
-        this.setPixelX(Math.min(Math.max(this.getPixelX(), 0), ctx.canvas.clientWidth - this.getWidth()))
-        this.setPixelY(Math.min(Math.max(this.getPixelY(), 0), ctx.canvas.clientHeight - this.getHeight()))
+        if (this.getBlockX() < 0) {
+            this.setBlockX(0)
+        }
+        if (this.getBlockY() < 0) {
+            this.setBlockY(0)
+        }
         super.draw(ctx)
     };
 }

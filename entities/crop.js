@@ -1,19 +1,21 @@
 class Crop extends Entity {
     #stage
-    #countDown
+    #timePlanted
+    #growPeriods
 
     constructor(type, x, y) {
         super("crops", type, null, x, y);
-        this.#stage = 1
-        this.#countDown = 500
+        this.#stage = 0
+        this.#timePlanted = DateTimeSystem.now()
+        this.#growPeriods = [1, 1, 1, 1]
     }
 
     update() {
-        if (this.#countDown > 0) {
-            this.#countDown -= 1
-        } else if (this.#countDown === 0) {
-            this.#stage += 1
-            this.#countDown = this.#stage < this.getJson()["tilecount"] ? 500 : -1
+        let timeUntilNextStage = this.getTimeUntilNextStageInMs()
+        while (timeUntilNextStage <= 0) {
+            this.#stage++;
+            this.#timePlanted.setTime(DateTimeSystem.getDateObject().getTime() - timeUntilNextStage)
+            timeUntilNextStage = this.getTimeUntilNextStageInMs()
         }
     }
 
@@ -21,14 +23,14 @@ class Crop extends Entity {
         return this.#stage
     }
 
-    getTimeUntilNextStage() {
-        return this.#countDown
+    getTimeUntilNextStageInMs() {
+        return this.#stage < this.#growPeriods.length ? this.#growPeriods[this.#stage] * 3600000 - DateTimeSystem.getDifferenceInMs(this.#timePlanted) : Infinity
     }
 
     draw(ctx) {
         ctx.drawImage(
             this.getSpriteSheet(),
-            (this.#stage - 1) * this.getTileWidth(), 0, this.getWidth(), this.getHeight(),
+            this.#stage * this.getTileWidth(), 0, this.getWidth(), this.getHeight(),
             this.getPixelX(), this.getPixelY(), this.getWidth(), this.getHeight()
         );
     };

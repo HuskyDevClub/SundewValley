@@ -4,7 +4,6 @@ class Level {
     #row
     #column
     #entities = []
-    #dateTimeSystem = new DateTimeSystem()
     #player
 
     constructor(map) {
@@ -25,7 +24,11 @@ class Level {
     };
 
     initEntities() {
-        this.#player = new Player(10, 10)
+        let playerName = "Cody"
+        /*while (playerName == null){
+            playerName = prompt("Please enter player name", "Cody");
+        }*/
+        this.#player = new Player(playerName, 10, 10)
         this.addEntity(this.#player);
         this.addEntity(new Chicken("black_chicken", 10, 10));
         this.addEntity(new Cow("strawberry_cow", 10, 10));
@@ -52,7 +55,7 @@ class Level {
         this.#map.forEach(_row => {
             let x = 0
             _row.forEach(_tile => {
-                _tile.draw(ctx, x, y, this.#dateTimeSystem.getSeason())
+                _tile.draw(ctx, x, y)
                 x += 1
             })
             y += 1
@@ -74,7 +77,10 @@ class Level {
             }
         );
         // Draw all the entities
-        this.#entities.forEach(entity => entity.draw(ctx));
+        this.#entities.forEach(entity => {
+            entity.draw(ctx)
+            if (Debugger.isDebugging) ctx.strokeRect(entity.getPixelX(), entity.getPixelY(), entity.getWidth(), entity.getHeight())
+        });
     };
 
     update() {
@@ -90,17 +96,18 @@ class Level {
             }
         }
 
-        this.#dateTimeSystem.update()
-
         if (Debugger.isDebugging) {
             this.#entities.forEach(entity => {
                 Debugger.pushInfo("--------------------")
+                if (entity instanceof Character) {
+                    Debugger.pushInfo(`name: ${entity.getName()}`)
+                }
                 Debugger.pushInfo(`type: ${entity.getType()}; size: [${entity.getWidth()}, ${entity.getHeight()}]`)
                 Debugger.pushInfo(`pixel pos: [${entity.getPixelX()}, ${entity.getPixelY()}]; block pos: [${Math.round(entity.getBlockX() * 100) / 100}, ${Math.round(entity.getBlockY() * 100) / 100}]`)
                 if (entity instanceof Creature) {
                     Debugger.pushInfo(`current speed: [${entity.getCurrentMovingSpeedX()} ${entity.getCurrentMovingSpeedY()}]; current action: ${entity.getCurrentAction()}`)
                 } else if (entity instanceof Crop) {
-                    Debugger.pushInfo(`current stage: ${entity.getStage()}; time until stage: ${entity.getTimeUntilNextStage()}`)
+                    Debugger.pushInfo(`current stage: ${entity.getStage()}; time until stage: ${entity.getTimeUntilNextStageInMs()}`)
                 }
             });
             Debugger.pushInfo("--------------------")

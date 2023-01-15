@@ -4,7 +4,7 @@ class GameEngine {
 
     #level
 
-    constructor(options) {
+    constructor() {
         // What you will use to draw
         // Documentation: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
         this.ctx = null;
@@ -29,9 +29,11 @@ class GameEngine {
 
     init(ctx) {
         this.ctx = ctx;
+        DateTimeSystem.init(2023);
         this.#level.initEntities()
         this.startInput();
         this.timer = new Timer();
+        Debugger.switchDebugMode();
     };
 
     start() {
@@ -167,7 +169,12 @@ class GameEngine {
 
     update() {
         Debugger.update()
-        if (Debugger.isDebugging) Debugger.pushInfo(`current in game time: ${Math.round(this.timer.gameTime)}s`)
+        DateTimeSystem.update(this.clockTick)
+        if (Debugger.isDebugging) {
+            Debugger.pushInfo(`current in game time: ${Math.round(this.timer.gameTime)}s`)
+            Debugger.pushInfo(`Date: ${DateTimeSystem.toLocaleString()} ${DateTimeSystem.getSeason()}`)
+        }
+
         this.#level.update()
     };
 

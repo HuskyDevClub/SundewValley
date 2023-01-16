@@ -46,14 +46,4 @@ class Player extends Character {
         }
         super.update()
     };
-
-    draw(ctx) {
-        if (this.getBlockX() < 0) {
-            this.setBlockX(0)
-        }
-        if (this.getBlockY() < 0) {
-            this.setBlockY(0)
-        }
-        super.draw(ctx)
-    };
 }

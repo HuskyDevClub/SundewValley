@@ -49,10 +49,10 @@ class Animal extends Creature {
         super.update()
     };
 
-    draw(ctx) {
+    display(ctx, offsetX, offsetY) {
         this.setPixelX(Math.min(Math.max(this.getPixelX(), 0), ctx.canvas.clientWidth))
         this.setPixelY(Math.min(Math.max(this.getPixelY(), 0), ctx.canvas.clientHeight))
-        super.draw(ctx)
+        super.display(ctx, offsetX, offsetY)
     };
 }
 

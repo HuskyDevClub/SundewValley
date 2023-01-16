@@ -1,22 +1,39 @@
 class Level {
 
-    #map
+    #map = []
     #row
     #column
+    #tileWidth
+    #tileHeight
+    #offsetX = 0
+    #offsetY = 0
     #entities = []
     #player
+    #mapImage
+    #scale
 
-    constructor(map) {
-        this.#row = map.length
-        this.#column = map[0].length
-        this.#map = []
-        map.forEach(_row => {
-            let _cache = []
-            _row.forEach(_tile => {
-                _cache.push(new Tile(_tile))
-            })
-            this.#map.push(_cache)
+    constructor(_path) {
+        const mapData = JSON_MANAGER.getJson(_path)
+        this.#row = 0
+        this.#column = 0
+        this.#tileWidth = mapData["tilewidth"]
+        this.#tileHeight = mapData["tileheight"]
+        Array.from(mapData["layers"]).forEach(_layer => {
+            this.#row = Math.max(this.#row, parseInt(_layer.height))
+            this.#column = Math.max(this.#column, parseInt(_layer.width))
         })
+        this.#mapImage = ASSET_MANAGER.getAsset(_path.replace(".json", ".png"))
+        console.assert(this.#mapImage.width === this.#column * this.#tileWidth)
+        console.assert(this.#mapImage.height === this.#row * this.#tileHeight)
+        this.#scale = Tile.getTileSize() / this.#tileWidth
+    }
+
+    getPixelWidth() {
+        return this.#mapImage.width * this.#scale
+    }
+
+    getPixelHeight() {
+        return this.#mapImage.height * this.#scale
     }
 
     addEntity(entity) {
@@ -51,15 +68,39 @@ class Level {
     }
 
     draw(ctx) {
-        let y = 0
-        this.#map.forEach(_row => {
-            let x = 0
-            _row.forEach(_tile => {
-                _tile.draw(ctx, x, y)
-                x += 1
-            })
-            y += 1
-        })
+        // fix offset x
+        if (this.#player.getPixelRight() + this.#offsetX > ctx.canvas.width * 0.9) {
+            this.#offsetX -= Math.ceil(this.#player.getMovingSpeedX() * 1.5)
+        } else if (this.#player.getPixelX() + this.#offsetX < ctx.canvas.width * 0.1) {
+            this.#offsetX += Math.ceil(this.#player.getMovingSpeedX() * 1.5)
+        }
+        this.#offsetX = Math.max(Math.min(this.#offsetX, 0), ctx.canvas.width - this.getPixelWidth())
+        // fix offset y
+        if (this.#player.getPixelBottom() + this.#offsetY > ctx.canvas.height * 0.9) {
+            this.#offsetY -= Math.ceil(this.#player.getMovingSpeedY() * 1.5)
+        } else if (this.#player.getPixelY() + this.#offsetY < ctx.canvas.height * 0.1) {
+            this.#offsetY += Math.ceil(this.#player.getMovingSpeedY() * 1.5)
+        }
+        this.#offsetY = Math.max(Math.min(this.#offsetY, 0), ctx.canvas.height - this.getPixelHeight())
+        // ensure player not go out of bound
+        if (this.#player.getBlockX() < 0.5) {
+            this.#player.setBlockX(0.5)
+        } else if (this.#player.getBlockX() > this.#column - 0.5) {
+            this.#player.setBlockX(this.#column - 0.5)
+        }
+        if (this.#player.getBlockY() < 1) {
+            this.#player.setBlockY(1)
+        }
+        if (this.#player.getBlockY() > this.#row) {
+            this.#player.setBlockY(this.#row)
+        }
+        // draw map
+        ctx.drawImage(this.#mapImage,
+            -this.#offsetX / this.#scale, -this.#offsetY / this.#scale,
+            ctx.canvas.width / this.#scale, ctx.canvas.height / this.#scale,
+            0, 0,
+            ctx.canvas.width, ctx.canvas.height
+        );
         // sort entities based on coordinates
         this.#entities.sort(
             function (firstItem, secondItem) {
@@ -78,8 +119,8 @@ class Level {
         );
         // Draw all the entities
         this.#entities.forEach(entity => {
-            entity.draw(ctx)
-            if (Debugger.isDebugging) ctx.strokeRect(entity.getPixelX(), entity.getPixelY(), entity.getWidth(), entity.getHeight())
+            entity.display(ctx, this.#offsetX, this.#offsetY)
+            if (Debugger.isDebugging) ctx.strokeRect(entity.getPixelX() + this.#offsetX, entity.getPixelY() + this.#offsetY, entity.getWidth(), entity.getHeight())
         });
     };
 
@@ -97,6 +138,8 @@ class Level {
         }
 
         if (Debugger.isDebugging) {
+            Debugger.pushInfo(`map - shape: [${this.#column}, ${this.#row}]`)
+            Debugger.pushInfo(`image size:[${this.getPixelWidth()}, ${this.getPixelHeight()}]; offset: [${this.#offsetX}, ${this.#offsetY}]`)
             this.#entities.forEach(entity => {
                 Debugger.pushInfo("--------------------")
                 if (entity instanceof Character) {

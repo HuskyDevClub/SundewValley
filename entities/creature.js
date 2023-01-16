@@ -92,7 +92,7 @@ class Creature extends Entity {
         this.setPixelY(this.getPixelY() + this.getCurrentMovingSpeedY())
     }
 
-    draw(ctx) {
-        this.getCurrentAnimation().drawFrame(gameEngine.clockTick, ctx, this.getPixelX(), this.getPixelY(), this.getWidth(), this.getHeight())
+    display(ctx, offsetX, offsetY) {
+        this.getCurrentAnimation().drawFrame(gameEngine.clockTick, ctx, this.getPixelX() + offsetX, this.getPixelY() + offsetY, this.getWidth(), this.getHeight())
     };
 }

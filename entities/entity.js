@@ -1,24 +1,17 @@
-class Entity {
+class Entity extends GameObject2d {
     #category
     #type
     #subType
     #sprite_sheet = null
     #json = null
-    #x
-    #y
-    #w
-    #h
     #tile_w
     #tile_h
 
     constructor(category, type, subType, blockX, blockY) {
+        super(0, 0, 0, 0)
         this.#category = category
         this.#type = type
         this.#subType = subType
-        this.#x = 0
-        this.#y = 0
-        this.#w = 0
-        this.#h = 0
         this.removeFromWorld = false
         this.#tile_w = this.getJson()["tilewidth"]
         this.#tile_h = this.getJson()["tileheight"]
@@ -53,24 +46,8 @@ class Entity {
         return this.#subType
     }
 
-    getPixelX() {
-        return this.#x
-    }
-
-    getPixelY() {
-        return this.#y
-    }
-
-    setPixelX(x) {
-        this.#x = x
-    }
-
-    setPixelY(y) {
-        this.#y = y
-    }
-
     getBlockX() {
-        return (this.#x + this.#w / 2) / Tile.getTileSize()
+        return (this.getPixelX() + this.getWidth() / 2) / Tile.getTileSize()
     }
 
     getBlockY() {
@@ -78,43 +55,11 @@ class Entity {
     }
 
     setBlockX(value) {
-        this.setRight(value * Tile.getTileSize() + this.#w / 2)
+        this.setPixelRight(value * Tile.getTileSize() + this.getWidth() / 2)
     }
 
     setBlockY(value) {
         this.setPixelBottom(value * Tile.getTileSize())
-    }
-
-    getRight() {
-        return this.#x + this.#w
-    }
-
-    getPixelBottom() {
-        return this.#y + this.#h
-    }
-
-    setRight(right) {
-        this.#x = right - this.#w
-    }
-
-    setPixelBottom(bottom) {
-        this.#y = bottom - this.#h
-    }
-
-    getWidth() {
-        return this.#w
-    }
-
-    getHeight() {
-        return this.#h
-    }
-
-    setWidth(width) {
-        this.#w = parseInt(width)
-    }
-
-    setHeight(height) {
-        this.#h = parseInt(height)
     }
 
     getTileWidth() {
@@ -125,12 +70,7 @@ class Entity {
         return this.#tile_h
     }
 
-    setSize(width, height) {
-        this.setWidth(width)
-        this.setHeight(height)
-    }
-
     collideWith(o) {
-        return Math.max(this.getPixelX(), o.getPixelX()) < Math.min(this.getRight(), o.getRight()) && Math.max(this.getPixelY(), o.getPixelY()) < Math.min(this.getPixelBottom(), o.getPixelBottom())
+        return Math.max(this.getPixelX(), o.getPixelX()) < Math.min(this.getPixelRight(), o.getPixelRight()) && Math.max(this.getPixelY(), o.getPixelY()) < Math.min(this.getPixelBottom(), o.getPixelBottom())
     }
 }

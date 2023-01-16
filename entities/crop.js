@@ -2,12 +2,14 @@ class Crop extends Entity {
     #stage
     #timePlanted
     #growPeriods
+    #scale = 0.75
 
     constructor(type, x, y) {
         super("crops", type, null, x, y);
         this.#stage = 0
         this.#timePlanted = DateTimeSystem.now()
         this.#growPeriods = [1, 1, 1, 1]
+        this.setSize(Tile.getTileSize() * this.#scale, Tile.getTileSize() * this.#scale)
     }
 
     update() {
@@ -27,11 +29,19 @@ class Crop extends Entity {
         return this.#stage < this.#growPeriods.length ? this.#growPeriods[this.#stage] * 3600000 - DateTimeSystem.getDifferenceInMs(this.#timePlanted) : Infinity
     }
 
-    draw(ctx) {
+    getPixelX() {
+        return super.getPixelX() + this.getWidth() - this.getTileWidth()
+    }
+
+    getPixelY() {
+        return super.getPixelY() + this.getHeight() - this.getTileHeight()
+    }
+
+    display(ctx, offsetX, offsetY) {
         ctx.drawImage(
             this.getSpriteSheet(),
-            this.#stage * this.getTileWidth(), 0, this.getWidth(), this.getHeight(),
-            this.getPixelX(), this.getPixelY(), this.getWidth(), this.getHeight()
+            this.#stage * this.getTileWidth(), 0, this.getTileWidth(), this.getTileHeight(),
+            this.getPixelX() + offsetX, this.getPixelY() + offsetY, this.getWidth(), this.getHeight()
         );
     };
 }

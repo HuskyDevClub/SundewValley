@@ -17,6 +17,9 @@ def preprocess(pathIn: str, dataIn: dict[str, list[str]]):
 
 _data: dict[str, list[str]] = {"jsons": [], "images": []}
 
+# document all images and json in images folder
 preprocess("images", _data)
+# document all images and json in levels folder
+preprocess("levels", _data)
 
 linpg.config.save("./additional.json", _data)

@@ -65,7 +65,8 @@
     "./images/ui/buttons.png",
     "./images/ui/elements.png",
     "./images/ui/gui.png",
-    "./images/ui/icons.png"
+    "./images/ui/icons.png",
+    "./levels/farm_spring.png"
   ],
   "jsons": [
     "./images/animals/chicken/chicken.json",
@@ -105,6 +106,8 @@
     "./images/tilemaps/spring.json",
     "./images/tilemaps/summer.json",
     "./images/tilemaps/walls_and_floors.json",
-    "./images/tilemaps/winter.json"
+    "./images/tilemaps/winter.json",
+    "./levels/bedroom.json",
+    "./levels/farm_spring.json"
   ]
 }

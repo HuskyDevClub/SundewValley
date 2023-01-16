@@ -9,8 +9,6 @@ class GameEngine {
         // Documentation: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
         this.ctx = null;
 
-        this.#level = new Level([[]]);
-
         // Information on the input
         this.click = null;
         this.mouse = null;
@@ -30,6 +28,7 @@ class GameEngine {
     init(ctx) {
         this.ctx = ctx;
         DateTimeSystem.init(2023);
+        this.#level = new Level(`./levels/farm_${DateTimeSystem.getSeason()}.json`);
         this.#level.initEntities()
         this.startInput();
         this.timer = new Timer();

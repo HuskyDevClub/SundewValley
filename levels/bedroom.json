@@ -1099,47 +1099,47 @@
   "tilesets": [
     {
       "firstgid": 1,
-      "source": "..\/images\/tilemaps\/winter.json"
+      "source": "../images/tilemaps/winter.json"
     },
     {
       "firstgid": 172,
-      "source": "..\/images\/tilemaps\/spring.json"
+      "source": "../images/tilemaps/spring.json"
     },
     {
       "firstgid": 343,
-      "source": "..\/images\/tilemaps\/summer.json"
+      "source": "../images/tilemaps/summer.json"
     },
     {
       "firstgid": 514,
-      "source": "..\/images\/tilemaps\/autumn.json"
+      "source": "../images/tilemaps/autumn.json"
     },
     {
       "firstgid": 685,
-      "source": "..\/images\/tilemaps\/inside.json"
+      "source": "../images/tilemaps/inside.json"
     },
     {
       "firstgid": 745,
-      "source": "..\/images\/tilemaps\/walls_and_floors.json"
+      "source": "../images/tilemaps/walls_and_floors.json"
     },
     {
       "firstgid": 985,
-      "source": "..\/images\/items\/autumn_objects.json"
+      "source": "../images/items/autumn_objects.json"
     },
     {
       "firstgid": 1089,
-      "source": "..\/images\/items\/barn.json"
+      "source": "../images/items/barn.json"
     },
     {
       "firstgid": 1305,
-      "source": "..\/images\/items\/bathroom.json"
+      "source": "../images/items/bathroom.json"
     },
     {
       "firstgid": 1370,
-      "source": "..\/images\/items\/bedroom.json"
+      "source": "../images/items/bedroom.json"
     },
     {
       "firstgid": 1418,
-      "source": "..\/images\/items\/carpets.json"
+      "source": "../images/items/carpets.json"
     }
   ],
   "tilewidth": 16,

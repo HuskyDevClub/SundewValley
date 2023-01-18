@@ -6,6 +6,7 @@ class Character extends Creature {
     constructor(name, type, x, y) {
         super("characters", type, null, x, y);
         this.#name = name
+        this.setMoney(0)
     }
 
     getName() {

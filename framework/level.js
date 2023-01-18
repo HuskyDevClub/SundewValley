@@ -1,6 +1,6 @@
 class Level {
 
-    #map = []
+    #map
     #row
     #column
     #tileWidth
@@ -10,22 +10,49 @@ class Level {
     #entities = []
     #player
     #mapImage
+    #tileSets
     #scale
 
     constructor(_path) {
-        const mapData = JSON_MANAGER.getJson(_path)
+        const mapData = ASSET_MANAGER.getJson(_path)
         this.#row = 0
         this.#column = 0
         this.#tileWidth = mapData["tilewidth"]
         this.#tileHeight = mapData["tileheight"]
-        Array.from(mapData["layers"]).forEach(_layer => {
+        let layers = Array.from(mapData["layers"])
+        layers.forEach(_layer => {
             this.#row = Math.max(this.#row, parseInt(_layer.height))
             this.#column = Math.max(this.#column, parseInt(_layer.width))
         })
-        this.#mapImage = ASSET_MANAGER.getAsset(_path.replace(".json", ".png"))
+        this.#mapImage = ASSET_MANAGER.getImage(_path.replace(".json", ".png"))
         console.assert(this.#mapImage.width === this.#column * this.#tileWidth)
         console.assert(this.#mapImage.height === this.#row * this.#tileHeight)
+        // pre-allocated space for map
+        this.#map = new Array(this.#row).fill(undefined).map(() => new Array(this.#column).fill(undefined).map(() => new Tile()))
+        layers.forEach(_layer => {
+            _layer["chunks"].forEach(_chunk => {
+                const chunk_width = parseInt(_chunk.width)
+                const chunk_height = parseInt(_chunk.height)
+                const chuck_relative_x = Math.floor(_chunk["x"] - _layer["startx"])
+                const chuck_relative_y = Math.floor(_chunk["y"] - _layer["starty"])
+                console.assert(_chunk["data"].length === chunk_width * chunk_height)
+                for (let i = 0; i < _chunk["data"].length; i++) {
+                    let x = chuck_relative_x + i % chunk_width
+                    let y = chuck_relative_y + Math.floor(i / chunk_width)
+                    this.#map[y][x].addLayers(_chunk["data"][i])
+                }
+            })
+        })
         this.#scale = Tile.getTileSize() / this.#tileWidth
+        this.#tileSets = Array.from(mapData["tilesets"])
+    }
+
+    #drawTile(_id) {
+        this.#tileSets.forEach(_tileSet => {
+            if (_id > _tileSet["firstgid"]) {
+                const imageData = ASSET_MANAGER.getImage(_tileSet["source"].replace("..", ".").replace("\/", "/").replace(".json", ".png"))
+            }
+        })
     }
 
     getPixelWidth() {

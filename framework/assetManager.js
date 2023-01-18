@@ -2,25 +2,36 @@ class AssetManager {
     constructor() {
         this.successCount = 0;
         this.errorCount = 0;
-        this.cache = [];
-        this.downloadQueue = [];
+        this.imageCache = {};
+        this.imageDownloadQueue = [];
+        this.jsonCache = {};
+        this.jsonDownloadQueue = [];
     };
 
     queueDownload(path) {
-        if (Debugger.isDebugging) console.log("Queueing Asset " + path);
-        this.downloadQueue.push(path);
+        path.endsWith(".json") ? this.queueDownloadJson(path) : this.queueDownloadImage(path);
     };
+
+    queueDownloadJson(path) {
+        if (Debugger.isDebugging) console.log("Queueing Json" + path);
+        this.jsonDownloadQueue.push(path);
+    }
+
+    queueDownloadImage(path) {
+        if (Debugger.isDebugging) console.log("Queueing Image " + path);
+        this.imageDownloadQueue.push(path);
+    }
 
     isDone() {
-        return this.downloadQueue.length === this.successCount + this.errorCount;
+        return this.imageDownloadQueue.length + this.jsonDownloadQueue.length === this.successCount + this.errorCount;
     };
 
-    downloadAll(callback) {
-        if (this.downloadQueue.length === 0) setTimeout(callback, 10);
-        for (let i = 0; i < this.downloadQueue.length; i++) {
+    #downloadAllImages(callback) {
+        if (this.imageDownloadQueue.length === 0) setTimeout(callback, 10);
+        for (let i = 0; i < this.imageDownloadQueue.length; i++) {
             const img = new Image();
 
-            const path = this.downloadQueue[i];
+            const path = this.imageDownloadQueue[i];
 
             img.addEventListener("load", () => {
                 if (Debugger.isDebugging) console.log("Loaded " + img.src);
@@ -35,12 +46,41 @@ class AssetManager {
             });
 
             img.src = path;
-            this.cache[path] = img;
+            this.imageCache[path] = img;
         }
     };
 
-    getAsset(path) {
-        return this.cache[path];
+    #downloadAllJson(callback) {
+        if (this.jsonDownloadQueue.length === 0) setTimeout(callback, 10);
+        for (let i = 0; i < this.jsonDownloadQueue.length; i++) {
+            const path = this.jsonDownloadQueue[i];
+            fetch(path)
+                .then((response) => response.json())
+                .then((data) => {
+                    this.jsonCache[path] = data;
+                    if (Debugger.isDebugging) console.log("Loaded " + path);
+                    this.successCount++;
+                    if (this.isDone()) callback();
+                })
+                .catch((error) => {
+                    if (Debugger.isDebugging) console.error('There has been a problem with your fetch operation:', error);
+                    this.errorCount++;
+                    if (this.isDone()) callback();
+                })
+        }
+    };
+
+    downloadAll(callback) {
+        this.#downloadAllImages(callback)
+        this.#downloadAllJson(callback)
+    };
+
+    getImage(path) {
+        return this.imageCache[path];
+    };
+
+    getJson(path) {
+        return this.jsonCache[path];
     };
 }
 

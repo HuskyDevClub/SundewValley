@@ -11,31 +11,31 @@ class Player extends Character {
         this.setCurrentMovingSpeedX(0)
         this.setCurrentMovingSpeedY(0)
         // check special action
-        if (gameEngine.Q === true) {
+        if (GAME_ENGINE.Q === true) {
             this.setCurrentAction("water")
             is_idle = false
-        } else if (gameEngine.E === true) {
+        } else if (GAME_ENGINE.E === true) {
             this.setCurrentAction("dig")
             is_idle = false
         } else {
             // move left or right
-            if (gameEngine.left === true) {
+            if (GAME_ENGINE.left === true) {
                 this.setDirectionFacing("l")
                 this.setCurrentAction("move")
                 this.setCurrentMovingSpeedX(-this.getMovingSpeedX())
                 is_idle = false
-            } else if (gameEngine.right === true) {
+            } else if (GAME_ENGINE.right === true) {
                 this.setDirectionFacing("r")
                 this.setCurrentAction("move")
                 this.setCurrentMovingSpeedX(this.getMovingSpeedX())
                 is_idle = false
             }
             // move up or down
-            if (gameEngine.up === true) {
+            if (GAME_ENGINE.up === true) {
                 this.setCurrentAction("move")
                 this.setCurrentMovingSpeedY(-this.getMovingSpeedY())
                 is_idle = false
-            } else if (gameEngine.down === true) {
+            } else if (GAME_ENGINE.down === true) {
                 this.setCurrentAction("move")
                 this.setCurrentMovingSpeedY(this.getMovingSpeedY())
                 is_idle = false

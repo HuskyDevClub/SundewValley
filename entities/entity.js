@@ -47,19 +47,19 @@ class Entity extends GameObject2d {
     }
 
     getBlockX() {
-        return (this.getPixelX() + this.getWidth() / 2) / Tile.getTileSize()
+        return (this.getPixelX() + this.getWidth() / 2) / Level.getTileSize()
     }
 
     getBlockY() {
-        return this.getPixelBottom() / Tile.getTileSize()
+        return this.getPixelBottom() / Level.getTileSize()
     }
 
     setBlockX(value) {
-        this.setPixelRight(value * Tile.getTileSize() + this.getWidth() / 2)
+        this.setPixelRight(value * Level.getTileSize() + this.getWidth() / 2)
     }
 
     setBlockY(value) {
-        this.setPixelBottom(value * Tile.getTileSize())
+        this.setPixelBottom(value * Level.getTileSize())
     }
 
     getTileWidth() {

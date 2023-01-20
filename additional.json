@@ -65,8 +65,7 @@
     "./images/ui/buttons.png",
     "./images/ui/elements.png",
     "./images/ui/gui.png",
-    "./images/ui/icons.png",
-    "./levels/farm_spring.png"
+    "./images/ui/icons.png"
   ],
   "jsons": [
     "./images/animals/chicken/chicken.json",

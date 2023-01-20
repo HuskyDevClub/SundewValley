@@ -3,7 +3,7 @@ class Player extends Character {
         super(name, "player", x, y)
         this.setMovingSpeedX(5)
         this.setMovingSpeedY(5)
-        this.setSize(Tile.getTileSize() * 1.5, Tile.getTileSize() * 1.5)
+        this.setSize(Level.getTileSize() * 1.5, Level.getTileSize() * 1.5)
     }
 
     update() {

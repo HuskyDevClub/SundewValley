@@ -9,7 +9,7 @@ class Crop extends Entity {
         this.#stage = 0
         this.#timePlanted = DateTimeSystem.now()
         this.#growPeriods = [1, 1, 1, 1]
-        this.setSize(Tile.getTileSize() * this.#scale, Tile.getTileSize() * this.#scale)
+        this.setSize(Level.getTileSize() * this.#scale, Level.getTileSize() * this.#scale)
     }
 
     update() {

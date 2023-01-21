@@ -2,8 +2,8 @@ class Animal extends Creature {
 
     #current_action_count_down
 
-    constructor(type, subType, x, y) {
-        super("animals", type, subType, x, y);
+    constructor(type, subType, x, y, mapRef) {
+        super("animals", type, subType, x, y, mapRef);
         this.#current_action_count_down = 0
     }
 

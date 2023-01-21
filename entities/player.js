@@ -1,6 +1,6 @@
 class Player extends Character {
-    constructor(name, x, y) {
-        super(name, "player", x, y)
+    constructor(name, x, y, mapRef) {
+        super(name, "player", x, y, mapRef)
         this.setMovingSpeedX(5)
         this.setMovingSpeedY(5)
         this.setSize(Level.getTileSize() * 1.5, Level.getTileSize() * 1.5)

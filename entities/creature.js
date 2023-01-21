@@ -1,4 +1,4 @@
-/* A Creature is a entity that can can move*/
+/* A Creature is a creature that can can move*/
 class Creature extends Entity {
     #moving_speed_x
     #moving_speed_y
@@ -7,8 +7,9 @@ class Creature extends Entity {
     #animations
     #current_action
     #direction_facing
+    #mapRef = null
 
-    constructor(category, type, subType, x, y) {
+    constructor(category, type, subType, x, y, mapRef) {
         super(category, type, subType, x, y);
         this.#moving_speed_x = 1
         this.#moving_speed_y = 1
@@ -16,6 +17,8 @@ class Creature extends Entity {
         this.#current_moving_speed_y = 0
         this.#animations = {}
         this.#direction_facing = "r"
+        this.#mapRef = mapRef
+        console.assert(this.#mapRef != null)
         this.setCurrentAction("idle")
         for (const [key, value] of Object.entries(this.getJson()["animations"])) {
             this.setAnimation(key, value[0] * this.getWidth(), value[1] * this.getHeight(), value[2], 1 / value[2], true);
@@ -44,7 +47,7 @@ class Creature extends Entity {
     }
 
     setCurrentMovingSpeedX(speed) {
-        this.#current_moving_speed_x = speed
+        this.#current_moving_speed_x = Math.round(speed)
     }
 
     getCurrentMovingSpeedY() {
@@ -52,7 +55,7 @@ class Creature extends Entity {
     }
 
     setCurrentMovingSpeedY(speed) {
-        this.#current_moving_speed_y = speed
+        this.#current_moving_speed_y = Math.round(speed)
     }
 
     setAnimation(name, xStart, yStart, frameCount, frameDuration, loop) {
@@ -88,8 +91,58 @@ class Creature extends Entity {
     }
 
     update() {
-        this.setPixelX(this.getPixelX() + this.getCurrentMovingSpeedX())
-        this.setPixelY(this.getPixelY() + this.getCurrentMovingSpeedY())
+        if (this.getCurrentMovingSpeedX() !== 0) {
+            if (this.getCurrentMovingSpeedX() > 0) {
+                for (let i = 0; i < Math.floor(this.getCurrentMovingSpeedX() / Level.getTileSize()); i++) {
+                    this.setPixelX(this.getPixelX() + Level.getTileSize())
+                    if (!this.#mapRef.canEnterTile(this.getBlockX(), this.getBlockY())) {
+                        this.setBlockX(Math.floor(this.getBlockX()) - 0.01)
+                    }
+                }
+                this.setPixelX(this.getPixelX() + this.getCurrentMovingSpeedX() % Level.getTileSize())
+                if (!this.#mapRef.canEnterTile(this.getBlockX(), this.getBlockY())) {
+                    this.setBlockX(Math.floor(this.getBlockX()) - 0.01)
+                }
+            } else {
+                for (let i = 0; i < Math.floor((-this.getCurrentMovingSpeedX()) / Level.getTileSize()); i++) {
+                    this.setPixelX(this.getPixelX() - Level.getTileSize())
+                    if (!this.#mapRef.canEnterTile(this.getBlockX(), this.getBlockY())) {
+                        this.setBlockX(Math.floor(this.getBlockX()) + 1)
+                    }
+                }
+                this.setPixelX(this.getPixelX() + this.getCurrentMovingSpeedX() % Level.getTileSize())
+                if (!this.#mapRef.canEnterTile(this.getBlockX(), this.getBlockY())) {
+                    this.setBlockX(Math.floor(this.getBlockX()) + 1)
+                }
+            }
+
+        }
+        if (this.getCurrentMovingSpeedY() !== 0) {
+            if (this.getCurrentMovingSpeedY() > 0) {
+                for (let i = 0; i < Math.floor(this.getCurrentMovingSpeedY() / Level.getTileSize()); i++) {
+                    this.setPixelY(this.getPixelY() + Level.getTileSize())
+                    if (!this.#mapRef.canEnterTile(this.getBlockX(), this.getBlockY())) {
+                        this.setBlockY(Math.floor(this.getBlockY()) - 0.01)
+                    }
+                }
+                this.setPixelY(this.getPixelY() + this.getCurrentMovingSpeedY() % Level.getTileSize())
+                if (!this.#mapRef.canEnterTile(this.getBlockX(), this.getBlockY())) {
+                    this.setBlockY(Math.floor(this.getBlockY()) - 0.01)
+                }
+            } else {
+                for (let i = 0; i < Math.floor((-this.getCurrentMovingSpeedY()) / Level.getTileSize()); i++) {
+                    this.setPixelY(this.getPixelY() - Level.getTileSize())
+                    if (!this.#mapRef.canEnterTile(this.getBlockX(), this.getBlockY())) {
+                        this.setBlockY(Math.floor(this.getBlockY()) + 1)
+                    }
+                }
+                this.setPixelY(this.getPixelY() + this.getCurrentMovingSpeedY() % Level.getTileSize())
+                if (!this.#mapRef.canEnterTile(this.getBlockX(), this.getBlockY())) {
+                    this.setBlockY(Math.floor(this.getBlockY()) + 1)
+                }
+            }
+
+        }
     }
 
     display(ctx, offsetX, offsetY) {

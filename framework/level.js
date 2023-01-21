@@ -8,6 +8,7 @@ class Level {
     #entities = []
     #player
     #tileSets
+    #automapTilesFirstGid = -1
 
     constructor(_path) {
         const mapData = ASSET_MANAGER.getJson(_path)
@@ -24,8 +25,8 @@ class Level {
             _layer["chunks"].forEach(_chunk => {
                 const chunk_width = parseInt(_chunk.width)
                 const chunk_height = parseInt(_chunk.height)
-                const chuck_relative_x = Math.floor(_chunk["x"] - _layer["startx"])
-                const chuck_relative_y = Math.floor(_chunk["y"] - _layer["starty"])
+                const chuck_relative_x = _layer["startx"] < 0 ? Math.floor(_chunk["x"] - _layer["startx"]) : _chunk["x"]
+                const chuck_relative_y = _layer["starty"] < 0 ? Math.floor(_chunk["y"] - _layer["starty"]) : _chunk["y"]
                 console.assert(_chunk["data"].length === chunk_width * chunk_height)
                 for (let i = 0; i < _chunk["data"].length; i++) {
                     let x = chuck_relative_x + i % chunk_width
@@ -35,6 +36,13 @@ class Level {
             })
         })
         this.#tileSets = Array.from(mapData["tilesets"])
+        // if automap-tiles are used for rules, then cache its first gid id
+        for (let i = 0; i < this.#tileSets.length; i++) {
+            if (this.#tileSets[i]["source"].endsWith("automap-tiles.tsx")) {
+                this.#automapTilesFirstGid = this.#tileSets[i]["firstgid"]
+                break;
+            }
+        }
     }
 
     static getTileSize() {
@@ -44,7 +52,7 @@ class Level {
     #drawTile(ctx, _id, x, y) {
         this.#tileSets.forEach(_tileSet => {
             const absId = _id - _tileSet["firstgid"]
-            if (absId > 0) {
+            if (absId >= 0 && !_tileSet["source"].endsWith("automap-tiles.tsx")) {
                 const jsonPath = _tileSet["source"].replace("..", ".").replace("\/", "/")
                 const jsonData = ASSET_MANAGER.getJson(jsonPath)
                 const pathSubs = jsonPath.split("/")
@@ -60,6 +68,21 @@ class Level {
                 )
             }
         })
+    }
+
+    canEnterTile(x, y) {
+        x = Math.floor(x)
+        y = Math.floor(y)
+        if (x < 0 || y < 0 || x >= this.#column || y >= this.#row) {
+            return false
+        } else if (this.#automapTilesFirstGid > 0) {
+            for (let i = 0, n = this.#map[y][x].length; i < n; i++) {
+                if (this.#map[y][x][i] === this.#automapTilesFirstGid) {
+                    return false
+                }
+            }
+        }
+        return true
     }
 
     getPixelWidth() {
@@ -79,14 +102,14 @@ class Level {
         /*while (playerName == null){
             playerName = prompt("Please enter player name", "Cody");
         }*/
-        this.#player = new Player(playerName, 10, 10)
-        this.addEntity(this.#player);
-        this.addEntity(new Chicken("black_chicken", 10, 10));
-        this.addEntity(new Cow("strawberry_cow", 10, 10));
-        this.addEntity(new Goat("brown_goat", 10, 10));
-        this.addEntity(new Pig("pink_pig", 10, 10));
-        this.addEntity(new Sheep("fluffy_white_sheep_sheet", 10, 10));
-        this.addEntity(new Crop("potato", 10, 10));
+        this.#player = new Player(playerName, 10, 10, this)
+        this.addEntity(this.#player);/*
+        this.addEntity(new Chicken("black_chicken", 10, 10, this));
+        this.addEntity(new Cow("strawberry_cow", 10, 10, this));
+        this.addEntity(new Goat("brown_goat", 10, 10, this));
+        this.addEntity(new Pig("pink_pig", 10, 10, this));
+        this.addEntity(new Sheep("fluffy_white_sheep_sheet", 10, 10, this));
+        this.addEntity(new Crop("potato", 10, 10));*/
     };
 
     getEntitiesThatCollideWith(entity) {
@@ -145,30 +168,18 @@ class Level {
     draw(ctx) {
         // fix offset x
         if (this.#player.getPixelRight() + this.#offsetX > ctx.canvas.width * 0.9) {
-            this.#offsetX -= Math.ceil(this.#player.getMovingSpeedX() * 1.5)
+            this.#offsetX -= Math.floor(this.#player.getMovingSpeedX() * 1.5)
         } else if (this.#player.getPixelX() + this.#offsetX < ctx.canvas.width * 0.1) {
-            this.#offsetX += Math.ceil(this.#player.getMovingSpeedX() * 1.5)
+            this.#offsetX += Math.floor(this.#player.getMovingSpeedX() * 1.5)
         }
         this.#offsetX = Math.max(Math.min(this.#offsetX, 0), ctx.canvas.width - this.getPixelWidth())
         // fix offset y
         if (this.#player.getPixelBottom() + this.#offsetY > ctx.canvas.height * 0.9) {
-            this.#offsetY -= Math.ceil(this.#player.getMovingSpeedY() * 1.5)
+            this.#offsetY -= Math.floor(this.#player.getMovingSpeedY() * 1.5)
         } else if (this.#player.getPixelY() + this.#offsetY < ctx.canvas.height * 0.1) {
-            this.#offsetY += Math.ceil(this.#player.getMovingSpeedY() * 1.5)
+            this.#offsetY += Math.floor(this.#player.getMovingSpeedY() * 1.5)
         }
         this.#offsetY = Math.max(Math.min(this.#offsetY, 0), ctx.canvas.height - this.getPixelHeight())
-        // ensure player not go out of bound
-        if (this.#player.getBlockX() < 0.5) {
-            this.#player.setBlockX(0.5)
-        } else if (this.#player.getBlockX() > this.#column - 0.5) {
-            this.#player.setBlockX(this.#column - 0.5)
-        }
-        if (this.#player.getBlockY() < 1) {
-            this.#player.setBlockY(1)
-        }
-        if (this.#player.getBlockY() > this.#row) {
-            this.#player.setBlockY(this.#row)
-        }
         // draw map
         for (let y = Math.floor(-this.#offsetY / Level.getTileSize()), rowLen = Math.ceil((ctx.canvas.height - this.#offsetY) / Level.getTileSize()); y < rowLen; y++) {
             for (let x = Math.floor(-this.#offsetX / Level.getTileSize()), columnMax = Math.ceil((ctx.canvas.width - this.#offsetX) / Level.getTileSize()); x < columnMax; x++) {

@@ -22,14 +22,14 @@ class Entity extends GameObject2d {
 
     getSpriteSheet() {
         if (this.#sprite_sheet == null) {
-            this.#sprite_sheet = ASSET_MANAGER.getImage(this.getSubType() ? `./images/${this.getCategory()}/${this.getType()}/${this.getSubType()}.png` : `./images/${this.#category}/${this.#type}.png`)
+            this.#sprite_sheet = this.getSubType() ? ASSET_MANAGER.getImage(this.getCategory(), this.getType(), `${this.getSubType()}.png`) : ASSET_MANAGER.getImage(this.getCategory(), `${this.getType()}.png`)
         }
         return this.#sprite_sheet
     }
 
     getJson() {
         if (this.#json == null) {
-            this.#json = ASSET_MANAGER.getJson(this.getSubType() ? `./images/${this.#category}/${this.#type}/${this.#type}.json` : `./images/${this.#category}/${this.#type}.json`)
+            this.#json = this.getSubType() ? ASSET_MANAGER.getJson("images", this.getCategory(), this.getType(), `${this.getType()}.json`) : ASSET_MANAGER.getJson("images", this.getCategory(), `${this.getType()}.json`)
         }
         return this.#json
     }

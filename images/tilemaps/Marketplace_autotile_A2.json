@@ -1,0 +1,15 @@
+{
+  "columns": 28,
+  "image": "Marketplace_autotile_A2.png",
+  "imageheight": 192,
+  "imagewidth": 448,
+  "margin": 0,
+  "name": "Marketplace_autotile_A2",
+  "spacing": 0,
+  "tilecount": 336,
+  "tiledversion": "1.9.2",
+  "tileheight": 16,
+  "tilewidth": 16,
+  "type": "tileset",
+  "version": "1.9"
+}

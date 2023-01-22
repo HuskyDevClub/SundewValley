@@ -75,12 +75,28 @@ class AssetManager {
         this.#downloadAllJson(callback)
     };
 
-    getImage(path) {
+    #getImageByPath(path) {
         return this.imageCache[path];
     };
 
-    getJson(path) {
+    getImageByPath(path) {
+        return this.#getImageByPath(path.replace("\/", "/"));
+    };
+
+    getImage(...args) {
+        return this.#getImageByPath([".", "images"].concat(args).join("/"))
+    }
+
+    #getJsonByPath(path) {
         return this.jsonCache[path];
     };
+
+    getJsonByPath(path) {
+        return this.#getJsonByPath(path.replace("\/", "/"));
+    };
+
+    getJson(...args) {
+        return this.#getJsonByPath(["."].concat(args).join("/"))
+    }
 }
 

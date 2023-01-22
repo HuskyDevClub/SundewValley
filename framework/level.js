@@ -11,7 +11,7 @@ class Level {
     #automapTilesFirstGid = -1
 
     constructor(_path) {
-        const mapData = ASSET_MANAGER.getJson(_path)
+        const mapData = ASSET_MANAGER.getJsonByPath(_path)
         this.#row = 0
         this.#column = 0
         let layers = Array.from(mapData["layers"])
@@ -53,11 +53,11 @@ class Level {
         this.#tileSets.forEach(_tileSet => {
             const absId = _id - _tileSet["firstgid"]
             if (absId >= 0 && !_tileSet["source"].endsWith("automap-tiles.tsx")) {
-                const jsonPath = _tileSet["source"].replace("..", ".").replace("\/", "/")
-                const jsonData = ASSET_MANAGER.getJson(jsonPath)
+                const jsonPath = _tileSet["source"].replace("..", ".")
+                const jsonData = ASSET_MANAGER.getJsonByPath(jsonPath)
                 const pathSubs = jsonPath.split("/")
                 pathSubs[pathSubs.length - 1] = jsonData["image"]
-                const imageRef = ASSET_MANAGER.getImage(pathSubs.join('/'))
+                const imageRef = ASSET_MANAGER.getImageByPath(pathSubs.join('/'))
                 const tileWidth = parseInt(jsonData["tilewidth"])
                 const tileHeight = parseInt(jsonData["tileheight"])
                 ctx.drawImage(imageRef,

@@ -1,0 +1,15 @@
+{
+  "columns": 32,
+  "image": "Marketplace_tileset.png",
+  "imageheight": 256,
+  "imagewidth": 512,
+  "margin": 0,
+  "name": "Marketplace_tileset",
+  "spacing": 0,
+  "tilecount": 512,
+  "tiledversion": "1.9.2",
+  "tileheight": 16,
+  "tilewidth": 16,
+  "type": "tileset",
+  "version": "1.9"
+}

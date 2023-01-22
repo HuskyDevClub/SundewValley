@@ -10,7 +10,7 @@ def preprocess(pathIn: str, dataIn: dict[str, list[str]]):
             preprocess(_path, _data)
         elif _path.endswith(".json"):
             dataIn["jsons"].append("./" + _path.replace("\\", "/"))
-            linpg.config.organize(_path)
+            # linpg.config.organize(_path)
         elif _path.endswith(".png") or _path.endswith(".jpg"):
             dataIn["images"].append("./" + _path.replace("\\", "/"))
 

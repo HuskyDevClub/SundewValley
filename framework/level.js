@@ -103,13 +103,13 @@ class Level {
             playerName = prompt("Please enter player name", "Cody");
         }*/
         this.#player = new Player(playerName, 10, 10, this)
-        this.addEntity(this.#player);/*
+        this.addEntity(this.#player);
         this.addEntity(new Chicken("black_chicken", 10, 10, this));
         this.addEntity(new Cow("strawberry_cow", 10, 10, this));
         this.addEntity(new Goat("brown_goat", 10, 10, this));
         this.addEntity(new Pig("pink_pig", 10, 10, this));
         this.addEntity(new Sheep("fluffy_white_sheep_sheet", 10, 10, this));
-        this.addEntity(new Crop("potato", 10, 10));*/
+        this.addEntity(new Crop("potato", 15, 12));
     };
 
     getEntitiesThatCollideWith(entity) {
@@ -191,13 +191,13 @@ class Level {
         // sort entities based on coordinates
         this.#entities.sort(
             function (firstItem, secondItem) {
-                if (firstItem.getPixelY() < secondItem.getPixelY()) {
+                if (firstItem.getBlockY() < secondItem.getBlockY()) {
                     return -1
-                } else if (firstItem.getPixelY() > secondItem.getPixelY()) {
+                } else if (firstItem.getBlockY() > secondItem.getBlockY()) {
                     return 1
-                } else if (firstItem.getPixelX() < secondItem.getPixelX()) {
+                } else if (firstItem.getBlockX() < secondItem.getBlockX()) {
                     return -1
-                } else if (firstItem.getPixelX() > secondItem.getPixelX()) {
+                } else if (firstItem.getBlockX() > secondItem.getBlockX()) {
                     return 1
                 } else {
                     return 0

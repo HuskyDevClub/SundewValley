@@ -1,0 +1,15 @@
+{
+  "columns": 5,
+  "image": "icons.png",
+  "imageheight": 176,
+  "imagewidth": 80,
+  "margin": 0,
+  "name": "icons",
+  "spacing": 0,
+  "tilecount": 55,
+  "tiledversion": "1.9.2",
+  "tileheight": 16,
+  "tilewidth": 16,
+  "type": "tileset",
+  "version": "1.9"
+}

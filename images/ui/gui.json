@@ -1,0 +1,15 @@
+{
+  "columns": 20,
+  "image": "gui.png",
+  "imageheight": 384,
+  "imagewidth": 320,
+  "margin": 0,
+  "name": "gui",
+  "spacing": 0,
+  "tilecount": 480,
+  "tiledversion": "1.9.2",
+  "tileheight": 16,
+  "tilewidth": 16,
+  "type": "tileset",
+  "version": "1.9"
+}

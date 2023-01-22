@@ -1,0 +1,15 @@
+{
+  "columns": 5,
+  "image": "elements.png",
+  "imageheight": 128,
+  "imagewidth": 80,
+  "margin": 0,
+  "name": "elements",
+  "spacing": 0,
+  "tilecount": 40,
+  "tiledversion": "1.9.2",
+  "tileheight": 16,
+  "tilewidth": 16,
+  "type": "tileset",
+  "version": "1.9"
+}

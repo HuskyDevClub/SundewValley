@@ -1,0 +1,15 @@
+{
+  "columns": 6,
+  "image": "buttons.png",
+  "imageheight": 224,
+  "imagewidth": 96,
+  "margin": 0,
+  "name": "buttons",
+  "spacing": 0,
+  "tilecount": 84,
+  "tiledversion": "1.9.2",
+  "tileheight": 16,
+  "tilewidth": 16,
+  "type": "tileset",
+  "version": "1.9"
+}

@@ -1,0 +1,15 @@
+{
+  "columns": 5,
+  "image": "bars.png",
+  "imageheight": 96,
+  "imagewidth": 80,
+  "margin": 0,
+  "name": "bars",
+  "spacing": 0,
+  "tilecount": 30,
+  "tiledversion": "1.9.2",
+  "tileheight": 16,
+  "tilewidth": 16,
+  "type": "tileset",
+  "version": "1.9"
+}

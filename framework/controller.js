@@ -16,8 +16,6 @@ class Controller {
     static keyboardActive = false;
 
     static startInput(_ctx) {
-        let that = this;
-
         let getPixelXandY = function (e) {
             let x = e.clientX - _ctx.canvas.getBoundingClientRect().left;
             let y = e.clientY - _ctx.canvas.getBoundingClientRect().top;
@@ -26,90 +24,90 @@ class Controller {
         }
 
         function mouseListener(e) {
-            that.mouse = getPixelXandY(e);
+            Controller.mouse = getPixelXandY(e);
         }
 
         function mouseClickListener(e) {
-            that.click = getPixelXandY(e);
-            if (Debugger.isDebugging) console.log(that.click);
+            Controller.click = getPixelXandY(e);
+            if (Debugger.isDebugging) console.log(Controller.click);
         }
 
         function wheelListener(e) {
             e.preventDefault(); // Prevent Scrolling
-            that.wheel = e.deltaY;
+            Controller.wheel = e.deltaY;
         }
 
         function keydownListener(e) {
-            that.keyboardActive = true;
+            Controller.keyboardActive = true;
             switch (e.code) {
                 case "ArrowLeft":
                 case "KeyA":
-                    that.left = true;
+                    Controller.left = true;
                     break;
                 case "ArrowRight":
                 case "KeyD":
-                    that.right = true;
+                    Controller.right = true;
                     break;
                 case "ArrowUp":
                 case "KeyW":
-                    that.up = true;
+                    Controller.up = true;
                     break;
                 case "ArrowDown":
                 case "KeyS":
-                    that.down = true;
+                    Controller.down = true;
                     break;
                 case "KeyQ":
-                    that.Q = true;
+                    Controller.Q = true;
                     break;
                 case "KeyE":
-                    that.E = true;
+                    Controller.E = true;
                     break;
             }
         }
 
         function keyUpListener(e) {
-            that.keyboardActive = false;
+            Controller.keyboardActive = false;
             switch (e.code) {
                 case "ArrowLeft":
                 case "KeyA":
-                    that.left = false;
+                    Controller.left = false;
                     break;
                 case "ArrowRight":
                 case "KeyD":
-                    that.right = false;
+                    Controller.right = false;
                     break;
                 case "ArrowUp":
                 case "KeyW":
-                    that.up = false;
+                    Controller.up = false;
                     break;
                 case "ArrowDown":
                 case "KeyS":
-                    that.down = false;
+                    Controller.down = false;
                     break;
                 case "KeyQ":
-                    that.Q = false;
+                    Controller.Q = false;
                     break;
                 case "KeyE":
-                    that.E = false;
+                    Controller.E = false;
                     break;
             }
         }
 
-        that.mousemove = mouseListener;
-        that.leftclick = mouseClickListener;
-        that.wheelscroll = wheelListener;
-        that.keydown = keydownListener;
-        that.keyup = keyUpListener;
+        Controller.mousemove = mouseListener;
+        Controller.leftclick = mouseClickListener;
+        Controller.wheelscroll = wheelListener;
+        Controller.keydown = keydownListener;
+        Controller.keyup = keyUpListener;
 
-        _ctx.canvas.addEventListener("mousemove", that.mousemove, false);
+        _ctx.canvas.addEventListener("mousemove", Controller.mousemove, false);
 
-        _ctx.canvas.addEventListener("click", that.leftclick, false);
+        _ctx.canvas.addEventListener("click", Controller.leftclick, false);
 
-        _ctx.canvas.addEventListener("wheel", that.wheelscroll, false);
+        _ctx.canvas.addEventListener("wheel", Controller.wheelscroll, false);
 
-        _ctx.canvas.addEventListener("keydown", that.keydown, false);
+        _ctx.canvas.addEventListener("keydown", Controller.keydown, false);
 
-        _ctx.canvas.addEventListener("keyup", that.keyup, false);
+        _ctx.canvas.addEventListener("keyup", Controller.keyup, false);
     };
 
     static clearMovement() {

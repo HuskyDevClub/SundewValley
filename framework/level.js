@@ -49,31 +49,124 @@ class Level {
         return Math.floor(GAME_ENGINE.ctx.canvas.width / 20)
     }
 
+    getTile(x, y) {
+        x = Math.floor(x)
+        y = Math.floor(y)
+        return this.#map[y][x]
+    }
+
     #drawTile(ctx, _id, x, y) {
-        this.#tileSets.forEach(_tileSet => {
+        for (let i = this.#tileSets.length - 1; i >= 0; i--) {
+            const _tileSet = this.#tileSets[i]
             const absId = _id - _tileSet["firstgid"]
-            if (absId >= 0 && !_tileSet["source"].endsWith("automap-tiles.tsx")) {
-                const jsonPath = _tileSet["source"].replace("..", ".")
-                const jsonData = ASSET_MANAGER.getJsonByPath(jsonPath)
-                const pathSubs = jsonPath.split("/")
-                pathSubs[pathSubs.length - 1] = jsonData["image"]
-                const imageRef = ASSET_MANAGER.getImageByPath(pathSubs.join('/'))
-                const tileWidth = parseInt(jsonData["tilewidth"])
-                const tileHeight = parseInt(jsonData["tileheight"])
-                ctx.drawImage(imageRef,
-                    (absId % (jsonData["imagewidth"] / tileWidth)) * tileWidth, Math.floor(absId / (jsonData["imagewidth"] / tileWidth)) * tileHeight,
-                    tileWidth, tileHeight,
-                    x * Level.getTileSize() + this.#offsetX, y * Level.getTileSize() + this.#offsetY,
-                    Level.getTileSize(), Level.getTileSize()
-                )
+            if (absId >= 0) {
+                if (!_tileSet["source"].endsWith("automap-tiles.tsx")) {
+                    const jsonPath = _tileSet["source"].replace("..", ".")
+                    const jsonData = ASSET_MANAGER.getJsonByPath(jsonPath)
+                    const pathSubs = jsonPath.split("/")
+                    pathSubs[pathSubs.length - 1] = jsonData["image"]
+                    const imageRef = ASSET_MANAGER.getImageByPath(pathSubs.join('/'))
+                    const tileWidth = parseInt(jsonData["tilewidth"])
+                    const tileHeight = parseInt(jsonData["tileheight"])
+                    ctx.drawImage(imageRef,
+                        (absId % jsonData["columns"]) * tileWidth, Math.floor(absId / jsonData["columns"]) * tileHeight,
+                        tileWidth, tileHeight,
+                        x * Level.getTileSize() + this.#offsetX, y * Level.getTileSize() + this.#offsetY,
+                        Level.getTileSize(), Level.getTileSize()
+                    )
+                }
+                break;
             }
-        })
+        }
+    }
+
+    getAbsMetaId(tileSheetType, tileSheetName, tileId) {
+        for (let i = this.#tileSets.length - 1; i > 0; i--) {
+            const _tileSet = this.#tileSets[i]
+            const _src = _tileSet["source"]
+            if (_src.endsWith(tileSheetName + ".json") && _src.includes(tileSheetType)) {
+                return _tileSet["firstgid"] + tileId
+            }
+        }
+        return null;
+    }
+
+    getTileLayerIndex(x, y, tileSheetType, tileSheetName, tileId) {
+        const _layers = this.getTile(x, y)
+        for (let i = 0, n = _layers.length; i < n; i++) {
+            if (_layers[i] === this.getAbsMetaId(tileSheetType, tileSheetName, tileId)) {
+                return i
+            }
+        }
+        return -1
+    }
+
+    #updateDirtKind(x, y, index, checkTileNextToIt = true) {
+        const dirtKind = new DirtTiles()
+        let indexTmp = this.#getDirtLayerIndexInTile(x - 1, y)
+        if (this.#getDirtLayerIndexInTile(x - 1, y) && indexTmp >= 0) {
+            dirtKind.leftConnected = true
+            if (checkTileNextToIt) {
+                this.#updateDirtKind(x - 1, y, indexTmp, false)
+            }
+        }
+        indexTmp = this.#getDirtLayerIndexInTile(x, y - 1)
+        if (this.#isCoordinateInRange(x, y - 1) && indexTmp >= 0) {
+            dirtKind.upConnected = true
+            if (checkTileNextToIt) {
+                this.#updateDirtKind(x, y - 1, indexTmp, false)
+            }
+        }
+        indexTmp = this.#getDirtLayerIndexInTile(x + 1, y)
+        if (this.#isCoordinateInRange(x + 1, y) && indexTmp >= 0) {
+            dirtKind.rightConnected = true
+            if (checkTileNextToIt) {
+                this.#updateDirtKind(x + 1, y, indexTmp, false)
+            }
+        }
+        indexTmp = this.#getDirtLayerIndexInTile(x, y + 1)
+        if (this.#isCoordinateInRange(x, y + 1) && indexTmp >= 0) {
+            dirtKind.downConnected = true
+            if (checkTileNextToIt) {
+                this.#updateDirtKind(x, y + 1, indexTmp, false)
+            }
+        }
+        this.getTile(x, y)[index] = dirtKind.getId() + DirtTiles.offset
+    }
+
+    #getDirtLayerIndexInTile(x, y) {
+        const _layers = this.getTile(x, y)
+        for (let i = 0, n = _layers.length; i < n; i++) {
+            if (DirtTiles.isDirt(_layers[i])) {
+                return i
+            }
+        }
+        return -1
+    }
+
+    tryConvertTileToDirt(x, y) {
+        x = Math.floor(x)
+        y = Math.floor(y)
+        const layerIndex = this.getTileLayerIndex(x, y, "tilemaps", "spring", 12)
+        if (layerIndex >= 0) {
+            this.getTile(x, y).fill(0, 2, 3)
+            // update dirt tile offset
+            DirtTiles.offset = this.getAbsMetaId("tilemaps", "spring", 0)
+            // temporary assign a valid dirt tile to the tile
+            this.getTile(x, y)[layerIndex + 1] = DirtTiles.offset + 90
+            // update the dirt tile type for the tile
+            this.#updateDirtKind(x, y, layerIndex + 1)
+        }
+    }
+
+    #isCoordinateInRange(x, y) {
+        return x >= 0 && y >= 0 && x < this.#column && y < this.#row
     }
 
     canEnterTile(x, y) {
         x = Math.floor(x)
         y = Math.floor(y)
-        if (x < 0 || y < 0 || x >= this.#column || y >= this.#row) {
+        if (!this.#isCoordinateInRange(x, y)) {
             return false
         } else if (this.#automapTilesFirstGid > 0) {
             for (let i = 0, n = this.#map[y][x].length; i < n; i++) {

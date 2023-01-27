@@ -18,6 +18,10 @@ class Animator {
 
     };
 
+    resetElapsedTime() {
+        this.elapsedTime = 0;
+    }
+
     drawFrame(tick, ctx, x, y, width, height) {
         this.elapsedTime += tick;
 

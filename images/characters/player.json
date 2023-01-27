@@ -13,12 +13,14 @@
     "dig_l": [
       4,
       0,
-      2
+      2,
+      false
     ],
     "dig_r": [
       6,
       0,
-      2
+      2,
+      false
     ],
     "idle_l": [
       0,
@@ -43,12 +45,14 @@
     "water_l": [
       4,
       1,
-      2
+      2,
+      false
     ],
     "water_r": [
       6,
       1,
-      2
+      2,
+      false
     ]
   },
   "tileheight": 24,

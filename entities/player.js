@@ -29,27 +29,34 @@ class Player extends Character {
             } else {
                 this.getAnimation("dig_l").resetElapsedTime()
                 this.getAnimation("dig_r").resetElapsedTime()
-                // move left or right
-                if (Controller.left === true) {
-                    this.setDirectionFacing("l")
-                    this.setCurrentAction("move")
-                    this.setCurrentMovingSpeedX(-this.getMovingSpeedX())
+                if (Controller.C === true) {
+                    this.setCurrentAction("cut")
                     is_idle = false
-                } else if (Controller.right === true) {
-                    this.setDirectionFacing("r")
-                    this.setCurrentAction("move")
-                    this.setCurrentMovingSpeedX(this.getMovingSpeedX())
-                    is_idle = false
-                }
-                // move up or down
-                if (Controller.up === true) {
-                    this.setCurrentAction("move")
-                    this.setCurrentMovingSpeedY(-this.getMovingSpeedY())
-                    is_idle = false
-                } else if (Controller.down === true) {
-                    this.setCurrentAction("move")
-                    this.setCurrentMovingSpeedY(this.getMovingSpeedY())
-                    is_idle = false
+                } else {
+                    this.getAnimation("cut_l").resetElapsedTime()
+                    this.getAnimation("cut_r").resetElapsedTime()
+                    // move left or right
+                    if (Controller.left === true) {
+                        this.setDirectionFacing("l")
+                        this.setCurrentAction("move")
+                        this.setCurrentMovingSpeedX(-this.getMovingSpeedX())
+                        is_idle = false
+                    } else if (Controller.right === true) {
+                        this.setDirectionFacing("r")
+                        this.setCurrentAction("move")
+                        this.setCurrentMovingSpeedX(this.getMovingSpeedX())
+                        is_idle = false
+                    }
+                    // move up or down
+                    if (Controller.up === true) {
+                        this.setCurrentAction("move")
+                        this.setCurrentMovingSpeedY(-this.getMovingSpeedY())
+                        is_idle = false
+                    } else if (Controller.down === true) {
+                        this.setCurrentAction("move")
+                        this.setCurrentMovingSpeedY(this.getMovingSpeedY())
+                        is_idle = false
+                    }
                 }
             }
         }

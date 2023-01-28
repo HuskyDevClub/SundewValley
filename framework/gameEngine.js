@@ -14,6 +14,7 @@ class GameEngine {
         this.ctx = ctx;
         DateTimeSystem.init(2023);
         this.#level = new FarmLevel(`./levels/farm_${DateTimeSystem.getSeason()}.json`);
+        //this.#level = new FarmLevel(`./levels/test_level.json`);
         this.#level.initEntities()
         Controller.startInput(this.ctx)
         this.timer = new Timer();

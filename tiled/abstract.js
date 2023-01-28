@@ -2,30 +2,33 @@ class AbstractTiledMap {
 
     #map
     #row
+    #minX
+    #minY
     #column
     #tileSets
 
     constructor(mapData) {
         this.#row = 0
         this.#column = 0
+        this.#minX = 0
+        this.#minY = 0
         let layers = Array.from(mapData["layers"])
         layers.forEach(_layer => {
-            this.#row = Math.max(this.#row, parseInt(_layer.height))
-            this.#column = Math.max(this.#column, parseInt(_layer.width))
+            this.#row = Math.max(this.#row, _layer.height)
+            this.#column = Math.max(this.#column, _layer.width)
+            this.#minX = Math.min(this.#minX, _layer["startx"])
+            this.#minY = Math.min(this.#minY, _layer["starty"])
         })
         // pre-allocated space for map
         this.#map = new Array(this.#row).fill(undefined).map(() => new Array(this.#column).fill(undefined).map(() => []))
         layers.forEach(_layer => {
             _layer["chunks"].forEach(_chunk => {
                 const chunk_width = parseInt(_chunk.width)
-                const chunk_height = parseInt(_chunk.height)
-                const chuck_relative_x = _layer["startx"] < 0 ? Math.floor(_chunk["x"] - _layer["startx"]) : _chunk["x"]
-                const chuck_relative_y = _layer["starty"] < 0 ? Math.floor(_chunk["y"] - _layer["starty"]) : _chunk["y"]
-                console.assert(_chunk["data"].length === chunk_width * chunk_height)
+                console.assert(_chunk["data"].length === chunk_width * parseInt(_chunk.height))
                 for (let i = 0; i < _chunk["data"].length; i++) {
-                    let x = chuck_relative_x + i % chunk_width
-                    let y = chuck_relative_y + Math.floor(i / chunk_width)
-                    this.#map[y][x].push(_chunk["data"][i])
+                    let x = _chunk["x"] - this.#minX + i % chunk_width
+                    let y = _chunk["y"] - this.#minY + Math.floor(i / chunk_width)
+                    this.getTile(x, y).push(_chunk["data"][i])
                 }
             })
         })

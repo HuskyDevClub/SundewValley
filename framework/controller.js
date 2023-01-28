@@ -7,11 +7,12 @@ class Controller {
 
     // Information on the input
     static click = null;
-    static mouse = null;
+    static mouse = {x: 0, y: 0, radius: 0};
     static wheel = null;
     static keys = {};
     static Q = false;
     static E = false;
+    static C = false;
 
     static keyboardActive = false;
 
@@ -62,6 +63,9 @@ class Controller {
                 case "KeyE":
                     Controller.E = true;
                     break;
+                case "KeyC":
+                    Controller.C = true;
+                    break;
             }
         }
 
@@ -89,6 +93,9 @@ class Controller {
                     break;
                 case "KeyE":
                     Controller.E = false;
+                    break;
+                case "KeyC":
+                    Controller.C = false;
                     break;
             }
         }

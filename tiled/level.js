@@ -21,6 +21,10 @@ class Level extends AbstractTiledMap {
         return Math.floor(GAME_ENGINE.ctx.canvas.width / 20)
     }
 
+    findEntity(_filter) {
+        return this.#entities.find(_filter)
+    }
+
     getAbsMetaId(tileSheetType, tileSheetName, tileId) {
         for (let i = this.getTileSets().length - 1; i > 0; i--) {
             const _tileSet = this.getTileSet(i)
@@ -90,6 +94,10 @@ class Level extends AbstractTiledMap {
         return this.#entities.filter(_entity => entity !== _entity && entity.collideWith(_entity))
     }
 
+    getTileOnPixel(pixelX, pixelY, _size) {
+        return this.getTile(Math.floor((pixelX - this.#offsetX) / _size), Math.floor((pixelY - this.#offsetY) / _size))
+    }
+
     update() {
         // update all the entities
         this.#entities.forEach(entity => {
@@ -107,6 +115,8 @@ class Level extends AbstractTiledMap {
         if (Debugger.isDebugging) {
             Debugger.pushInfo(`map - shape: [${this.getColumn()}, ${this.getRow()}]`)
             Debugger.pushInfo(`image size:[${this.getPixelWidth()}, ${this.getPixelHeight()}]; offset: [${this.#offsetX}, ${this.#offsetY}]`)
+            Debugger.pushInfo(`tile is hovering: [${this.getTileOnPixel(Controller.mouse.x, Controller.mouse.y, Level.getTileSize())}]`)
+            this.#entities.sort((entity1, entity2) => entity1.getType().localeCompare(entity2.getType()) || entity1.getUid() - entity2.getUid())
             this.#entities.forEach(entity => {
                 Debugger.pushInfo("--------------------")
                 if (entity instanceof Character) {

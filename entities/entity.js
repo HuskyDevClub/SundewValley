@@ -1,4 +1,5 @@
 class Entity extends GameObject2d {
+    static #uid_counter = 0
     #category
     #type
     #subType
@@ -6,6 +7,7 @@ class Entity extends GameObject2d {
     #json = null
     #tile_w
     #tile_h
+    #uid
 
     constructor(category, type, subType, blockX, blockY) {
         super(0, 0, 0, 0)
@@ -15,9 +17,14 @@ class Entity extends GameObject2d {
         this.removeFromWorld = false
         this.#tile_w = this.getJson()["tilewidth"]
         this.#tile_h = this.getJson()["tileheight"]
+        this.#uid = ++Entity.#uid_counter
         this.setSize(this.#tile_w, this.#tile_h)
         this.setBlockX(blockX)
         this.setBlockY(blockY)
+    }
+
+    getUid() {
+        return this.#uid
     }
 
     getSpriteSheet() {

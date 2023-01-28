@@ -3,6 +3,10 @@ class FarmLevel extends Level {
         super(_path)
     }
 
+    getCropOnCoordinate(x, y) {
+        return this.findEntity(_entity => Math.floor(_entity.getBlockX()) === x && Math.floor(_entity.getBlockY()) === y && _entity instanceof Crop)
+    }
+
     #updateDirtKind(x, y, index, checkTileNextToIt = true) {
         const dirtKind = new DirtTiles()
         let indexTmp = this.getTileLayerIndexUsingFilter(x - 1, y, DirtTiles.isDirt)
@@ -40,6 +44,10 @@ class FarmLevel extends Level {
             this.getTile(x, y)[layerIndex + 2] = 0
             // update the dirt tile type for the tile
             this.#updateDirtKind(x, y, layerIndex + 1)
+            const cropOnLocation = this.getCropOnCoordinate(x, y)
+            if (cropOnLocation !== undefined) {
+                cropOnLocation.removeFromWorld = true
+            }
         }
     }
 

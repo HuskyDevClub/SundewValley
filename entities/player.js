@@ -3,11 +3,30 @@ class Player extends Character {
         super(name, "player", x, y, mapRef)
         this.setMovingSpeedX(5)
         this.setMovingSpeedY(5)
-        this.setSize(Level.getTileSize() * 1.5, Level.getTileSize() * 1.5)
+        this.setSize(this.getMapReference().getTileSize() * 1.5, this.getMapReference().getTileSize() * 1.5)
+        this.isIdle = true
+    }
+
+    #checkNotLoopAnimation(key, action) {
+        if (key === true) {
+            this.setCurrentAction(action)
+            this.isIdle = false
+            return true
+        } else {
+            this.getAnimation(action + "_l").resetElapsedTime()
+            this.getAnimation(action + "_r").resetElapsedTime()
+            return false
+        }
+    }
+
+    #checkSpecialAction() {
+        return !this.#checkNotLoopAnimation(Controller.keys["KeyQ"], "water")
+            && !this.#checkNotLoopAnimation(Controller.keys["KeyE"], "dig")
+            && !this.#checkNotLoopAnimation(Controller.keys["KeyC"], "cut")
     }
 
     update() {
-        let is_idle = true
+        this.isIdle = true
         this.setCurrentMovingSpeedX(0)
         this.setCurrentMovingSpeedY(0)
         // for dig action, try to convert grass to dirt
@@ -17,50 +36,31 @@ class Player extends Character {
             this.getMapReference().tryConvertTileToWateredDirt(this.getBlockX(), this.getBlockY())
         }
         // check special action
-        if (Controller.Q === true) {
-            this.setCurrentAction("water")
-            is_idle = false
-        } else {
-            this.getAnimation("water_l").resetElapsedTime()
-            this.getAnimation("water_r").resetElapsedTime()
-            if (Controller.E === true) {
-                this.setCurrentAction("dig")
-                is_idle = false
-            } else {
-                this.getAnimation("dig_l").resetElapsedTime()
-                this.getAnimation("dig_r").resetElapsedTime()
-                if (Controller.C === true) {
-                    this.setCurrentAction("cut")
-                    is_idle = false
-                } else {
-                    this.getAnimation("cut_l").resetElapsedTime()
-                    this.getAnimation("cut_r").resetElapsedTime()
-                    // move left or right
-                    if (Controller.left === true) {
-                        this.setDirectionFacing("l")
-                        this.setCurrentAction("move")
-                        this.setCurrentMovingSpeedX(-this.getMovingSpeedX())
-                        is_idle = false
-                    } else if (Controller.right === true) {
-                        this.setDirectionFacing("r")
-                        this.setCurrentAction("move")
-                        this.setCurrentMovingSpeedX(this.getMovingSpeedX())
-                        is_idle = false
-                    }
-                    // move up or down
-                    if (Controller.up === true) {
-                        this.setCurrentAction("move")
-                        this.setCurrentMovingSpeedY(-this.getMovingSpeedY())
-                        is_idle = false
-                    } else if (Controller.down === true) {
-                        this.setCurrentAction("move")
-                        this.setCurrentMovingSpeedY(this.getMovingSpeedY())
-                        is_idle = false
-                    }
-                }
+        if (this.#checkSpecialAction()) {
+            // move left or right
+            if (Controller.left === true) {
+                this.setDirectionFacing("l")
+                this.setCurrentAction("move")
+                this.setCurrentMovingSpeedX(-this.getMovingSpeedX())
+                this.isIdle = false
+            } else if (Controller.right === true) {
+                this.setDirectionFacing("r")
+                this.setCurrentAction("move")
+                this.setCurrentMovingSpeedX(this.getMovingSpeedX())
+                this.isIdle = false
+            }
+            // move up or down
+            if (Controller.up === true) {
+                this.setCurrentAction("move")
+                this.setCurrentMovingSpeedY(-this.getMovingSpeedY())
+                this.isIdle = false
+            } else if (Controller.down === true) {
+                this.setCurrentAction("move")
+                this.setCurrentMovingSpeedY(this.getMovingSpeedY())
+                this.isIdle = false
             }
         }
-        if (is_idle) {
+        if (this.isIdle) {
             this.setCurrentAction("idle")
         }
         super.update()

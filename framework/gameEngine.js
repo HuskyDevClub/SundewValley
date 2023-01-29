@@ -3,19 +3,22 @@
 class GameEngine {
 
     #level
+    #ui
 
     constructor() {
         // What you will use to draw
         // Documentation: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
         this.ctx = null;
+        this.#ui = null;
     };
 
     init(ctx) {
         this.ctx = ctx;
         DateTimeSystem.init(2023);
-        this.#level = new FarmLevel(`./levels/farm_${DateTimeSystem.getSeason()}.json`);
-        //this.#level = new FarmLevel(`./levels/test_level.json`);
+        //this.#level = new FarmLevel(`./levels/farm_${DateTimeSystem.getSeason()}.json`);
+        this.#level = new FarmLevel(`./levels/test_level.json`);
         this.#level.initEntities()
+        this.#ui = new UserInterfaces(this.#level);
         Controller.startInput(this.ctx)
         this.timer = new Timer();
         Debugger.switchDebugMode();
@@ -33,9 +36,10 @@ class GameEngine {
     draw() {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-
         // Draw the latest things first
         this.#level.draw(this.ctx)
+        // Draw all the ui onto screen
+        this.#ui.draw(this.ctx)
     };
 
     update() {
@@ -45,8 +49,8 @@ class GameEngine {
             Debugger.pushInfo(`current in game time: ${Math.round(this.timer.gameTime)}s`)
             Debugger.pushInfo(`Date: ${DateTimeSystem.toLocaleString()} ${DateTimeSystem.getSeason()}`)
         }
-
         this.#level.update()
+        this.#ui.update()
     };
 
     loop() {

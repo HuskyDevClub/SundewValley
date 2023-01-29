@@ -4,12 +4,12 @@ class Crop extends Entity {
     #growPeriods
     #scale = 0.75
 
-    constructor(type, x, y) {
-        super("crops", type, null, x, y);
+    constructor(type, x, y, mapRef) {
+        super("crops", type, null, x, y, mapRef);
         this.#stage = 0
         this.#timePlanted = DateTimeSystem.now()
         this.#growPeriods = [1, 1, 1, 1]
-        this.setSize(Level.getTileSize() * this.#scale, Level.getTileSize() * this.#scale)
+        this.setSize(this.getMapReference().getTileSize() * this.#scale, this.getMapReference().getTileSize() * this.#scale)
     }
 
     update() {

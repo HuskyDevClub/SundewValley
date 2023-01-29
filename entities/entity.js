@@ -8,8 +8,9 @@ class Entity extends GameObject2d {
     #tile_w
     #tile_h
     #uid
+    #mapRef = null
 
-    constructor(category, type, subType, blockX, blockY) {
+    constructor(category, type, subType, blockX, blockY, mapRef) {
         super(0, 0, 0, 0)
         this.#category = category
         this.#type = type
@@ -18,6 +19,8 @@ class Entity extends GameObject2d {
         this.#tile_w = this.getJson()["tilewidth"]
         this.#tile_h = this.getJson()["tileheight"]
         this.#uid = ++Entity.#uid_counter
+        this.#mapRef = mapRef
+        console.assert(this.#mapRef != null)
         this.setSize(this.#tile_w, this.#tile_h)
         this.setBlockX(blockX)
         this.setBlockY(blockY)
@@ -25,6 +28,10 @@ class Entity extends GameObject2d {
 
     getUid() {
         return this.#uid
+    }
+
+    getMapReference() {
+        return this.#mapRef
     }
 
     getSpriteSheet() {
@@ -54,19 +61,19 @@ class Entity extends GameObject2d {
     }
 
     getBlockX() {
-        return (this.getPixelX() + this.getWidth() / 2) / Level.getTileSize()
+        return (this.getPixelX() + this.getWidth() / 2) / this.getMapReference().getTileSize()
     }
 
     getBlockY() {
-        return this.getPixelBottom() / Level.getTileSize()
+        return this.getPixelBottom() / this.getMapReference().getTileSize()
     }
 
     setBlockX(value) {
-        this.setPixelRight(value * Level.getTileSize() + this.getWidth() / 2)
+        this.setPixelRight(value * this.getMapReference().getTileSize() + this.getWidth() / 2)
     }
 
     setBlockY(value) {
-        this.setPixelBottom(value * Level.getTileSize())
+        this.setPixelBottom(value * this.getMapReference().getTileSize())
     }
 
     getTileWidth() {

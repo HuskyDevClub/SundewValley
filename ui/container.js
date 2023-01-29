@@ -1,10 +1,9 @@
-class GameObjectsMapContainer extends GameObject2d {
+class GameObjectsMapContainer {
     #items_container_map
     #item_being_hovered
 
-    constructor(x, y, width, height) {
-        super(x, y, width, height);
-        this.#items_container_map = {}
+    constructor(containerRef = {}) {
+        this.#items_container_map = containerRef
         this.#item_being_hovered = null
     }
 
@@ -13,7 +12,7 @@ class GameObjectsMapContainer extends GameObject2d {
     }
 
     clear() {
-        this.#items_container_map = {}
+        this.#items_container_map.length = 0
     }
 
     isEmpty() {
@@ -45,7 +44,6 @@ class GameObjectsMapContainer extends GameObject2d {
     }
 
     update() {
-
     }
 
     display(ctx, offsetX, offsetY) {

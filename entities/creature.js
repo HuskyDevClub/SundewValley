@@ -7,18 +7,15 @@ class Creature extends Entity {
     #animations
     #current_action
     #direction_facing
-    #mapRef = null
 
     constructor(category, type, subType, x, y, mapRef) {
-        super(category, type, subType, x, y);
+        super(category, type, subType, x, y, mapRef);
         this.#moving_speed_x = 1
         this.#moving_speed_y = 1
         this.#current_moving_speed_x = 0
         this.#current_moving_speed_y = 0
         this.#animations = {}
         this.#direction_facing = "r"
-        this.#mapRef = mapRef
-        console.assert(this.#mapRef != null)
         this.setCurrentAction("idle")
         for (const [key, value] of Object.entries(this.getJson()["animations"])) {
             this.setAnimation(key, value[0] * this.getWidth(), value[1] * this.getHeight(), value[2], 1 / value[2], value.length > 3 ? value[3] : true);
@@ -94,31 +91,27 @@ class Creature extends Entity {
         }
     }
 
-    getMapReference() {
-        return this.#mapRef
-    }
-
     update() {
         if (this.getCurrentMovingSpeedX() !== 0) {
             if (this.getCurrentMovingSpeedX() > 0) {
-                for (let i = 0; i < Math.floor(this.getCurrentMovingSpeedX() / Level.getTileSize()); i++) {
-                    this.setPixelX(this.getPixelX() + Level.getTileSize())
+                for (let i = 0; i < Math.floor(this.getCurrentMovingSpeedX() / this.getMapReference().getTileSize()); i++) {
+                    this.setPixelX(this.getPixelX() + this.getMapReference().getTileSize())
                     if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY())) {
                         this.setBlockX(Math.floor(this.getBlockX()) - 0.01)
                     }
                 }
-                this.setPixelX(this.getPixelX() + this.getCurrentMovingSpeedX() % Level.getTileSize())
+                this.setPixelX(this.getPixelX() + this.getCurrentMovingSpeedX() % this.getMapReference().getTileSize())
                 if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY())) {
                     this.setBlockX(Math.floor(this.getBlockX()) - 0.01)
                 }
             } else {
-                for (let i = 0; i < Math.floor((-this.getCurrentMovingSpeedX()) / Level.getTileSize()); i++) {
-                    this.setPixelX(this.getPixelX() - Level.getTileSize())
+                for (let i = 0; i < Math.floor((-this.getCurrentMovingSpeedX()) / this.getMapReference().getTileSize()); i++) {
+                    this.setPixelX(this.getPixelX() - this.getMapReference().getTileSize())
                     if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY())) {
                         this.setBlockX(Math.floor(this.getBlockX()) + 1)
                     }
                 }
-                this.setPixelX(this.getPixelX() + this.getCurrentMovingSpeedX() % Level.getTileSize())
+                this.setPixelX(this.getPixelX() + this.getCurrentMovingSpeedX() % this.getMapReference().getTileSize())
                 if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY())) {
                     this.setBlockX(Math.floor(this.getBlockX()) + 1)
                 }
@@ -126,24 +119,24 @@ class Creature extends Entity {
         }
         if (this.getCurrentMovingSpeedY() !== 0) {
             if (this.getCurrentMovingSpeedY() > 0) {
-                for (let i = 0; i < Math.floor(this.getCurrentMovingSpeedY() / Level.getTileSize()); i++) {
-                    this.setPixelY(this.getPixelY() + Level.getTileSize())
+                for (let i = 0; i < Math.floor(this.getCurrentMovingSpeedY() / this.getMapReference().getTileSize()); i++) {
+                    this.setPixelY(this.getPixelY() + this.getMapReference().getTileSize())
                     if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY())) {
                         this.setBlockY(Math.floor(this.getBlockY()) - 0.01)
                     }
                 }
-                this.setPixelY(this.getPixelY() + this.getCurrentMovingSpeedY() % Level.getTileSize())
+                this.setPixelY(this.getPixelY() + this.getCurrentMovingSpeedY() % this.getMapReference().getTileSize())
                 if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY())) {
                     this.setBlockY(Math.floor(this.getBlockY()) - 0.01)
                 }
             } else {
-                for (let i = 0; i < Math.floor((-this.getCurrentMovingSpeedY()) / Level.getTileSize()); i++) {
-                    this.setPixelY(this.getPixelY() - Level.getTileSize())
+                for (let i = 0; i < Math.floor((-this.getCurrentMovingSpeedY()) / this.getMapReference().getTileSize()); i++) {
+                    this.setPixelY(this.getPixelY() - this.getMapReference().getTileSize())
                     if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY())) {
                         this.setBlockY(Math.floor(this.getBlockY()) + 1)
                     }
                 }
-                this.setPixelY(this.getPixelY() + this.getCurrentMovingSpeedY() % Level.getTileSize())
+                this.setPixelY(this.getPixelY() + this.getCurrentMovingSpeedY() % this.getMapReference().getTileSize())
                 if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY())) {
                     this.setBlockY(Math.floor(this.getBlockY()) + 1)
                 }

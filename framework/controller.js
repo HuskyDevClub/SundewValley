@@ -10,9 +10,6 @@ class Controller {
     static mouse = {x: 0, y: 0, radius: 0};
     static wheel = null;
     static keys = {};
-    static Q = false;
-    static E = false;
-    static C = false;
 
     static keyboardActive = false;
 
@@ -57,15 +54,8 @@ class Controller {
                 case "KeyS":
                     Controller.down = true;
                     break;
-                case "KeyQ":
-                    Controller.Q = true;
-                    break;
-                case "KeyE":
-                    Controller.E = true;
-                    break;
-                case "KeyC":
-                    Controller.C = true;
-                    break;
+                default:
+                    Controller.keys[e.code] = true;
             }
         }
 
@@ -88,15 +78,8 @@ class Controller {
                 case "KeyS":
                     Controller.down = false;
                     break;
-                case "KeyQ":
-                    Controller.Q = false;
-                    break;
-                case "KeyE":
-                    Controller.E = false;
-                    break;
-                case "KeyC":
-                    Controller.C = false;
-                    break;
+                default:
+                    Controller.keys[e.code] = false;
             }
         }
 

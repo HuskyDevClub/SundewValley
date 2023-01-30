@@ -89,4 +89,14 @@ class FarmLevel extends Level {
             this.#updateWateredDirtKind(x, y, layerIndex + 1)
         }
     }
+
+    //Function to teleport the player to town once they are in a certain position
+    moveToTown(x, y)
+    {
+        if (x == 0, y == 0)
+        {
+            //Changes the background or map
+            window.location.replace("./levels/town.json");
+        }
+    }
 }

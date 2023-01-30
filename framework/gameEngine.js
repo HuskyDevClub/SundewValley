@@ -2,7 +2,8 @@
 
 class GameEngine {
 
-    #level
+    #levels
+    #currentLevelName
     #ui
 
     constructor() {
@@ -10,15 +11,26 @@ class GameEngine {
         // Documentation: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
         this.ctx = null;
         this.#ui = null;
+        this.#levels = {}
     };
+
+    #getCurrentLevel() {
+        return this.#levels[this.#currentLevelName]
+    }
+
+    #enterLevel(name) {
+        this.#currentLevelName = name
+        if (this.#getCurrentLevel() == null) {
+            this.#levels[this.#currentLevelName] = new FarmLevel(`./levels/${name}.json`);
+            this.#getCurrentLevel().initEntities()
+        }
+        this.#ui = new UserInterfaces(this.#getCurrentLevel());
+    }
 
     init(ctx) {
         this.ctx = ctx;
         DateTimeSystem.init(2023);
-        //this.#level = new FarmLevel(`./levels/farm_${DateTimeSystem.getSeason()}.json`);
-        this.#level = new FarmLevel(`./levels/test_level.json`);
-        this.#level.initEntities()
-        this.#ui = new UserInterfaces(this.#level);
+        this.#enterLevel("test_level") // `farm_${DateTimeSystem.getSeason()}`
         Controller.startInput(this.ctx)
         this.timer = new Timer();
         Debugger.switchDebugMode();
@@ -37,7 +49,7 @@ class GameEngine {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         // Draw the latest things first
-        this.#level.draw(this.ctx)
+        this.#getCurrentLevel().draw(this.ctx)
         // Draw all the ui onto screen
         this.#ui.draw(this.ctx)
     };
@@ -49,7 +61,7 @@ class GameEngine {
             Debugger.pushInfo(`current in game time: ${Math.round(this.timer.gameTime)}s`)
             Debugger.pushInfo(`Date: ${DateTimeSystem.toLocaleString()} ${DateTimeSystem.getSeason()}`)
         }
-        this.#level.update()
+        this.#getCurrentLevel().update()
         this.#ui.update()
     };
 

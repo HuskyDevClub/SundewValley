@@ -4029,27 +4029,27 @@
         }, 
         {
          "firstgid":6,
-         "source":"Assets\/Town\/spring_and_summer_objects.tsx"
+         "source":"..\/images\/items\/spring_and_summer_objects.json"
         }, 
         {
          "firstgid":149,
-         "source":"Assets\/Town\/spring.tsx"
+         "source":"..\/images\/tilemaps\/spring.json"
         }, 
         {
          "firstgid":320,
-         "source":"Assets\/Town\/walls_and_floors.tsx"
+         "source":"..\/images\/tilemaps\/walls_and_floors.json"
         }, 
         {
          "firstgid":560,
-         "source":"Assets\/Town\/winter.tsx"
+         "source":"..\/images\/tilemaps\/winter.json"
         }, 
         {
          "firstgid":731,
-         "source":"Assets\/Town\/Marketplace_tileset.tsx"
+         "source":"..\/images\/items\/Marketplace_tileset.json"
         }, 
         {
          "firstgid":1243,
-         "source":"Assets\/Town\/Marketplace_autotile_A2.tsx"
+         "source":"..\/images\/tilemaps\/Marketplace_autotile_A2.json"
         }],
  "tilewidth":16,
  "type":"map",

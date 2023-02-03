@@ -31,9 +31,9 @@ class Player extends Character {
         this.setCurrentMovingSpeedY(0)
         // for dig action, try to convert grass to dirt
         if (this.isCurrentAction("dig") && this.getCurrentAnimation().currentFrame() === 1) {
-            this.getMapReference().tryConvertTileToDirt(this.getBlockX(), this.getBlockY())
+            if (this.getMapReference() instanceof FarmLevel) this.getMapReference().tryConvertTileToDirt(this.getBlockX(), this.getBlockY())
         } else if (this.isCurrentAction("water") && this.getCurrentAnimation().currentFrame() === 1) {
-            this.getMapReference().tryConvertTileToWateredDirt(this.getBlockX(), this.getBlockY())
+            if (this.getMapReference() instanceof FarmLevel) this.getMapReference().tryConvertTileToWateredDirt(this.getBlockX(), this.getBlockY())
         }
         // check special action
         if (this.#checkSpecialAction()) {

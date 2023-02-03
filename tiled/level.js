@@ -2,6 +2,7 @@ class Level extends AbstractTiledMap {
     #entities = []
     #player
     #automapTilesFirstGid = -1
+    #groupLevelEndAtIndex
 
     constructor(_path) {
         super(_path)
@@ -12,6 +13,7 @@ class Level extends AbstractTiledMap {
                 break;
             }
         }
+        this.#groupLevelEndAtIndex = LevelData.get("groupLevelEndAtIndex")[_path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "")];
     }
 
     findEntity(_filter) {
@@ -116,11 +118,12 @@ class Level extends AbstractTiledMap {
             this.setPixelY(this.getPixelY() + Math.floor(this.#player.getMovingSpeedY() * 1.5))
         }
         this.setPixelY(Math.max(Math.min(this.getPixelY(), 0), ctx.canvas.height - this.getHeight()))
-        // draw map
+        // draw map group layers
         this.drawTiles(
             ctx,
             Math.floor(-this.getPixelX() / this.getTileSize()), Math.ceil((ctx.canvas.width - this.getPixelX()) / this.getTileSize()),
             Math.floor(-this.getPixelY() / this.getTileSize()), Math.ceil((ctx.canvas.height - this.getPixelY()) / this.getTileSize()),
+            0, this.#groupLevelEndAtIndex,
             this.getPixelX(), this.getPixelY()
         )
         // sort entities based on coordinates
@@ -144,6 +147,16 @@ class Level extends AbstractTiledMap {
             entity.display(ctx, this.getPixelX(), this.getPixelY())
             if (Debugger.isDebugging) ctx.strokeRect(entity.getPixelX() + this.getPixelX(), entity.getPixelY() + this.getPixelY(), entity.getWidth(), entity.getHeight())
         });
+        // If there is top layers on the top of ground layers
+        if (this.#groupLevelEndAtIndex != null) {
+            this.drawTiles(
+                ctx,
+                Math.floor(-this.getPixelX() / this.getTileSize()), Math.ceil((ctx.canvas.width - this.getPixelX()) / this.getTileSize()),
+                Math.floor(-this.getPixelY() / this.getTileSize()), Math.ceil((ctx.canvas.height - this.getPixelY()) / this.getTileSize()),
+                this.#groupLevelEndAtIndex, null,
+                this.getPixelX(), this.getPixelY()
+            )
+        }
     };
 
 }

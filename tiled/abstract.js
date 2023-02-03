@@ -143,16 +143,18 @@ class AbstractTiledMap extends Abstract2dGameObject {
         }
     }
 
-    drawTiles(ctx, xStart, xEndExclude, yStart, yEndExclude, pixelX, pixelY) {
+    drawTiles(ctx, xStart, xEndExclude, yStart, yEndExclude, layerStart, layerEnd, pixelX, pixelY) {
         if (xStart == null) xStart = 0
         if (yStart == null) yStart = 0
         if (xEndExclude == null) xEndExclude = this.#column
         if (yEndExclude == null) yEndExclude = this.#row
+        if (layerStart == null) layerStart = 0
         for (let y = yStart; y < yEndExclude; y++) {
             for (let x = xStart; x < xEndExclude; x++) {
-                this.#map[y][x].forEach(metaId => {
-                    this.drawTile(ctx, metaId, x * this.#tileSize + pixelX, y * this.#tileSize + pixelY)
-                })
+                const currentTile = this.#map[y][x]
+                for (let i = layerStart, n = layerEnd == null ? currentTile.length : layerEnd; i < n; i++) {
+                    this.drawTile(ctx, currentTile[i], x * this.#tileSize + pixelX, y * this.#tileSize + pixelY)
+                }
             }
         }
     }

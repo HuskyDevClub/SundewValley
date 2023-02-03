@@ -14,7 +14,7 @@ class Inventory extends AbstractTiledMap {
         if (this.isVisiable) {
             this.setPixelRight(ctx.canvas.width)
             this.setPixelY(0)
-            this.drawTiles(ctx, null, null, null, null, this.getPixelX(), this.getPixelY())
+            this.drawTiles(ctx, null, null, null, null, null, null, this.getPixelX(), this.getPixelY())
             ctx.font = `${this.getTileSize()}px serif`
             ctx.fillText(this.#characterRef.getMoney(), this.getPixelRight() - this.getTileSize() * 28, this.getPixelY() + this.getTileSize() * 2)
         }

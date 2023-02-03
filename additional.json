@@ -118,8 +118,9 @@
     "./images/ui/icons.json",
     "./levels/bedroom.json",
     "./levels/farm_spring.json",
+    "./levels/farm_test_level.json",
+    "./levels/levels.json",
     "./levels/town.json",
-    "./levels/test_level.json",
     "./ui/inventory.json",
     "./ui/ui.json"
   ]

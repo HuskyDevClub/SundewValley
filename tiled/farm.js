@@ -90,6 +90,18 @@ class FarmLevel extends Level {
         }
     }
 
+    // if player can plant on tile
+    canPlantOnTile(x, y) {
+        const layers = this.getTile(x, y)
+        WateredDirtTiles.offset = this.getAbsMetaId("tilemaps", DateTimeSystem.getSeason(), 0)
+        for (let i = 0; i < layers.length; i++) {
+            if (WateredDirtTiles.isWateredDirt(layers[i])) {
+                return true
+            }
+        }
+        return false;
+    }
+
     //Function to teleport the player to town once they are in a certain position
     moveToTown(x, y) {
         if (x == 0, y == 0) {

@@ -1,5 +1,9 @@
 {
-  "groupLevelEndAtIndex": {
-    "town": 3
+  "town": {
+    "groupLevelEndAtIndex": 3,
+    "spawn": [
+      14,
+      16
+    ]
   }
 }

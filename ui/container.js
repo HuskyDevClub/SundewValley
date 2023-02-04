@@ -46,7 +46,7 @@ class GameObjectsMapContainer {
     update() {
     }
 
-    display(ctx, offsetX, offsetY) {
+    draw(ctx) {
         this.#item_being_hovered = null
     }
 

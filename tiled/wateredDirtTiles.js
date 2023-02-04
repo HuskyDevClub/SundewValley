@@ -9,7 +9,7 @@ class WateredDirtTiles {
     }
 
     static isWateredDirt(absMetaId) {
-        absMetaId -= DirtTiles.offset
+        absMetaId -= WateredDirtTiles.offset
         return (121 <= absMetaId && absMetaId <= 124) || (130 <= absMetaId && absMetaId <= 160)
     }
 

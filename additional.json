@@ -67,7 +67,8 @@
     "./images/ui/buttons.png",
     "./images/ui/elements.png",
     "./images/ui/gui.png",
-    "./images/ui/icons.png"
+    "./images/ui/icons.png",
+    "./images/ui/itemsBar.png"
   ],
   "jsons": [
     "./images/animals/chicken/chicken.json",
@@ -122,6 +123,7 @@
     "./levels/levels.json",
     "./levels/town.json",
     "./ui/inventory.json",
+    "./ui/itemsBar.json",
     "./ui/ui.json"
   ]
 }

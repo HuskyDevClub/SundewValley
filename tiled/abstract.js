@@ -7,6 +7,7 @@ class AbstractTiledMap extends Abstract2dGameObject {
     #column
     #tileSets
     #tileSize = 0
+    #levelParameters
 
     constructor(_path) {
         super(0, 0)
@@ -32,7 +33,13 @@ class AbstractTiledMap extends Abstract2dGameObject {
             }
         })
         this.#tileSets = Array.from(_data["tilesets"])
+        this.#levelParameters = LevelData.get(_path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, ""));
+        if (this.#levelParameters == null) this.#levelParameters = {}
         this.setTileSize(Math.floor(GAME_ENGINE.ctx.canvas.width / 20))
+    }
+
+    getParameter(key) {
+        return this.#levelParameters[key]
     }
 
     getTileSize() {
@@ -114,9 +121,12 @@ class AbstractTiledMap extends Abstract2dGameObject {
         return this.#map[y][x]
     }
 
+    getCoordinate(pixelX, pixelY, _size) {
+        return [Math.floor((pixelX - this.getPixelX()) / _size), Math.floor((pixelY - this.getPixelY()) / _size)]
+    }
+
     getTileOnPixel(pixelX, pixelY, _size) {
-        const x = Math.floor((pixelX - this.getPixelX()) / _size)
-        const y = Math.floor((pixelY - this.getPixelY()) / _size)
+        const [x, y] = this.getCoordinate(pixelX, pixelY, _size)
         return this.isCoordinateInRange(x, y) ? this.getTile(x, y) : null
     }
 

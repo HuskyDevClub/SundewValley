@@ -41,7 +41,7 @@ class Player extends Character {
         else if (this.isCurrentAction("cut") && this.getCurrentAnimation().currentFrame() === 1) {
             if (this.getMapReference() instanceof FarmLevel) {
                 const _crop = this.getMapReference().getCrop(this.getBlockX(), this.getBlockY())
-                if (_crop != null) {
+                if (_crop != null && _crop.isMatured()) {
                     _crop.removeFromWorld = true
                     // obtain a random amount of crop
                     this.obtainItem(_crop.getType(), getRandomIntInclusive(1, 3))

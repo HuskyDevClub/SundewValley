@@ -24,7 +24,10 @@ class InventoryItems {
         "eggplant_seed": [7, 1],
         "lavender_seed": [8, 1],
         "corn_seed": [9, 1],
-        "pea_seed": [9, 3]
+        "pea_seed": [9, 3],
+        "pot": [0, 3],
+        "axe": [0, 4],
+        "hoe": [3, 4]
     }
 
     static init() {
@@ -41,9 +44,9 @@ class InventoryItems {
         return key.endsWith("seed")
     }
 
-    static drawImage(ctx, key, pixelX, pixelY, width, height) {
+    static drawImage(ctx, key, pixelX, pixelY, width, height, offsetTileX = 0, offsetTileY = 0) {
         const _loc = this.#LOCATIONS[key]
-        ctx.drawImage(this.#ITEMS_SPRITE_SHEET, _loc[0] * this.#PIXEL_SIZE, _loc[1] * this.#PIXEL_SIZE, this.#PIXEL_SIZE, this.#PIXEL_SIZE, pixelX, pixelY, width, height)
+        ctx.drawImage(this.#ITEMS_SPRITE_SHEET, (_loc[0] + offsetTileX) * this.#PIXEL_SIZE, (_loc[1] + offsetTileY) * this.#PIXEL_SIZE, this.#PIXEL_SIZE, this.#PIXEL_SIZE, pixelX, pixelY, width, height)
     }
 }
 

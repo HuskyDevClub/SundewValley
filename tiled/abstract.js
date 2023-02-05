@@ -121,6 +121,14 @@ class AbstractTiledMap extends Abstract2dGameObject {
         return this.#map[y][x]
     }
 
+    getTilePixelX(x) {
+        return x * this.#tileSize + this.getPixelX()
+    }
+
+    getTilePixelY(y) {
+        return y * this.#tileSize + this.getPixelY()
+    }
+
     getCoordinate(pixelX, pixelY, _size) {
         return [Math.floor((pixelX - this.getPixelX()) / _size), Math.floor((pixelY - this.getPixelY()) / _size)]
     }
@@ -153,7 +161,7 @@ class AbstractTiledMap extends Abstract2dGameObject {
         }
     }
 
-    drawTiles(ctx, xStart, xEndExclude, yStart, yEndExclude, layerStart, layerEnd, pixelX, pixelY) {
+    drawTiles(ctx, xStart, xEndExclude, yStart, yEndExclude, layerStart, layerEnd) {
         if (xStart == null) xStart = 0
         if (yStart == null) yStart = 0
         if (xEndExclude == null) xEndExclude = this.#column
@@ -163,9 +171,15 @@ class AbstractTiledMap extends Abstract2dGameObject {
             for (let x = xStart; x < xEndExclude; x++) {
                 const currentTile = this.#map[y][x]
                 for (let i = layerStart, n = layerEnd == null ? currentTile.length : layerEnd; i < n; i++) {
-                    this.drawTile(ctx, currentTile[i], x * this.#tileSize + pixelX, y * this.#tileSize + pixelY)
+                    this.drawTile(ctx, currentTile[i], this.getTilePixelX(x), this.getTilePixelY(y))
                 }
             }
         }
+    }
+
+    logDebugInfo() {
+        Debugger.pushInfo(`map - shape: [${this.getColumn()}, ${this.getRow()}]`)
+        Debugger.pushInfo(`image size:[${this.getWidth()}, ${this.getHeight()}]; offset: [${this.getPixelX()}, ${this.getPixelY()}]`)
+        Debugger.pushInfo(`tile is hovering: [${this.getTileOnPixel(Controller.mouse.x, Controller.mouse.y, this.getTileSize())}]`)
     }
 }

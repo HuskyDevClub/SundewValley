@@ -18,7 +18,7 @@ class GameEngine {
         return this.#levels[this.#currentLevelName]
     }
 
-    #enterLevel(name) {
+    enterLevel(name) {
         this.#currentLevelName = name
         if (this.getCurrentLevel() == null) {
             this.#levels[this.#currentLevelName] = name.startsWith("farm_") ? new FarmLevel(`./levels/${name}.json`) : new Level(`./levels/${name}.json`)
@@ -32,7 +32,7 @@ class GameEngine {
         DateTimeSystem.init(2023);
         InventoryItems.init()
         LevelData.init()
-        this.#enterLevel("farm_test_level") // "town" `farm_${DateTimeSystem.getSeason()}`
+        this.enterLevel("farm_test_level") // "town" `farm_${DateTimeSystem.getSeason()}`
         Controller.startInput(this.ctx)
         this.timer = new Timer();
         Debugger.switchDebugMode();

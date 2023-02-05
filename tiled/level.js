@@ -74,6 +74,34 @@ class Level extends AbstractTiledMap {
         return this.#entities.filter(_entity => entity !== _entity && entity.collideWith(_entity))
     }
 
+    logDebugInfo() {
+        super.logDebugInfo()
+        this.#entities.sort((entity1, entity2) => entity1.getType().localeCompare(entity2.getType()) || entity1.getUid() - entity2.getUid())
+        this.#entities.forEach(entity => {
+            Debugger.pushInfo("--------------------")
+            if (entity instanceof Character) {
+                Debugger.pushInfo(`name: ${entity.getName()}`)
+                Debugger.pushInfo(`inventory: ${JSON.stringify(entity.getInventory())}`)
+            }
+            Debugger.pushInfo(`type: ${entity.getType()}; size: [${entity.getWidth()}, ${entity.getHeight()}]`)
+            Debugger.pushInfo(`pixel pos: [${entity.getPixelX()}, ${entity.getPixelY()}]; block pos: [${Math.round(entity.getBlockX() * 100) / 100}, ${Math.round(entity.getBlockY() * 100) / 100}]`)
+            if (entity instanceof Creature) {
+                Debugger.pushInfo(`current speed: [${entity.getCurrentMovingSpeedX()} ${entity.getCurrentMovingSpeedY()}]; current action: ${entity.getCurrentAction()}`)
+            } else if (entity instanceof Crop) {
+                Debugger.pushInfo(`current stage: ${entity.getStage()}; time until stage: ${entity.getTimeUntilNextStageInMs()}`)
+            }
+        });
+        Debugger.pushInfo("--------------------")
+        const entitiesThatCollideWithPlayer = this.getEntitiesThatCollideWith(this.#player)
+        Debugger.pushInfo(`Total entities that collide with the player: ${entitiesThatCollideWithPlayer.length}`)
+        if (entitiesThatCollideWithPlayer.length > 0) {
+            const names = []
+            entitiesThatCollideWithPlayer.forEach(_entity => names.push(_entity.getType()))
+            Debugger.pushInfo(`Entities that collide with the player: ${names}`)
+        }
+    }
+
+
     update() {
         // update all the entities
         this.#entities.forEach(entity => {
@@ -89,32 +117,7 @@ class Level extends AbstractTiledMap {
         }
         //output debug information
         if (Debugger.isDebugging) {
-            Debugger.pushInfo(`map - shape: [${this.getColumn()}, ${this.getRow()}]`)
-            Debugger.pushInfo(`image size:[${this.getWidth()}, ${this.getHeight()}]; offset: [${this.getPixelX()}, ${this.getPixelY()}]`)
-            Debugger.pushInfo(`tile is hovering: [${this.getTileOnPixel(Controller.mouse.x, Controller.mouse.y, this.getTileSize())}]`)
-            this.#entities.sort((entity1, entity2) => entity1.getType().localeCompare(entity2.getType()) || entity1.getUid() - entity2.getUid())
-            this.#entities.forEach(entity => {
-                Debugger.pushInfo("--------------------")
-                if (entity instanceof Character) {
-                    Debugger.pushInfo(`name: ${entity.getName()}`)
-                    Debugger.pushInfo(`inventory: ${JSON.stringify(entity.getInventory())}`)
-                }
-                Debugger.pushInfo(`type: ${entity.getType()}; size: [${entity.getWidth()}, ${entity.getHeight()}]`)
-                Debugger.pushInfo(`pixel pos: [${entity.getPixelX()}, ${entity.getPixelY()}]; block pos: [${Math.round(entity.getBlockX() * 100) / 100}, ${Math.round(entity.getBlockY() * 100) / 100}]`)
-                if (entity instanceof Creature) {
-                    Debugger.pushInfo(`current speed: [${entity.getCurrentMovingSpeedX()} ${entity.getCurrentMovingSpeedY()}]; current action: ${entity.getCurrentAction()}`)
-                } else if (entity instanceof Crop) {
-                    Debugger.pushInfo(`current stage: ${entity.getStage()}; time until stage: ${entity.getTimeUntilNextStageInMs()}`)
-                }
-            });
-            Debugger.pushInfo("--------------------")
-            const entitiesThatCollideWithPlayer = this.getEntitiesThatCollideWith(this.#player)
-            Debugger.pushInfo(`Total entities that collide with the player: ${entitiesThatCollideWithPlayer.length}`)
-            if (entitiesThatCollideWithPlayer.length > 0) {
-                const names = []
-                entitiesThatCollideWithPlayer.forEach(_entity => names.push(_entity.getType()))
-                Debugger.pushInfo(`Entities that collide with the player: ${names}`)
-            }
+            this.logDebugInfo()
         }
     }
 
@@ -138,8 +141,7 @@ class Level extends AbstractTiledMap {
             ctx,
             Math.floor(-this.getPixelX() / this.getTileSize()), Math.ceil((ctx.canvas.width - this.getPixelX()) / this.getTileSize()),
             Math.floor(-this.getPixelY() / this.getTileSize()), Math.ceil((ctx.canvas.height - this.getPixelY()) / this.getTileSize()),
-            0, this.getParameter("groupLevelEndAtIndex"),
-            this.getPixelX(), this.getPixelY()
+            0, this.getParameter("groupLevelEndAtIndex")
         )
         // sort entities based on coordinates
         this.#entities.sort(
@@ -162,14 +164,33 @@ class Level extends AbstractTiledMap {
             entity.display(ctx, this.getPixelX(), this.getPixelY())
             if (Debugger.isDebugging) ctx.strokeRect(entity.getPixelX() + this.getPixelX(), entity.getPixelY() + this.getPixelY(), entity.getWidth(), entity.getHeight())
         });
+        // Draw all the teleportation points
+        const teleportationPoints = this.getParameter("teleportation")
+        if (teleportationPoints != null) {
+            teleportationPoints.forEach(_pos => {
+                const trigger = new Trigger(
+                    this.getTilePixelX(_pos.x), this.getTilePixelY(_pos.y),
+                    this.getTileSize() * _pos.width, this.getTileSize() * _pos.height,
+                    _pos.x, _pos.y, _pos.width, _pos.height,
+                )
+                if (trigger.collideWith(this.#player)) {
+                    GAME_ENGINE.enterLevel(_pos["destinationLevel"])
+                    GAME_ENGINE.getCurrentLevel().getPlayer().setBlockX(_pos["destinationX"])
+                    GAME_ENGINE.getCurrentLevel().getPlayer().setBlockY(_pos["destinationY"])
+                } else if (Debugger.isDebugging) {
+                    ctx.strokeStyle = 'red';
+                    trigger.draw(ctx)
+                    ctx.strokeStyle = 'black';
+                }
+            })
+        }
         // If there is top layers on the top of ground layers
         if (this.getParameter("groupLevelEndAtIndex") != null) {
             this.drawTiles(
                 ctx,
                 Math.floor(-this.getPixelX() / this.getTileSize()), Math.ceil((ctx.canvas.width - this.getPixelX()) / this.getTileSize()),
                 Math.floor(-this.getPixelY() / this.getTileSize()), Math.ceil((ctx.canvas.height - this.getPixelY()) / this.getTileSize()),
-                this.getParameter("groupLevelEndAtIndex"), null,
-                this.getPixelX(), this.getPixelY()
+                this.getParameter("groupLevelEndAtIndex"), null
             )
         }
     };

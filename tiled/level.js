@@ -61,6 +61,15 @@ class Level extends AbstractTiledMap {
         return this.#player
     }
 
+    getEntityUsingFilter(_filter) {
+        for (let i = this.#entities.length - 1; i >= 0; i--) {
+            if (_filter(this.#entities[i])) {
+                return this.#entities[i]
+            }
+        }
+        return null
+    }
+
     getEntitiesThatCollideWith(entity) {
         return this.#entities.filter(_entity => entity !== _entity && entity.collideWith(_entity))
     }

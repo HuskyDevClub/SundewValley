@@ -22,12 +22,16 @@ class Inventory extends GameObjectsMapContainer {
         if (isSelected) {
             ctx.drawImage(Inventory.#BASE_SPRITE_SHEET, 15 * InventoryItems.getPixelSize(), 0, InventoryItems.getPixelSize() * 2, InventoryItems.getPixelSize() * 2, boxStartX, boxStartY, boxWidth, boxWidth)
             // draw item icon on mouse location
-            if (InventoryItems.isUsable(key)) {
+            if (InventoryItems.isUsable(key) && !this.isHovering()) {
                 if (GAME_ENGINE.getCurrentLevel() instanceof FarmLevel) {
                     const onBlock = GAME_ENGINE.getCurrentLevel().getCoordinate(Controller.mouse.x, Controller.mouse.y, GAME_ENGINE.getCurrentLevel().getTileSize())
                     if (onBlock != null) {
+                        // if you can plant stuff on this tile
                         if (GAME_ENGINE.getCurrentLevel().canPlantOnTile(onBlock[0], onBlock[1])) {
                             ctx.fillStyle = 'rgba(127,255,0,0.5)';
+                            if (Controller.mouse.leftClick && GAME_ENGINE.getCurrentLevel().getPlayer().tryUseItem(key)) {
+                                GAME_ENGINE.getCurrentLevel().addEntity(new Crop(key.replace('_seed', ''), onBlock[0], onBlock[1], GAME_ENGINE.getCurrentLevel()))
+                            }
                         } else {
                             ctx.fillStyle = 'rgba(255,0,0,0.5)';
                         }
@@ -47,12 +51,22 @@ class Inventory extends GameObjectsMapContainer {
 
     draw(ctx) {
         super.draw(ctx)
+        // get keys
         const _keys = this.keys()
-        const _pixelY = ctx.canvas.height * 0.9
-        const totalWidth = this.#boxSize * 1.575 * _keys.length
-        let _pixelX = (ctx.canvas.width - totalWidth) / 2
-        ctx.drawImage(this.#itemsBar, _pixelX, _pixelY - this.#boxSize / 2, totalWidth, this.#boxSize * 2)
-        _pixelX += this.#boxSize / 2
+        // padding of the container
+        const _padding = this.#boxSize / 2
+        // update size
+        this.setWidth((this.#boxSize + _padding) * _keys.length + _padding)
+        this.setHeight(this.#boxSize * 2)
+        // update position
+        this.setPixelY(ctx.canvas.height - _padding - this.getHeight())
+        this.setPixelX((ctx.canvas.width - this.getWidth()) / 2)
+        // draw item bar background image
+        ctx.drawImage(this.#itemsBar, this.getPixelX(), this.getPixelY(), this.getWidth(), this.getHeight())
+        // the start pixel x of the first box
+        let _pixelX = this.getPixelX() + _padding
+        let _pixelY = this.getPixelY() + _padding
+        // draw out all the item(s)
         for (let i = 0; i < _keys.length; i++) {
             const key = _keys[i]
             const value = this.get(key)
@@ -60,14 +74,15 @@ class Inventory extends GameObjectsMapContainer {
                 this.#selected = i
             }
             if (value > 1) {
-                ctx.font = `bold ${this.#boxSize / 3}px arial`
+                ctx.font = `bold ${_padding}px arial`
                 ctx.fillStyle = 'white';
                 ctx.strokeStyle = 'black';
-                ctx.fillText(value, _pixelX + this.#boxSize * 0.8, _pixelY + this.#boxSize * 0.95)
-                ctx.strokeText(value, _pixelX + this.#boxSize * 0.8, _pixelY + this.#boxSize * 0.95)
+                ctx.fillText(value, _pixelX + this.#boxSize * 3 / 4, _pixelY + this.#boxSize)
+                ctx.strokeText(value, _pixelX + this.#boxSize * 3 / 4, _pixelY + this.#boxSize)
             }
-            _pixelX += this.#boxSize * 1.5
+            _pixelX += this.#boxSize + _padding
         }
+        // press Escape to deselect item
         if (Controller.keys["Escape"]) {
             this.#selected = -1
         }

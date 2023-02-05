@@ -7,6 +7,22 @@ class FarmLevel extends Level {
         return this.findEntity(_entity => Math.floor(_entity.getBlockX()) === x && Math.floor(_entity.getBlockY()) === y && _entity instanceof Crop)
     }
 
+    getCrop(x, y) {
+        return this.getEntityUsingFilter(e => Math.floor(e.getBlockX()) === Math.floor(x) && Math.floor(e.getBlockY()) === Math.floor(y) && e instanceof Crop)
+    }
+
+    // if player can plant on tile
+    canPlantOnTile(x, y) {
+        const layers = this.getTile(x, y)
+        WateredDirtTiles.offset = this.getAbsMetaId("tilemaps", DateTimeSystem.getSeason(), 0)
+        for (let i = 0; i < layers.length; i++) {
+            if (WateredDirtTiles.isWateredDirt(layers[i])) {
+                return this.getCrop(x, y) == null
+            }
+        }
+        return false;
+    }
+
     #updateDirtKind(x, y, index, checkTileNextToIt = true) {
         const dirtKind = new DirtTiles()
         let indexTmp = this.getTileLayerIndexUsingFilter(x - 1, y, DirtTiles.isDirt)
@@ -88,18 +104,6 @@ class FarmLevel extends Level {
             // update the watered dirt tile type for the tile
             this.#updateWateredDirtKind(x, y, layerIndex + 1)
         }
-    }
-
-    // if player can plant on tile
-    canPlantOnTile(x, y) {
-        const layers = this.getTile(x, y)
-        WateredDirtTiles.offset = this.getAbsMetaId("tilemaps", DateTimeSystem.getSeason(), 0)
-        for (let i = 0; i < layers.length; i++) {
-            if (WateredDirtTiles.isWateredDirt(layers[i])) {
-                return true
-            }
-        }
-        return false;
     }
 
     //Function to teleport the player to town once they are in a certain position

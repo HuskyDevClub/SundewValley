@@ -38,8 +38,16 @@ class Level extends AbstractTiledMap {
         /*while (playerName == null){
             playerName = prompt("Please enter player name", "Cody");
         }*/
-        this.#player = new Player(playerName, 10, 10, this)
+        let _spawn = this.getParameter("spawn")
+        if (_spawn == null) _spawn = [0, 0]
+        this.#player = new Player(playerName, _spawn[0], _spawn[1], this)
         this.#player.obtainItem("potato_seed")
+        this.#player.obtainItem("potato", 2)
+        this.#player.obtainItem("corn", 2)
+        this.#player.obtainItem("pea", 2)
+        this.#player.obtainItem("pumpkin_seed", 2)
+        this.#player.obtainItem("cabbage_seed", 2)
+        this.#player.obtainItem("grain_seed", 2)
         this.addEntity(this.#player);
         this.addEntity(new Chicken("black_chicken", 10, 10, this));
         this.addEntity(new Cow("strawberry_cow", 10, 10, this));
@@ -51,6 +59,15 @@ class Level extends AbstractTiledMap {
 
     getPlayer() {
         return this.#player
+    }
+
+    getEntityUsingFilter(_filter) {
+        for (let i = this.#entities.length - 1; i >= 0; i--) {
+            if (_filter(this.#entities[i])) {
+                return this.#entities[i]
+            }
+        }
+        return null
     }
 
     getEntitiesThatCollideWith(entity) {
@@ -116,11 +133,12 @@ class Level extends AbstractTiledMap {
             this.setPixelY(this.getPixelY() + Math.floor(this.#player.getMovingSpeedY() * 1.5))
         }
         this.setPixelY(Math.max(Math.min(this.getPixelY(), 0), ctx.canvas.height - this.getHeight()))
-        // draw map
+        // draw map group layers
         this.drawTiles(
             ctx,
             Math.floor(-this.getPixelX() / this.getTileSize()), Math.ceil((ctx.canvas.width - this.getPixelX()) / this.getTileSize()),
             Math.floor(-this.getPixelY() / this.getTileSize()), Math.ceil((ctx.canvas.height - this.getPixelY()) / this.getTileSize()),
+            0, this.getParameter("groupLevelEndAtIndex"),
             this.getPixelX(), this.getPixelY()
         )
         // sort entities based on coordinates
@@ -144,6 +162,16 @@ class Level extends AbstractTiledMap {
             entity.display(ctx, this.getPixelX(), this.getPixelY())
             if (Debugger.isDebugging) ctx.strokeRect(entity.getPixelX() + this.getPixelX(), entity.getPixelY() + this.getPixelY(), entity.getWidth(), entity.getHeight())
         });
+        // If there is top layers on the top of ground layers
+        if (this.getParameter("groupLevelEndAtIndex") != null) {
+            this.drawTiles(
+                ctx,
+                Math.floor(-this.getPixelX() / this.getTileSize()), Math.ceil((ctx.canvas.width - this.getPixelX()) / this.getTileSize()),
+                Math.floor(-this.getPixelY() / this.getTileSize()), Math.ceil((ctx.canvas.height - this.getPixelY()) / this.getTileSize()),
+                this.getParameter("groupLevelEndAtIndex"), null,
+                this.getPixelX(), this.getPixelY()
+            )
+        }
     };
 
 }

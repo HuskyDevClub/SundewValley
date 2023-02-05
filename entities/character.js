@@ -27,6 +27,17 @@ class Character extends Creature {
         this.#inventory[key] = this.#inventory[key] == null ? num : this.#inventory[key] + num
     }
 
+    tryUseItem(key, num = 1) {
+        if (this.#inventory[key] != null && this.#inventory[key] >= num) {
+            this.#inventory[key] -= num
+            if (this.#inventory[key] === 0) {
+                delete this.#inventory[key]
+            }
+            return true
+        }
+        return false;
+    }
+
     setMoney(value) {
         this.#money = Math.max(value, 0)
     }

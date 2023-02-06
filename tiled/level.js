@@ -1,6 +1,6 @@
 class Level extends AbstractTiledMap {
+    static PLAYER
     #entities = []
-    #player
     #automapTilesFirstGid = -1
 
     constructor(_path) {
@@ -34,32 +34,33 @@ class Level extends AbstractTiledMap {
     };
 
     initEntities() {
-        let playerName = "Cody"
-        /*while (playerName == null){
-            playerName = prompt("Please enter player name", "Cody");
-        }*/
-        let _spawn = this.getParameter("spawn")
-        if (_spawn == null) _spawn = [0, 0]
-        this.#player = new Player(playerName, _spawn[0], _spawn[1], this)
-        this.#player.obtainItem("potato_seed")
-        this.#player.obtainItem("potato", 2)
-        this.#player.obtainItem("corn", 2)
-        this.#player.obtainItem("pea", 2)
-        this.#player.obtainItem("pumpkin_seed", 2)
-        this.#player.obtainItem("cabbage_seed", 2)
-        this.#player.obtainItem("grain_seed", 2)
-        this.addEntity(this.#player);
+        this.#entities = []
+        if (Level.PLAYER == null) {
+            let playerName = "Cody"
+            /*while (playerName == null){
+                playerName = prompt("Please enter player name", "Cody");
+            }*/
+            let _spawn = this.getParameter("spawn")
+            if (_spawn == null) _spawn = [0, 0]
+            Level.PLAYER = new Player(playerName, _spawn[0], _spawn[1], this)
+            Level.PLAYER.obtainItem("potato_seed")
+            Level.PLAYER.obtainItem("potato", 2)
+            Level.PLAYER.obtainItem("corn", 2)
+            Level.PLAYER.obtainItem("pea", 2)
+            Level.PLAYER.obtainItem("pumpkin_seed", 2)
+            Level.PLAYER.obtainItem("cabbage_seed", 2)
+            Level.PLAYER.obtainItem("grain_seed", 2)
+        }
+        Level.PLAYER.setMapReference(this)
+        this.addEntity(Level.PLAYER);
+        /*
         this.addEntity(new Chicken("black_chicken", 10, 10, this));
         this.addEntity(new Cow("strawberry_cow", 10, 10, this));
         this.addEntity(new Goat("brown_goat", 10, 10, this));
         this.addEntity(new Pig("pink_pig", 10, 10, this));
         this.addEntity(new Sheep("fluffy_white_sheep_sheet", 10, 10, this));
-        this.addEntity(new Crop("potato", 15, 12, this));
+        this.addEntity(new Crop("potato", 15, 12, this));*/
     };
-
-    getPlayer() {
-        return this.#player
-    }
 
     getEntityUsingFilter(_filter) {
         for (let i = this.#entities.length - 1; i >= 0; i--) {
@@ -92,7 +93,7 @@ class Level extends AbstractTiledMap {
             }
         });
         Debugger.pushInfo("--------------------")
-        const entitiesThatCollideWithPlayer = this.getEntitiesThatCollideWith(this.#player)
+        const entitiesThatCollideWithPlayer = this.getEntitiesThatCollideWith(Level.PLAYER)
         Debugger.pushInfo(`Total entities that collide with the player: ${entitiesThatCollideWithPlayer.length}`)
         if (entitiesThatCollideWithPlayer.length > 0) {
             const names = []
@@ -123,17 +124,17 @@ class Level extends AbstractTiledMap {
 
     draw(ctx) {
         // fix offset x
-        if (this.#player.getPixelRight() + this.getPixelX() > ctx.canvas.width * 0.9) {
-            this.setPixelX(this.getPixelX() - Math.floor(this.#player.getMovingSpeedX() * 1.5))
-        } else if (this.#player.getPixelX() + this.getPixelX() < ctx.canvas.width * 0.1) {
-            this.setPixelX(this.getPixelX() + Math.floor(this.#player.getMovingSpeedX() * 1.5))
+        if (Level.PLAYER.getPixelRight() + this.getPixelX() > ctx.canvas.width * 0.9) {
+            this.setPixelX(this.getPixelX() - Math.floor(Level.PLAYER.getMovingSpeedX() * 1.5))
+        } else if (Level.PLAYER.getPixelX() + this.getPixelX() < ctx.canvas.width * 0.1) {
+            this.setPixelX(this.getPixelX() + Math.floor(Level.PLAYER.getMovingSpeedX() * 1.5))
         }
         this.setPixelX(Math.max(Math.min(this.getPixelX(), 0), ctx.canvas.width - this.getWidth()))
         // fix offset y
-        if (this.#player.getPixelBottom() + this.getPixelY() > ctx.canvas.height * 0.9) {
-            this.setPixelY(this.getPixelY() - Math.floor(this.#player.getMovingSpeedY() * 1.5))
-        } else if (this.#player.getPixelY() + this.getPixelY() < ctx.canvas.height * 0.1) {
-            this.setPixelY(this.getPixelY() + Math.floor(this.#player.getMovingSpeedY() * 1.5))
+        if (Level.PLAYER.getPixelBottom() + this.getPixelY() > ctx.canvas.height * 0.9) {
+            this.setPixelY(this.getPixelY() - Math.floor(Level.PLAYER.getMovingSpeedY() * 1.5))
+        } else if (Level.PLAYER.getPixelY() + this.getPixelY() < ctx.canvas.height * 0.1) {
+            this.setPixelY(this.getPixelY() + Math.floor(Level.PLAYER.getMovingSpeedY() * 1.5))
         }
         this.setPixelY(Math.max(Math.min(this.getPixelY(), 0), ctx.canvas.height - this.getHeight()))
         // draw map group layers
@@ -173,10 +174,11 @@ class Level extends AbstractTiledMap {
                     this.getTileSize() * _pos.width, this.getTileSize() * _pos.height,
                     _pos.x, _pos.y, _pos.width, _pos.height,
                 )
-                if (trigger.collideWith(this.#player)) {
+                if (trigger.collideWith(Level.PLAYER)) {
                     GAME_ENGINE.enterLevel(_pos["destinationLevel"])
-                    GAME_ENGINE.getCurrentLevel().getPlayer().setBlockX(_pos["destinationX"])
-                    GAME_ENGINE.getCurrentLevel().getPlayer().setBlockY(_pos["destinationY"])
+                    Level.PLAYER.setMapReference(GAME_ENGINE.getCurrentLevel())
+                    Level.PLAYER.setBlockX(_pos["destinationX"])
+                    Level.PLAYER.setBlockY(_pos["destinationY"])
                 } else if (Debugger.isDebugging) {
                     ctx.strokeStyle = 'red';
                     trigger.draw(ctx)

@@ -34,6 +34,10 @@ class Entity extends GameObject2d {
         return this.#mapRef
     }
 
+    setMapReference(_ref) {
+        return this.#mapRef = _ref
+    }
+
     getSpriteSheet() {
         if (this.#sprite_sheet == null) {
             this.#sprite_sheet = this.getSubType() ? ASSET_MANAGER.getImage(this.getCategory(), this.getType(), `${this.getSubType()}.png`) : ASSET_MANAGER.getImage(this.getCategory(), `${this.getType()}.png`)

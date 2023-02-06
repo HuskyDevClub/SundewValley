@@ -180,6 +180,6 @@ class AbstractTiledMap extends Abstract2dGameObject {
     logDebugInfo() {
         Debugger.pushInfo(`map - shape: [${this.getColumn()}, ${this.getRow()}]`)
         Debugger.pushInfo(`image size:[${this.getWidth()}, ${this.getHeight()}]; offset: [${this.getPixelX()}, ${this.getPixelY()}]`)
-        Debugger.pushInfo(`tile is hovering: [${this.getTileOnPixel(Controller.mouse.x, Controller.mouse.y, this.getTileSize())}]`)
+        Debugger.pushInfo(`tile is hovering: [${this.getCoordinate(Controller.mouse.x, Controller.mouse.y, this.getTileSize())}]- [${this.getTileOnPixel(Controller.mouse.x, Controller.mouse.y, this.getTileSize())}]`)
     }
 }

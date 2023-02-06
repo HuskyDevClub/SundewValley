@@ -24,7 +24,7 @@ class GameEngine {
             this.#levels[this.#currentLevelName] = name.startsWith("farm_") ? new FarmLevel(`./levels/${name}.json`) : new Level(`./levels/${name}.json`)
             this.getCurrentLevel().initEntities()
         }
-        this.#ui = new UserInterfaces(this.getCurrentLevel());
+        this.#ui = new UserInterfaces();
     }
 
     init(ctx) {

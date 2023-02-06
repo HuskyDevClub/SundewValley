@@ -47,7 +47,7 @@ class Inventory extends GameObjectsMapContainer {
                         // if you can plant stuff on this tile
                         if (GAME_ENGINE.getCurrentLevel().canPlantOnTile(onBlock[0], onBlock[1])) {
                             ctx.fillStyle = 'rgba(127,255,0,0.5)';
-                            if (Controller.mouse.leftClick && GAME_ENGINE.getCurrentLevel().getPlayer().tryUseItem(key)) {
+                            if (Controller.mouse.leftClick && Level.PLAYER.tryUseItem(key)) {
                                 GAME_ENGINE.getCurrentLevel().addEntity(new Crop(key.replace('_seed', ''), onBlock[0], onBlock[1], GAME_ENGINE.getCurrentLevel()))
                             }
                         } else {

@@ -32,10 +32,7 @@
     ]
   },
   "bedroom": {
-    "spawn": [
-      24,
-      25
-    ],
+    "interior": true,
     "teleportation": [
       {
         "x": 24,

@@ -2,7 +2,7 @@ class DateTimeSystem {
     static #data
 
     static init(yearStarted) {
-        this.#data = new Date(yearStarted, 2, 1, 6, 0, 0, 0)
+        this.#data = new Date(yearStarted, 2, 1, 6, 0, 1, 0)
     }
 
     static getDateObject() {
@@ -19,6 +19,10 @@ class DateTimeSystem {
 
     static update(time_in_seconds) {
         this.#data.setTime(this.#data.getTime() + time_in_seconds * 60000)
+    }
+
+    static getHour() {
+        return this.#data.getHours() + this.#data.getMinutes() / 60
     }
 
     static getMonth() {

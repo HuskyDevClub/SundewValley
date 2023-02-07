@@ -1,8 +1,8 @@
 class UserInterfaces {
     #inventory = null
 
-    constructor(_level) {
-        this.#inventory = new Inventory(_level.getPlayer())
+    constructor() {
+        this.#inventory = new Inventory(Level.PLAYER)
     }
 
     update() {

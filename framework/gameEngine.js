@@ -14,23 +14,25 @@ class GameEngine {
         this.#levels = {}
     };
 
-    #getCurrentLevel() {
+    getCurrentLevel() {
         return this.#levels[this.#currentLevelName]
     }
 
-    #enterLevel(name) {
+    enterLevel(name) {
         this.#currentLevelName = name
-        if (this.#getCurrentLevel() == null) {
-            this.#levels[this.#currentLevelName] = name.startsWith("farm") ? new FarmLevel(`./levels/${name}.json`) : new Level(`./levels/${name}.json`)
-            this.#getCurrentLevel().initEntities()
+        if (this.getCurrentLevel() == null) {
+            this.#levels[this.#currentLevelName] = name.startsWith("farm_") ? new FarmLevel(`./levels/${name}.json`) : new Level(`./levels/${name}.json`)
+            this.getCurrentLevel().initEntities()
         }
-        this.#ui = new UserInterfaces(this.#getCurrentLevel());
+        this.#ui = new UserInterfaces();
     }
 
     init(ctx) {
         this.ctx = ctx;
         DateTimeSystem.init(2023);
-        this.#enterLevel("town") // `farm_${DateTimeSystem.getSeason()}`
+        InventoryItems.init()
+        LevelData.init()
+        this.enterLevel("farm_test_level") // "town" `farm_${DateTimeSystem.getSeason()}`
         Controller.startInput(this.ctx)
         this.timer = new Timer();
         Debugger.switchDebugMode();
@@ -49,7 +51,7 @@ class GameEngine {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         // Draw the latest things first
-        this.#getCurrentLevel().draw(this.ctx)
+        this.getCurrentLevel().draw(this.ctx)
         // Draw all the ui onto screen
         this.#ui.draw(this.ctx)
     };
@@ -61,7 +63,7 @@ class GameEngine {
             Debugger.pushInfo(`current in game time: ${Math.round(this.timer.gameTime)}s`)
             Debugger.pushInfo(`Date: ${DateTimeSystem.toLocaleString()} ${DateTimeSystem.getSeason()}`)
         }
-        this.#getCurrentLevel().update()
+        this.getCurrentLevel().update()
         this.#ui.update()
     };
 

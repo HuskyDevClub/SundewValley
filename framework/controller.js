@@ -6,8 +6,7 @@ class Controller {
     static right = false;
 
     // Information on the input
-    static click = null;
-    static mouse = {x: 0, y: 0, radius: 0};
+    static mouse = {x: 0, y: 0, radius: 0, leftClick: false, rightClick: false};
     static wheel = null;
     static keys = {};
 
@@ -22,12 +21,29 @@ class Controller {
         }
 
         function mouseListener(e) {
-            Controller.mouse = getPixelXandY(e);
+            Controller.mouse = {...Controller.mouse, ...getPixelXandY(e)};
         }
 
-        function mouseClickListener(e) {
-            Controller.click = getPixelXandY(e);
-            if (Debugger.isDebugging) console.log(Controller.click);
+        function mouseDown(e) {
+            switch (e.button) {
+                case 0:
+                    Controller.mouse.leftClick = true
+                    break;
+                case 2:
+                    Controller.mouse.rightClick = true;
+                    break;
+            }
+        }
+
+        function mouseUp(e) {
+            switch (e.button) {
+                case 0:
+                    Controller.mouse.leftClick = false
+                    break;
+                case 2:
+                    Controller.mouse.rightClick = false;
+                    break;
+            }
         }
 
         function wheelListener(e) {
@@ -84,14 +100,15 @@ class Controller {
         }
 
         Controller.mousemove = mouseListener;
-        Controller.leftclick = mouseClickListener;
         Controller.wheelscroll = wheelListener;
         Controller.keydown = keydownListener;
         Controller.keyup = keyUpListener;
 
         _ctx.canvas.addEventListener("mousemove", Controller.mousemove, false);
 
-        _ctx.canvas.addEventListener("click", Controller.leftclick, false);
+        _ctx.canvas.addEventListener("mousedown", mouseDown, false);
+
+        _ctx.canvas.addEventListener("mouseup", mouseUp, false);
 
         _ctx.canvas.addEventListener("wheel", Controller.wheelscroll, false);
 

@@ -32,8 +32,23 @@ class Player extends Character {
         // for dig action, try to convert grass to dirt
         if (this.isCurrentAction("dig") && this.getCurrentAnimation().currentFrame() === 1) {
             if (this.getMapReference() instanceof FarmLevel) this.getMapReference().tryConvertTileToDirt(this.getBlockX(), this.getBlockY())
-        } else if (this.isCurrentAction("water") && this.getCurrentAnimation().currentFrame() === 1) {
+        }
+        // for water action, try to water the ground
+        else if (this.isCurrentAction("water") && this.getCurrentAnimation().currentFrame() === 1) {
             if (this.getMapReference() instanceof FarmLevel) this.getMapReference().tryConvertTileToWateredDirt(this.getBlockX(), this.getBlockY())
+        }
+        // for cut action, try to harvest the crop
+        else if (this.isCurrentAction("cut") && this.getCurrentAnimation().currentFrame() === 1) {
+            if (this.getMapReference() instanceof FarmLevel) {
+                const _crop = this.getMapReference().getCrop(this.getBlockX(), this.getBlockY())
+                if (_crop != null && _crop.isMatured()) {
+                    _crop.removeFromWorld = true
+                    // obtain a random amount of crop
+                    this.obtainItem(_crop.getType(), getRandomIntInclusive(1, 3))
+                    // obtain a random amount of seed for that crop
+                    this.obtainItem(_crop.getType() + "_seed", getRandomIntInclusive(1, 2))
+                }
+            }
         }
         // check special action
         if (this.#checkSpecialAction()) {

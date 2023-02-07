@@ -21,12 +21,16 @@ class Crop extends Entity {
         }
     }
 
+    isMatured() {
+        return this.#stage >= this.#growPeriods.length
+    }
+
     getStage() {
         return this.#stage
     }
 
     getTimeUntilNextStageInMs() {
-        return this.#stage < this.#growPeriods.length ? this.#growPeriods[this.#stage] * 3600000 - DateTimeSystem.getDifferenceInMs(this.#timePlanted) : Infinity
+        return this.isMatured() ? Infinity : this.#growPeriods[this.#stage] * 3600000 - DateTimeSystem.getDifferenceInMs(this.#timePlanted)
     }
 
     getPixelX() {

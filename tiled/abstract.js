@@ -7,6 +7,7 @@ class AbstractTiledMap extends Abstract2dGameObject {
     #column
     #tileSets
     #tileSize = 0
+    #levelParameters
 
     constructor(_path) {
         super(0, 0)
@@ -32,7 +33,13 @@ class AbstractTiledMap extends Abstract2dGameObject {
             }
         })
         this.#tileSets = Array.from(_data["tilesets"])
+        this.#levelParameters = LevelData.get(_path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, ""));
+        if (this.#levelParameters == null) this.#levelParameters = {}
         this.setTileSize(Math.floor(GAME_ENGINE.ctx.canvas.width / 20))
+    }
+
+    getParameter(key) {
+        return this.#levelParameters[key]
     }
 
     getTileSize() {
@@ -114,9 +121,20 @@ class AbstractTiledMap extends Abstract2dGameObject {
         return this.#map[y][x]
     }
 
+    getTilePixelX(x) {
+        return x * this.#tileSize + this.getPixelX()
+    }
+
+    getTilePixelY(y) {
+        return y * this.#tileSize + this.getPixelY()
+    }
+
+    getCoordinate(pixelX, pixelY, _size) {
+        return [Math.floor((pixelX - this.getPixelX()) / _size), Math.floor((pixelY - this.getPixelY()) / _size)]
+    }
+
     getTileOnPixel(pixelX, pixelY, _size) {
-        const x = Math.floor((pixelX - this.getPixelX()) / _size)
-        const y = Math.floor((pixelY - this.getPixelY()) / _size)
+        const [x, y] = this.getCoordinate(pixelX, pixelY, _size)
         return this.isCoordinateInRange(x, y) ? this.getTile(x, y) : null
     }
 
@@ -143,17 +161,25 @@ class AbstractTiledMap extends Abstract2dGameObject {
         }
     }
 
-    drawTiles(ctx, xStart, xEndExclude, yStart, yEndExclude, pixelX, pixelY) {
+    drawTiles(ctx, xStart, xEndExclude, yStart, yEndExclude, layerStart, layerEnd) {
         if (xStart == null) xStart = 0
         if (yStart == null) yStart = 0
         if (xEndExclude == null) xEndExclude = this.#column
         if (yEndExclude == null) yEndExclude = this.#row
+        if (layerStart == null) layerStart = 0
         for (let y = yStart; y < yEndExclude; y++) {
             for (let x = xStart; x < xEndExclude; x++) {
-                this.#map[y][x].forEach(metaId => {
-                    this.drawTile(ctx, metaId, x * this.#tileSize + pixelX, y * this.#tileSize + pixelY)
-                })
+                const currentTile = this.#map[y][x]
+                for (let i = layerStart, n = layerEnd == null ? currentTile.length : layerEnd; i < n; i++) {
+                    this.drawTile(ctx, currentTile[i], this.getTilePixelX(x), this.getTilePixelY(y))
+                }
             }
         }
+    }
+
+    logDebugInfo() {
+        Debugger.pushInfo(`map - shape: [${this.getColumn()}, ${this.getRow()}]`)
+        Debugger.pushInfo(`image size:[${this.getWidth()}, ${this.getHeight()}]; offset: [${this.getPixelX()}, ${this.getPixelY()}]`)
+        Debugger.pushInfo(`tile is hovering: [${this.getCoordinate(Controller.mouse.x, Controller.mouse.y, this.getTileSize())}]- [${this.getTileOnPixel(Controller.mouse.x, Controller.mouse.y, this.getTileSize())}]`)
     }
 }

@@ -14,6 +14,14 @@ class Level extends AbstractTiledMap {
         }
     }
 
+    static #setPlayerCoordinate(x, y) {
+        this.PLAYER.setBlockX(x)
+        this.PLAYER.setBlockY(y)
+        const theCurrentLevel = this.PLAYER.getMapReference()
+        theCurrentLevel.setPixelX(-this.PLAYER.getBlockX() * theCurrentLevel.getTileSize() + GAME_ENGINE.ctx.canvas.width / 2)
+        theCurrentLevel.setPixelY(-this.PLAYER.getBlockY() * theCurrentLevel.getTileSize() + GAME_ENGINE.ctx.canvas.height / 2)
+    }
+
     findEntity(_filter) {
         return this.#entities.find(_filter)
     }
@@ -40,9 +48,10 @@ class Level extends AbstractTiledMap {
             /*while (playerName == null){
                 playerName = prompt("Please enter player name", "Cody");
             }*/
+            Level.PLAYER = new Player(playerName, 0, 0, this)
             let _spawn = this.getParameter("spawn")
             if (_spawn == null) _spawn = [0, 0]
-            Level.PLAYER = new Player(playerName, _spawn[0], _spawn[1], this)
+            Level.#setPlayerCoordinate(_spawn[0], _spawn[1])
             Level.PLAYER.obtainItem("potato_seed")
             Level.PLAYER.obtainItem("potato", 2)
             Level.PLAYER.obtainItem("corn", 2)
@@ -177,8 +186,8 @@ class Level extends AbstractTiledMap {
                 if (trigger.collideWith(Level.PLAYER)) {
                     GAME_ENGINE.enterLevel(_pos["destinationLevel"])
                     Level.PLAYER.setMapReference(GAME_ENGINE.getCurrentLevel())
-                    Level.PLAYER.setBlockX(_pos["destinationX"])
-                    Level.PLAYER.setBlockY(_pos["destinationY"])
+                    Level.#setPlayerCoordinate(_pos["destinationX"], _pos["destinationY"])
+                    return undefined;
                 } else if (Debugger.isDebugging) {
                     ctx.strokeStyle = 'red';
                     trigger.draw(ctx)
@@ -187,12 +196,13 @@ class Level extends AbstractTiledMap {
             })
         }
         // If there is top layers on the top of ground layers
-        if (this.getParameter("groupLevelEndAtIndex") != null) {
+        const theGroupLevelEndAtIndex = this.getParameter("groupLevelEndAtIndex")
+        if (theGroupLevelEndAtIndex != null) {
             this.drawTiles(
                 ctx,
-                Math.floor(-this.getPixelX() / this.getTileSize()), Math.ceil((ctx.canvas.width - this.getPixelX()) / this.getTileSize()),
-                Math.floor(-this.getPixelY() / this.getTileSize()), Math.ceil((ctx.canvas.height - this.getPixelY()) / this.getTileSize()),
-                this.getParameter("groupLevelEndAtIndex"), null
+                Math.max(Math.floor(-this.getPixelX() / this.getTileSize()), 0), Math.min(Math.ceil((ctx.canvas.width - this.getPixelX()) / this.getTileSize()), this.getColumn()),
+                Math.max(Math.floor(-this.getPixelY() / this.getTileSize()), 0), Math.min(Math.ceil((ctx.canvas.height - this.getPixelY()) / this.getTileSize()), this.getRow()),
+                theGroupLevelEndAtIndex, null
             )
         }
         // if this is an interior scene

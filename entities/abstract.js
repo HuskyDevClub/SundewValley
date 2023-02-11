@@ -49,7 +49,7 @@ class Abstract2dGameObject {
 
     // if the mouse is hovering this item
     isHovering() {
-        return this.getPixelX() < Controller.mouse.x && Controller.mouse.x < this.getPixelRight() && this.getPixelY() < Controller.mouse.y && Controller.mouse.y < this.getPixelRight()
+        return this.getPixelX() < Controller.mouse.x && Controller.mouse.x < this.getPixelRight() && this.getPixelY() < Controller.mouse.y && Controller.mouse.y < this.getPixelBottom()
     }
 
     draw(ctx) {

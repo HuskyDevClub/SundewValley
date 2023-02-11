@@ -22,6 +22,10 @@ class Level extends AbstractTiledMap {
         theCurrentLevel.setPixelY(-this.PLAYER.getBlockY() * theCurrentLevel.getTileSize() + GAME_ENGINE.ctx.canvas.height / 2)
     }
 
+    getTileSize() {
+        return this.getTileWidth()
+    }
+
     findEntity(_filter) {
         return this.#entities.find(_filter)
     }
@@ -59,6 +63,13 @@ class Level extends AbstractTiledMap {
             Level.PLAYER.obtainItem("pumpkin_seed", 2)
             Level.PLAYER.obtainItem("cabbage_seed", 2)
             Level.PLAYER.obtainItem("grain_seed", 2)
+            Level.PLAYER.obtainItem("grain_seed", 2)
+            Level.PLAYER.obtainItem("cabbage", 2)
+            Level.PLAYER.obtainItem("grain_seed", 5)
+            Level.PLAYER.obtainItem("pea", 2)
+            Level.PLAYER.obtainItem("lavender_seed", 2)
+            Level.PLAYER.obtainItem("tomato", 9)
+            Level.PLAYER.obtainItem("strawberry", 10)
         }
         Level.PLAYER.setMapReference(this)
         this.addEntity(Level.PLAYER);
@@ -91,7 +102,13 @@ class Level extends AbstractTiledMap {
             Debugger.pushInfo("--------------------")
             if (entity instanceof Character) {
                 Debugger.pushInfo(`name: ${entity.getName()}`)
-                Debugger.pushInfo(`inventory: ${JSON.stringify(entity.getInventory())}`)
+                Debugger.pushInfo("inventory:")
+                Object.keys(entity.getItemBar()).forEach(key => {
+                    Debugger.pushInfo(`- ${key}: ${JSON.stringify(entity.getItemBar()[key])}`)
+                })
+                Object.keys(entity.getInventory()).forEach(key => {
+                    Debugger.pushInfo(`-- ${key}: ${JSON.stringify(entity.getInventory()[key])}`)
+                })
             }
             Debugger.pushInfo(`type: ${entity.getType()}; size: [${entity.getWidth()}, ${entity.getHeight()}]`)
             Debugger.pushInfo(`pixel pos: [${entity.getPixelX()}, ${entity.getPixelY()}]; block pos: [${Math.round(entity.getBlockX() * 100) / 100}, ${Math.round(entity.getBlockY() * 100) / 100}]`)

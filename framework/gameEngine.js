@@ -71,6 +71,8 @@ class GameEngine {
         this.clockTick = this.timer.tick();
         this.update();
         this.draw();
+        //Controller needs to be updated at the very end!
+        Controller.update();
     };
 
 }

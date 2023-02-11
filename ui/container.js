@@ -9,7 +9,7 @@ class GameObjectsMapContainer extends GameObject2d {
     }
 
     getNumOfItems() {
-        return this.#items_container_map.length
+        return Object.keys(this.#items_container_map).length
     }
 
     clear() {

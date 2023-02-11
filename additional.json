@@ -62,8 +62,7 @@
     "./images/tilemaps/summer.png",
     "./images/tilemaps/walls_and_floors.png",
     "./images/tilemaps/winter.png",
-    "./images/ui/gui.png",
-    "./images/ui/itemsBar.png"
+    "./images/ui/gui.png"
   ],
   "jsons": [
     "./images/animals/chicken/chicken.json",

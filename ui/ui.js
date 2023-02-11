@@ -6,7 +6,7 @@ class UserInterfaces {
     }
 
     update() {
-        this.#inventory.isVisiable = Controller.keys["KeyI"]
+        this.#inventory.isInventoryUIVisible = Controller.keys["KeyI"]
     }
 
     draw(ctx) {

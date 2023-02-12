@@ -35,10 +35,6 @@ class InventoryItems {
         this.#PIXEL_SIZE = ASSET_MANAGER.getJsonByPath("./images/items/items.json")["tilewidth"]
     }
 
-    static getPixelSize() {
-        return this.#PIXEL_SIZE
-    }
-
     // if an item can be used
     static isUsable(key) {
         return key.endsWith("seed")

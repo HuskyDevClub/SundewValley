@@ -1,18 +1,19 @@
 class Inventory extends GameObjectsMapContainer {
-    static #BASE_SPRITE_SHEET = null
     static #itemsBarTiledStaticImage = null
     static #backpackTiledStaticImage = null
     static ITEMS_PER_ROW = 9
+    static #ROWS_PER_INVENTIORY_PAGE = 6
     #boxSize
     #selected = -1
     #inventoryContainer
+    #currentInventoryPage = 0
 
     constructor(characterRef) {
         super(characterRef.getItemBar())
         this.#boxSize = Math.floor(GAME_ENGINE.ctx.canvas.width / 20)
         this.#inventoryContainer = new GameObjectsMapContainer(characterRef.getInventory())
         this.isInventoryUIVisible = false
-        if (Inventory.#BASE_SPRITE_SHEET == null) Inventory.#BASE_SPRITE_SHEET = ASSET_MANAGER.getImageByPath("./images/ui/gui.png")
+        GUI.init()
         if (Inventory.#itemsBarTiledStaticImage == null) Inventory.#itemsBarTiledStaticImage = new TiledStaticImage("./ui/itemsBar.json")
         if (Inventory.#backpackTiledStaticImage == null) Inventory.#backpackTiledStaticImage = new TiledStaticImage("./ui/backpack.json")
     }
@@ -22,7 +23,7 @@ class Inventory extends GameObjectsMapContainer {
         const boxHeight = this.#boxSize * 1.75
         const boxStartX = pixelX + (width - boxWidth) / 2
         const boxStartY = pixelY + (height - boxHeight) / 2
-        ctx.drawImage(Inventory.#BASE_SPRITE_SHEET, 9 * InventoryItems.getPixelSize(), 0, InventoryItems.getPixelSize() * 3, InventoryItems.getPixelSize() * 3, boxStartX, boxStartY, boxWidth, boxHeight)
+        GUI.draw(ctx, 9, 0, 3, 3, boxStartX, boxStartY, boxWidth, boxHeight)
         InventoryItems.drawImage(ctx, key, pixelX, pixelY, width, height, toolLevel)
     }
 
@@ -39,7 +40,7 @@ class Inventory extends GameObjectsMapContainer {
         if (key != null) InventoryItems.drawImage(ctx, key, pixelX, pixelY, width, height)
         // if current item has been selected
         if (this.#selected === index) {
-            ctx.drawImage(Inventory.#BASE_SPRITE_SHEET, 15 * InventoryItems.getPixelSize(), 0, InventoryItems.getPixelSize() * 2, InventoryItems.getPixelSize() * 2, pixelX - this.#boxSize * 0.35, pixelY - this.#boxSize * 0.35, this.#boxSize * 1.75, this.#boxSize * 1.75)
+            GUI.draw(ctx, 15, 0, 2, 2, pixelX - this.#boxSize * 0.35, pixelY - this.#boxSize * 0.35, this.#boxSize * 1.75, this.#boxSize * 1.75)
             // draw item icon on mouse location
             if (key != null && InventoryItems.isUsable(key) && !Inventory.#itemsBarTiledStaticImage.isHovering() && (!this.isInventoryUIVisible || !Inventory.#backpackTiledStaticImage.isHovering())) {
                 if (GAME_ENGINE.getCurrentLevel() instanceof FarmLevel) {
@@ -64,7 +65,9 @@ class Inventory extends GameObjectsMapContainer {
                 }
                 InventoryItems.drawImage(ctx, key, Controller.mouse.x, Controller.mouse.y, width / 2, height / 2)
             }
-        } else if (pixelX <= Controller.mouse.x && Controller.mouse.x <= pixelX + this.#boxSize && pixelY <= Controller.mouse.y && Controller.mouse.y <= pixelY + this.#boxSize) {
+        }
+        // if box is hovered
+        if (pixelX <= Controller.mouse.x && Controller.mouse.x <= pixelX + this.#boxSize && pixelY <= Controller.mouse.y && Controller.mouse.y <= pixelY + this.#boxSize) {
             // if player left-click this item
             if (Controller.mouse.leftClick) {
                 // the item will be selected
@@ -79,13 +82,8 @@ class Inventory extends GameObjectsMapContainer {
         }
         // render item number text
         if (value != null && value.amount > 1) {
-            ctx.font = `bold ${Math.floor(Inventory.#itemsBarTiledStaticImage.getTileHeight() * 1.75)}px arial`
-            ctx.fillStyle = 'white';
-            ctx.strokeStyle = 'black';
-            ctx.fillText(value.amount, pixelX + this.#boxSize - ctx.measureText(value.amount).width, pixelY + this.#boxSize)
-            ctx.strokeText(value.amount, pixelX + this.#boxSize - ctx.measureText(value.amount).width, pixelY + this.#boxSize)
+            Font.draw(ctx, value.amount, Inventory.#itemsBarTiledStaticImage.getTileHeight() * 1.75, pixelX + this.#boxSize - ctx.measureText(value.amount).width, pixelY + this.#boxSize)
         }
-
     }
 
     draw(ctx) {
@@ -131,7 +129,8 @@ class Inventory extends GameObjectsMapContainer {
             Inventory.#backpackTiledStaticImage.setPixelY(Inventory.#itemsBarTiledStaticImage.getPixelY() - padding * 2 - Inventory.#backpackTiledStaticImage.getHeight())
             Inventory.#backpackTiledStaticImage.draw(ctx)
             // draw out all the item(s) in player's inventory
-            for (let i = 0; i < Inventory.ITEMS_PER_ROW * 6; i++) {
+            const ITEM_PER_PAGE = Inventory.ITEMS_PER_ROW * Inventory.#ROWS_PER_INVENTIORY_PAGE
+            for (let i = this.#currentInventoryPage * ITEM_PER_PAGE, n = i + ITEM_PER_PAGE; i < n; i++) {
                 // calculate pixel x of the box
                 _pixelX = Math.floor(this.getPixelX() + (i % Inventory.ITEMS_PER_ROW) * 5 * Inventory.#backpackTiledStaticImage.getTileWidth() + padding)
                 // calculate pixel y of the box
@@ -141,6 +140,13 @@ class Inventory extends GameObjectsMapContainer {
                     this.drawItem(ctx, key, this.#inventoryContainer.get(key), i + Inventory.ITEMS_PER_ROW, _pixelX, _pixelY, this.#boxSize, this.#boxSize)
                 } else {
                     this.drawItem(ctx, null, null, i + Inventory.ITEMS_PER_ROW, _pixelX, _pixelY, this.#boxSize, this.#boxSize)
+                }
+            }
+            if (!Controller.mouse_prev.leftClick && Controller.mouse.leftClick) {
+                if (Inventory.#backpackTiledStaticImage.isTilesHovered(47, 48, 14, 15)) {
+                    this.#currentInventoryPage = Math.max(this.#currentInventoryPage - 1, 0)
+                } else if (Inventory.#backpackTiledStaticImage.isTilesHovered(47, 48, 17, 18)) {
+                    this.#currentInventoryPage += 1
                 }
             }
         }

@@ -69,6 +69,10 @@ class AbstractTiledMap extends Abstract2dGameObject {
         return this.getRow() * this.getTileHeight()
     }
 
+    isTilesHovered(xStart, xEndExclude, yStart, yEndExclude) {
+        return this.getTilePixelX(xStart) <= Controller.mouse.x && Controller.mouse.x <= this.getTilePixelX(xEndExclude) && this.getTilePixelY(yStart) <= Controller.mouse.y && Controller.mouse.y <= this.getTilePixelY(yEndExclude)
+    }
+
     #processChunk(_chunk) {
         const chunk_width = parseInt(_chunk.width)
         console.assert(_chunk["data"].length === chunk_width * parseInt(_chunk.height))
@@ -133,11 +137,11 @@ class AbstractTiledMap extends Abstract2dGameObject {
     }
 
     getTilePixelX(x) {
-        return x * this.#tileWidth + this.getPixelX()
+        return x * this.getTileWidth() + this.getPixelX()
     }
 
     getTilePixelY(y) {
-        return y * this.#tileHeight + this.getPixelY()
+        return y * this.getTileHeight() + this.getPixelY()
     }
 
     getCoordinate(pixelX, pixelY, _size) {

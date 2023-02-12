@@ -2,6 +2,7 @@ class UserInterfaces {
     #inventory = null
 
     constructor() {
+        GUI.init()
         this.#inventory = new Inventory(Level.PLAYER)
     }
 

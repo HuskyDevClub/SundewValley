@@ -21,7 +21,8 @@ class GameEngine {
     enterLevel(name) {
         this.#currentLevelName = name
         if (this.getCurrentLevel() == null) {
-            this.#levels[this.#currentLevelName] = name.startsWith("farm_") ? new FarmLevel(`./levels/${name}.json`) : new Level(`./levels/${name}.json`)
+            const levelPath = `./levels/${name}.json`
+            this.#levels[this.#currentLevelName] = name.startsWith("farm_") ? new FarmLevel(levelPath) : name.startsWith("bedroom") ? new Bedroom(levelPath) : new Level(levelPath)
             this.getCurrentLevel().initEntities()
         }
         this.#ui = new UserInterfaces();

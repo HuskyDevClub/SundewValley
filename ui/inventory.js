@@ -13,7 +13,6 @@ class Inventory extends GameObjectsMapContainer {
         this.#boxSize = Math.floor(GAME_ENGINE.ctx.canvas.width / 20)
         this.#inventoryContainer = new GameObjectsMapContainer(characterRef.getInventory())
         this.isInventoryUIVisible = false
-        GUI.init()
         if (Inventory.#itemsBarTiledStaticImage == null) Inventory.#itemsBarTiledStaticImage = new TiledStaticImage("./ui/itemsBar.json")
         if (Inventory.#backpackTiledStaticImage == null) Inventory.#backpackTiledStaticImage = new TiledStaticImage("./ui/backpack.json")
     }

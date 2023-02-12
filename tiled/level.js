@@ -148,6 +148,14 @@ class Level extends AbstractTiledMap {
         }
     }
 
+    processTriggers(_data) {
+        if (_data.type.localeCompare("teleportation") === 0) {
+            GAME_ENGINE.enterLevel(_data["destinationLevel"])
+            Level.PLAYER.setMapReference(GAME_ENGINE.getCurrentLevel())
+            Level.#setPlayerCoordinate(_data["destinationX"], _data["destinationY"])
+        }
+    }
+
     draw(ctx) {
         // fix offset x
         if (Level.PLAYER.getPixelRight() + this.getPixelX() > ctx.canvas.width * 0.9) {
@@ -192,25 +200,27 @@ class Level extends AbstractTiledMap {
             if (Debugger.isDebugging) ctx.strokeRect(entity.getPixelX() + this.getPixelX(), entity.getPixelY() + this.getPixelY(), entity.getWidth(), entity.getHeight())
         });
         // Draw all the teleportation points
-        const teleportationPoints = this.getParameter("teleportation")
-        if (teleportationPoints != null) {
-            teleportationPoints.forEach(_pos => {
-                const trigger = new Trigger(
-                    this.getTilePixelX(_pos.x), this.getTilePixelY(_pos.y),
-                    this.getTileSize() * _pos.width, this.getTileSize() * _pos.height,
-                    _pos.x, _pos.y, _pos.width, _pos.height,
-                )
-                if (trigger.collideWith(Level.PLAYER)) {
-                    GAME_ENGINE.enterLevel(_pos["destinationLevel"])
-                    Level.PLAYER.setMapReference(GAME_ENGINE.getCurrentLevel())
-                    Level.#setPlayerCoordinate(_pos["destinationX"], _pos["destinationY"])
-                    return undefined;
-                } else if (Debugger.isDebugging) {
-                    ctx.strokeStyle = 'red';
-                    trigger.draw(ctx)
-                    ctx.strokeStyle = 'black';
+        const triggers = this.getParameter("triggers")
+        if (triggers != null) {
+            triggers.forEach(_pos => {
+                    const _trigger = new Trigger(
+                        this.getTilePixelX(_pos.x), this.getTilePixelY(_pos.y),
+                        this.getTileSize() * _pos.width, this.getTileSize() * _pos.height,
+                        _pos.x, _pos.y, _pos.width, _pos.height,
+                    )
+                    if (_trigger.collideWith(Level.PLAYER)) {
+                        this.processTriggers(_pos)
+                        if (Debugger.isDebugging) {
+                            ctx.strokeStyle = 'red';
+                            _trigger.draw(ctx)
+                            ctx.strokeStyle = 'black';
+                        }
+                    } else if (Debugger.isDebugging) {
+                        ctx.strokeStyle = 'black';
+                        _trigger.draw(ctx)
+                    }
                 }
-            })
+            )
         }
         // If there is top layers on the top of ground layers
         const theGroupLevelEndAtIndex = this.getParameter("groupLevelEndAtIndex")
@@ -223,7 +233,6 @@ class Level extends AbstractTiledMap {
             )
         }
         // if this is an interior scene
-
         if (this.getParameter("interior") == null || this.getParameter("interior") === false) {
             // adding affect for day night cycle
             if (!(DateTimeSystem.getHour() > 6 && DateTimeSystem.getHour() < 17)) {

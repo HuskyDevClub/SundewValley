@@ -33,6 +33,11 @@ class DateTimeSystem {
         return this.#data.toLocaleString()
     }
 
+    static toNextDay() {
+        this.#data.setDate(this.#data.getDate() + 1)
+        this.#data.setHours(6, 0, 1, 0)
+    }
+
     static getSeason() {
         if (3 <= this.getMonth() && this.getMonth() <= 5) {
             return "spring"

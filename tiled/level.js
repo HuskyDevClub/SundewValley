@@ -150,9 +150,11 @@ class Level extends AbstractTiledMap {
 
     processTriggers(_data) {
         if (_data.type.localeCompare("teleportation") === 0) {
-            GAME_ENGINE.enterLevel(_data["destinationLevel"])
-            Level.PLAYER.setMapReference(GAME_ENGINE.getCurrentLevel())
-            Level.#setPlayerCoordinate(_data["destinationX"], _data["destinationY"])
+            Transition.start(() => {
+                GAME_ENGINE.enterLevel(_data["destinationLevel"])
+                Level.PLAYER.setMapReference(GAME_ENGINE.getCurrentLevel())
+                Level.#setPlayerCoordinate(_data["destinationX"], _data["destinationY"])
+            })
         }
     }
 
@@ -199,29 +201,6 @@ class Level extends AbstractTiledMap {
             entity.display(ctx, this.getPixelX(), this.getPixelY())
             if (Debugger.isDebugging) ctx.strokeRect(entity.getPixelX() + this.getPixelX(), entity.getPixelY() + this.getPixelY(), entity.getWidth(), entity.getHeight())
         });
-        // Draw all the teleportation points
-        const triggers = this.getParameter("triggers")
-        if (triggers != null) {
-            triggers.forEach(_pos => {
-                    const _trigger = new Trigger(
-                        this.getTilePixelX(_pos.x), this.getTilePixelY(_pos.y),
-                        this.getTileSize() * _pos.width, this.getTileSize() * _pos.height,
-                        _pos.x, _pos.y, _pos.width, _pos.height,
-                    )
-                    if (_trigger.collideWith(Level.PLAYER)) {
-                        this.processTriggers(_pos)
-                        if (Debugger.isDebugging) {
-                            ctx.strokeStyle = 'red';
-                            _trigger.draw(ctx)
-                            ctx.strokeStyle = 'black';
-                        }
-                    } else if (Debugger.isDebugging) {
-                        ctx.strokeStyle = 'black';
-                        _trigger.draw(ctx)
-                    }
-                }
-            )
-        }
         // If there is top layers on the top of ground layers
         const theGroupLevelEndAtIndex = this.getParameter("groupLevelEndAtIndex")
         if (theGroupLevelEndAtIndex != null) {
@@ -244,6 +223,26 @@ class Level extends AbstractTiledMap {
                     ctx.fillStyle = "rgba(5,18,45, 0.9)";
                 }
                 ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            }
+        }
+        // Draw all the teleportation points
+        if (Transition.isNotActivated()) {
+            const triggers = this.getParameter("triggers")
+            if (triggers != null) {
+                triggers.forEach(_pos => {
+                        const _trigger = new Trigger(
+                            this.getTilePixelX(_pos.x), this.getTilePixelY(_pos.y),
+                            this.getTileSize() * _pos.width, this.getTileSize() * _pos.height,
+                            _pos.x, _pos.y, _pos.width, _pos.height,
+                        )
+                        if (_trigger.collideWith(Level.PLAYER)) {
+                            this.processTriggers(_pos)
+                        } else if (Debugger.isDebugging) {
+                            ctx.strokeStyle = 'red';
+                            _trigger.draw(ctx)
+                        }
+                    }
+                )
             }
         }
     };

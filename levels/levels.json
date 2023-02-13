@@ -26,20 +26,21 @@
         "width": 1,
         "height": 1,
         "destinationLevel": "bedroom",
-        "destinationX": 24,
-        "destinationY": 26,
+        "destinationX": 24.5,
+        "destinationY": 25.9,
         "type": "teleportation"
       }
     ]
   },
   "bedroom": {
     "interior": true,
+    "groupLevelEndAtIndex": 3,
     "triggers": [
       {
         "x": 24,
         "y": 26,
         "width": 1,
-        "height": 0.5,
+        "height": 1,
         "destinationLevel": "farm_test_level",
         "destinationX": 5.5,
         "destinationY": 10,

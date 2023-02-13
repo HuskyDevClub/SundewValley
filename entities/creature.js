@@ -1,5 +1,6 @@
 /* A Creature is a creature that can can move*/
 class Creature extends Entity {
+    static #COLLISION_RADIUS = 0.5
     #moving_speed_x
     #moving_speed_y
     #current_moving_speed_x
@@ -92,53 +93,61 @@ class Creature extends Entity {
     }
 
     update() {
+        // X coordinate collision detection
         if (this.getCurrentMovingSpeedX() !== 0) {
+            // moving right
             if (this.getCurrentMovingSpeedX() > 0) {
                 for (let i = 0; i < Math.floor(this.getCurrentMovingSpeedX() / this.getMapReference().getTileSize()); i++) {
                     this.setPixelX(this.getPixelX() + this.getMapReference().getTileSize())
-                    if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY())) {
-                        this.setBlockX(Math.floor(this.getBlockX()) - 0.01)
+                    if (!this.getMapReference().canEnterTile(this.getBlockX() + Creature.#COLLISION_RADIUS, this.getBlockY())) {
+                        this.setBlockX(Math.floor(this.getBlockX()) + Creature.#COLLISION_RADIUS)
                     }
                 }
                 this.setPixelX(this.getPixelX() + this.getCurrentMovingSpeedX() % this.getMapReference().getTileSize())
-                if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY())) {
-                    this.setBlockX(Math.floor(this.getBlockX()) - 0.01)
+                if (!this.getMapReference().canEnterTile(this.getBlockX() + Creature.#COLLISION_RADIUS, this.getBlockY())) {
+                    this.setBlockX(Math.floor(this.getBlockX()) + Creature.#COLLISION_RADIUS)
                 }
-            } else {
+            }
+            // moving left
+            else {
                 for (let i = 0; i < Math.floor((-this.getCurrentMovingSpeedX()) / this.getMapReference().getTileSize()); i++) {
                     this.setPixelX(this.getPixelX() - this.getMapReference().getTileSize())
-                    if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY())) {
-                        this.setBlockX(Math.floor(this.getBlockX()) + 1)
+                    if (!this.getMapReference().canEnterTile(this.getBlockX() - Creature.#COLLISION_RADIUS, this.getBlockY())) {
+                        this.setBlockX(Math.floor(this.getBlockX()) + Creature.#COLLISION_RADIUS)
                     }
                 }
                 this.setPixelX(this.getPixelX() + this.getCurrentMovingSpeedX() % this.getMapReference().getTileSize())
-                if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY())) {
-                    this.setBlockX(Math.floor(this.getBlockX()) + 1)
+                if (!this.getMapReference().canEnterTile(this.getBlockX() - Creature.#COLLISION_RADIUS, this.getBlockY())) {
+                    this.setBlockX(Math.floor(this.getBlockX()) + Creature.#COLLISION_RADIUS)
                 }
             }
         }
+        // Y coordinate collision detection
         if (this.getCurrentMovingSpeedY() !== 0) {
+            // moving down
             if (this.getCurrentMovingSpeedY() > 0) {
                 for (let i = 0; i < Math.floor(this.getCurrentMovingSpeedY() / this.getMapReference().getTileSize()); i++) {
                     this.setPixelY(this.getPixelY() + this.getMapReference().getTileSize())
-                    if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY())) {
+                    if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY() - 0.01)) {
                         this.setBlockY(Math.floor(this.getBlockY()) - 0.01)
                     }
                 }
                 this.setPixelY(this.getPixelY() + this.getCurrentMovingSpeedY() % this.getMapReference().getTileSize())
-                if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY())) {
+                if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY() - 0.01)) {
                     this.setBlockY(Math.floor(this.getBlockY()) - 0.01)
                 }
-            } else {
+            }
+            // moving up
+            else {
                 for (let i = 0; i < Math.floor((-this.getCurrentMovingSpeedY()) / this.getMapReference().getTileSize()); i++) {
                     this.setPixelY(this.getPixelY() - this.getMapReference().getTileSize())
-                    if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY())) {
-                        this.setBlockY(Math.floor(this.getBlockY()) + 1)
+                    if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY() - Creature.#COLLISION_RADIUS)) {
+                        this.setBlockY(Math.floor(this.getBlockY()) + Creature.#COLLISION_RADIUS)
                     }
                 }
                 this.setPixelY(this.getPixelY() + this.getCurrentMovingSpeedY() % this.getMapReference().getTileSize())
-                if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY())) {
-                    this.setBlockY(Math.floor(this.getBlockY()) + 1)
+                if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY() - Creature.#COLLISION_RADIUS)) {
+                    this.setBlockY(Math.floor(this.getBlockY()) + Creature.#COLLISION_RADIUS)
                 }
             }
         }
@@ -148,6 +157,6 @@ class Creature extends Entity {
         if (this.getCurrentAnimation().isDone()) {
             this.setCurrentAction("idle")
         }
-        this.getCurrentAnimation().drawFrame(GAME_ENGINE.clockTick, ctx, this.getPixelX() + offsetX, this.getPixelY() + offsetY, this.getWidth(), this.getHeight())
+        this.getCurrentAnimation().drawFrame(GAME_ENGINE.clockTick, ctx, Math.round(this.getPixelX() + offsetX), Math.round(this.getPixelY() + offsetY), this.getWidth(), this.getHeight())
     };
 }

@@ -2905,28 +2905,8 @@
   "tileheight": 16,
   "tilesets": [
     {
-      "firstgid": 1,
-      "source": "..\/images\/ui\/base.json"
-    },
-    {
-      "firstgid": 298,
-      "source": "..\/images\/ui\/bars.json"
-    },
-    {
-      "firstgid": 328,
-      "source": "..\/images\/ui\/buttons.json"
-    },
-    {
-      "firstgid": 412,
-      "source": "..\/images\/ui\/elements.json"
-    },
-    {
       "firstgid": 452,
       "source": "..\/images\/ui\/gui.json"
-    },
-    {
-      "firstgid": 932,
-      "source": "..\/images\/ui\/icons.json"
     }
   ],
   "tilewidth": 16,

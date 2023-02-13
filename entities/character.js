@@ -23,14 +23,22 @@ class Character extends Creature {
         return this.#inventory
     }
 
+    hasItemInInventory(key) {
+        return this.#inventory[key] != null
+    }
+
     obtainItem(key, num = 1) {
-        this.#inventory[key] = this.#inventory[key] == null ? num : this.#inventory[key] + num
+        if (this.hasItemInInventory(key)) {
+            this.#inventory[key]["amount"] += num
+        } else {
+            this.#inventory[key] = {"amount": num}
+        }
     }
 
     tryUseItem(key, num = 1) {
-        if (this.#inventory[key] != null && this.#inventory[key] >= num) {
-            this.#inventory[key] -= num
-            if (this.#inventory[key] === 0) {
+        if (this.hasItemInInventory(key) != null && this.#inventory[key]["amount"] >= num) {
+            this.#inventory[key]["amount"] -= num
+            if (this.#inventory[key]["amount"] === 0) {
                 delete this.#inventory[key]
             }
             return true

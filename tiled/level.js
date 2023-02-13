@@ -14,6 +14,18 @@ class Level extends AbstractTiledMap {
         }
     }
 
+    static #setPlayerCoordinate(x, y) {
+        this.PLAYER.setBlockX(x)
+        this.PLAYER.setBlockY(y)
+        const theCurrentLevel = this.PLAYER.getMapReference()
+        theCurrentLevel.setPixelX(-this.PLAYER.getBlockX() * theCurrentLevel.getTileSize() + GAME_ENGINE.ctx.canvas.width / 2)
+        theCurrentLevel.setPixelY(-this.PLAYER.getBlockY() * theCurrentLevel.getTileSize() + GAME_ENGINE.ctx.canvas.height / 2)
+    }
+
+    getTileSize() {
+        return this.getTileWidth()
+    }
+
     findEntity(_filter) {
         return this.#entities.find(_filter)
     }
@@ -40,9 +52,10 @@ class Level extends AbstractTiledMap {
             /*while (playerName == null){
                 playerName = prompt("Please enter player name", "Cody");
             }*/
+            Level.PLAYER = new Player(playerName, 0, 0, this)
             let _spawn = this.getParameter("spawn")
             if (_spawn == null) _spawn = [0, 0]
-            Level.PLAYER = new Player(playerName, _spawn[0], _spawn[1], this)
+            Level.#setPlayerCoordinate(_spawn[0], _spawn[1])
             Level.PLAYER.obtainItem("potato_seed")
             Level.PLAYER.obtainItem("potato", 2)
             Level.PLAYER.obtainItem("corn", 2)
@@ -50,6 +63,13 @@ class Level extends AbstractTiledMap {
             Level.PLAYER.obtainItem("pumpkin_seed", 2)
             Level.PLAYER.obtainItem("cabbage_seed", 2)
             Level.PLAYER.obtainItem("grain_seed", 2)
+            Level.PLAYER.obtainItem("grain_seed", 2)
+            Level.PLAYER.obtainItem("cabbage", 2)
+            Level.PLAYER.obtainItem("grain_seed", 5)
+            Level.PLAYER.obtainItem("pea", 2)
+            Level.PLAYER.obtainItem("lavender_seed", 2)
+            Level.PLAYER.obtainItem("tomato", 9)
+            Level.PLAYER.obtainItem("strawberry", 10)
         }
         Level.PLAYER.setMapReference(this)
         this.addEntity(Level.PLAYER);
@@ -82,7 +102,13 @@ class Level extends AbstractTiledMap {
             Debugger.pushInfo("--------------------")
             if (entity instanceof Character) {
                 Debugger.pushInfo(`name: ${entity.getName()}`)
-                Debugger.pushInfo(`inventory: ${JSON.stringify(entity.getInventory())}`)
+                Debugger.pushInfo("inventory:")
+                Object.keys(entity.getItemBar()).forEach(key => {
+                    Debugger.pushInfo(`- ${key}: ${JSON.stringify(entity.getItemBar()[key])}`)
+                })
+                Object.keys(entity.getInventory()).forEach(key => {
+                    Debugger.pushInfo(`-- ${key}: ${JSON.stringify(entity.getInventory()[key])}`)
+                })
             }
             Debugger.pushInfo(`type: ${entity.getType()}; size: [${entity.getWidth()}, ${entity.getHeight()}]`)
             Debugger.pushInfo(`pixel pos: [${entity.getPixelX()}, ${entity.getPixelY()}]; block pos: [${Math.round(entity.getBlockX() * 100) / 100}, ${Math.round(entity.getBlockY() * 100) / 100}]`)
@@ -119,6 +145,16 @@ class Level extends AbstractTiledMap {
         //output debug information
         if (Debugger.isDebugging) {
             this.logDebugInfo()
+        }
+    }
+
+    processTriggers(_data) {
+        if (_data.type.localeCompare("teleportation") === 0) {
+            Transition.start(() => {
+                GAME_ENGINE.enterLevel(_data["destinationLevel"])
+                Level.PLAYER.setMapReference(GAME_ENGINE.getCurrentLevel())
+                Level.#setPlayerCoordinate(_data["destinationX"], _data["destinationY"])
+            })
         }
     }
 
@@ -165,34 +201,14 @@ class Level extends AbstractTiledMap {
             entity.display(ctx, this.getPixelX(), this.getPixelY())
             if (Debugger.isDebugging) ctx.strokeRect(entity.getPixelX() + this.getPixelX(), entity.getPixelY() + this.getPixelY(), entity.getWidth(), entity.getHeight())
         });
-        // Draw all the teleportation points
-        const teleportationPoints = this.getParameter("teleportation")
-        if (teleportationPoints != null) {
-            teleportationPoints.forEach(_pos => {
-                const trigger = new Trigger(
-                    this.getTilePixelX(_pos.x), this.getTilePixelY(_pos.y),
-                    this.getTileSize() * _pos.width, this.getTileSize() * _pos.height,
-                    _pos.x, _pos.y, _pos.width, _pos.height,
-                )
-                if (trigger.collideWith(Level.PLAYER)) {
-                    GAME_ENGINE.enterLevel(_pos["destinationLevel"])
-                    Level.PLAYER.setMapReference(GAME_ENGINE.getCurrentLevel())
-                    Level.PLAYER.setBlockX(_pos["destinationX"])
-                    Level.PLAYER.setBlockY(_pos["destinationY"])
-                } else if (Debugger.isDebugging) {
-                    ctx.strokeStyle = 'red';
-                    trigger.draw(ctx)
-                    ctx.strokeStyle = 'black';
-                }
-            })
-        }
         // If there is top layers on the top of ground layers
-        if (this.getParameter("groupLevelEndAtIndex") != null) {
+        const theGroupLevelEndAtIndex = this.getParameter("groupLevelEndAtIndex")
+        if (theGroupLevelEndAtIndex != null) {
             this.drawTiles(
                 ctx,
-                Math.floor(-this.getPixelX() / this.getTileSize()), Math.ceil((ctx.canvas.width - this.getPixelX()) / this.getTileSize()),
-                Math.floor(-this.getPixelY() / this.getTileSize()), Math.ceil((ctx.canvas.height - this.getPixelY()) / this.getTileSize()),
-                this.getParameter("groupLevelEndAtIndex"), null
+                Math.max(Math.floor(-this.getPixelX() / this.getTileSize()), 0), Math.min(Math.ceil((ctx.canvas.width - this.getPixelX()) / this.getTileSize()), this.getColumn()),
+                Math.max(Math.floor(-this.getPixelY() / this.getTileSize()), 0), Math.min(Math.ceil((ctx.canvas.height - this.getPixelY()) / this.getTileSize()), this.getRow()),
+                theGroupLevelEndAtIndex, null
             )
         }
         // if this is an interior scene
@@ -200,13 +216,33 @@ class Level extends AbstractTiledMap {
             // adding affect for day night cycle
             if (!(DateTimeSystem.getHour() > 6 && DateTimeSystem.getHour() < 17)) {
                 if (DateTimeSystem.getHour() >= 17 && DateTimeSystem.getHour() <= 21) {
-                    ctx.fillStyle = `rgba(0, 0, 0, ${(DateTimeSystem.getHour() - 17) * 0.225})`;
+                    ctx.fillStyle = `rgba(5,18,45, ${(DateTimeSystem.getHour() - 17) * 0.225})`;
                 } else if (DateTimeSystem.getHour() >= 4 && DateTimeSystem.getHour() <= 6) {
-                    ctx.fillStyle = `rgba(0, 0, 0, ${0.9 - (DateTimeSystem.getHour() - 4) * 0.45})`;
+                    ctx.fillStyle = `rgba(5,18,45, ${0.9 - (DateTimeSystem.getHour() - 4) * 0.45})`;
                 } else {
-                    ctx.fillStyle = "rgba(0, 0, 0, 0.9)";
+                    ctx.fillStyle = "rgba(5,18,45, 0.9)";
                 }
                 ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            }
+        }
+        // Draw all the teleportation points
+        if (Transition.isNotActivated()) {
+            const triggers = this.getParameter("triggers")
+            if (triggers != null) {
+                triggers.forEach(_pos => {
+                        const _trigger = new Trigger(
+                            this.getTilePixelX(_pos.x), this.getTilePixelY(_pos.y),
+                            this.getTileSize() * _pos.width, this.getTileSize() * _pos.height,
+                            _pos.x, _pos.y, _pos.width, _pos.height,
+                        )
+                        if (_trigger.collideWith(Level.PLAYER)) {
+                            this.processTriggers(_pos)
+                        } else if (Debugger.isDebugging) {
+                            ctx.strokeStyle = 'red';
+                            _trigger.draw(ctx)
+                        }
+                    }
+                )
             }
         }
     };

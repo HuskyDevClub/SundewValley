@@ -20,7 +20,7 @@ class Controller {
             return {x: x, y: y, radius: 0};
         }
 
-        function mouseListener(e) {
+        function mouseMove(e) {
             Controller.mouse = {...Controller.mouse, ...getPixelXandY(e)};
         }
 
@@ -99,7 +99,7 @@ class Controller {
             }
         }
 
-        Controller.mousemove = mouseListener;
+        Controller.mousemove = mouseMove;
         Controller.wheelscroll = wheelListener;
         Controller.keydown = keydownListener;
         Controller.keyup = keyUpListener;
@@ -122,5 +122,9 @@ class Controller {
         this.down = false;
         this.left = false;
         this.right = false;
+    }
+
+    static update() {
+        this.mouse_prev = structuredClone(this.mouse);
     }
 }

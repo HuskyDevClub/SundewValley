@@ -6,7 +6,8 @@ class AbstractTiledMap extends Abstract2dGameObject {
     #minY
     #column
     #tileSets
-    #tileSize = 0
+    #tileWidth = 0
+    #tileHeight = 0
     #levelParameters
 
     constructor(_path) {
@@ -35,27 +36,41 @@ class AbstractTiledMap extends Abstract2dGameObject {
         this.#tileSets = Array.from(_data["tilesets"])
         this.#levelParameters = LevelData.get(_path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, ""));
         if (this.#levelParameters == null) this.#levelParameters = {}
-        this.setTileSize(Math.floor(GAME_ENGINE.ctx.canvas.width / 20))
+        const defaultSize = GAME_ENGINE.ctx.canvas.width / 20
+        this.setTileWidth(defaultSize)
+        this.setTileHeight(defaultSize)
     }
 
     getParameter(key) {
         return this.#levelParameters[key]
     }
 
-    getTileSize() {
-        return this.#tileSize
+    getTileWidth() {
+        return this.#tileWidth
     }
 
-    setTileSize(size) {
-        this.#tileSize = size
+    setTileWidth(size) {
+        this.#tileWidth = Math.round(size)
+    }
+
+    getTileHeight() {
+        return this.#tileHeight
+    }
+
+    setTileHeight(size) {
+        this.#tileHeight = Math.round(size)
     }
 
     getWidth() {
-        return this.getColumn() * this.getTileSize()
+        return this.getColumn() * this.getTileWidth()
     }
 
     getHeight() {
-        return this.getRow() * this.getTileSize()
+        return this.getRow() * this.getTileHeight()
+    }
+
+    isTilesHovered(xStart, xEndExclude, yStart, yEndExclude) {
+        return this.getTilePixelX(xStart) <= Controller.mouse.x && Controller.mouse.x <= this.getTilePixelX(xEndExclude) && this.getTilePixelY(yStart) <= Controller.mouse.y && Controller.mouse.y <= this.getTilePixelY(yEndExclude)
     }
 
     #processChunk(_chunk) {
@@ -122,11 +137,11 @@ class AbstractTiledMap extends Abstract2dGameObject {
     }
 
     getTilePixelX(x) {
-        return x * this.#tileSize + this.getPixelX()
+        return x * this.getTileWidth() + this.getPixelX()
     }
 
     getTilePixelY(y) {
-        return y * this.#tileSize + this.getPixelY()
+        return y * this.getTileHeight() + this.getPixelY()
     }
 
     getCoordinate(pixelX, pixelY, _size) {
@@ -153,7 +168,7 @@ class AbstractTiledMap extends Abstract2dGameObject {
                     const tileHeight = parseInt(jsonData["tileheight"])
                     ctx.drawImage(imageRef,
                         (absId % jsonData["columns"]) * tileWidth, Math.floor(absId / jsonData["columns"]) * tileHeight,
-                        tileWidth, tileHeight, pixelX, pixelY, this.#tileSize, this.#tileSize
+                        tileWidth, tileHeight, pixelX, pixelY, this.#tileWidth, this.#tileHeight
                     )
                 }
                 break;

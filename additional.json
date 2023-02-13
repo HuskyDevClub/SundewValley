@@ -62,13 +62,7 @@
     "./images/tilemaps/summer.png",
     "./images/tilemaps/walls_and_floors.png",
     "./images/tilemaps/winter.png",
-    "./images/ui/bars.png",
-    "./images/ui/base.png",
-    "./images/ui/buttons.png",
-    "./images/ui/elements.png",
-    "./images/ui/gui.png",
-    "./images/ui/icons.png",
-    "./images/ui/itemsBar.png"
+    "./images/ui/gui.png"
   ],
   "jsons": [
     "./images/animals/chicken/chicken.json",
@@ -111,18 +105,13 @@
     "./images/tilemaps/summer.json",
     "./images/tilemaps/walls_and_floors.json",
     "./images/tilemaps/winter.json",
-    "./images/ui/bars.json",
-    "./images/ui/base.json",
-    "./images/ui/buttons.json",
-    "./images/ui/elements.json",
     "./images/ui/gui.json",
-    "./images/ui/icons.json",
     "./levels/bedroom.json",
     "./levels/farm_spring.json",
     "./levels/farm_test_level.json",
     "./levels/levels.json",
     "./levels/town.json",
-    "./ui/inventory.json",
+    "./ui/backpack.json",
     "./ui/itemsBar.json",
     "./ui/ui.json"
   ]

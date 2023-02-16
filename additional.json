@@ -108,11 +108,14 @@
     "./images/ui/gui.json",
     "./levels/bedroom.json",
     "./levels/farm_spring.json",
+    "./levels/farm_summer.json",
     "./levels/farm_test_level.json",
     "./levels/levels.json",
     "./levels/town.json",
     "./ui/backpack.json",
+    "./ui/chest.json",
     "./ui/itemsBar.json",
+    "./ui/trade.json",
     "./ui/ui.json"
   ]
 }

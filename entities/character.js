@@ -19,8 +19,16 @@ class Character extends Creature {
         return this.#money
     }
 
+    earnMoney(value) {
+        this.#money += value
+    }
+
     getInventory() {
         return this.#inventory
+    }
+
+    setInventory(inventory) {
+        this.#inventory = inventory
     }
 
     hasItemInInventory(key) {

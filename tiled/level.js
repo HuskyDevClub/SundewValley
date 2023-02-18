@@ -1,5 +1,8 @@
 class Level extends AbstractTiledMap {
     static PLAYER
+    static CHESTS = {
+        "TradingBox": {}
+    }
     #entities = []
     #automapTilesFirstGid = -1
 
@@ -109,6 +112,7 @@ class Level extends AbstractTiledMap {
                 Object.keys(entity.getInventory()).forEach(key => {
                     Debugger.pushInfo(`-- ${key}: ${JSON.stringify(entity.getInventory()[key])}`)
                 })
+                Debugger.pushInfo(`money: ${entity.getMoney()}`)
             }
             Debugger.pushInfo(`type: ${entity.getType()}; size: [${entity.getWidth()}, ${entity.getHeight()}]`)
             Debugger.pushInfo(`pixel pos: [${entity.getPixelX()}, ${entity.getPixelY()}]; block pos: [${Math.round(entity.getBlockX() * 100) / 100}, ${Math.round(entity.getBlockY() * 100) / 100}]`)
@@ -118,6 +122,11 @@ class Level extends AbstractTiledMap {
                 Debugger.pushInfo(`current stage: ${entity.getStage()}; time until stage: ${entity.getTimeUntilNextStageInMs()}`)
             }
         });
+        Debugger.pushInfo("--------------------")
+        Debugger.pushInfo("Item in trade chest:")
+        Object.keys(Level.CHESTS.TradingBox).forEach(key => {
+            Debugger.pushInfo(`- ${key}: ${JSON.stringify(Level.CHESTS.TradingBox[key])}`)
+        })
         Debugger.pushInfo("--------------------")
         const entitiesThatCollideWithPlayer = this.getEntitiesThatCollideWith(Level.PLAYER)
         Debugger.pushInfo(`Total entities that collide with the player: ${entitiesThatCollideWithPlayer.length}`)
@@ -155,6 +164,19 @@ class Level extends AbstractTiledMap {
                 Level.PLAYER.setMapReference(GAME_ENGINE.getCurrentLevel())
                 Level.#setPlayerCoordinate(_data["destinationX"], _data["destinationY"])
             })
+        } else if (_data.type.localeCompare("chest") === 0) {
+            const _fontSize = Level.PLAYER.getMapReference().getTileSize() / 2
+            if (MessageButton.draw(
+                GAME_ENGINE.ctx, "Open", _fontSize,
+                Level.PLAYER.getMapReference().getPixelX() + Level.PLAYER.getPixelRight() - _fontSize / 3, Level.PLAYER.getMapReference().getPixelY() + Level.PLAYER.getPixelY() + _fontSize
+            )) {
+                if (!Controller.mouse_prev.leftClick && Controller.mouse.leftClick) {
+                    if (Level.CHESTS[_data["linkToChest"]] == null) Level.CHESTS[_data["linkToChest"]] = {}
+                    const chest = new Chest(0, 0, GAME_ENGINE.getCurrentLevel())
+                    chest.setInventory(Level.CHESTS[_data["linkToChest"]])
+                    GAME_ENGINE.getPlayerUi().openChest(chest)
+                }
+            }
         }
     }
 
@@ -167,7 +189,7 @@ class Level extends AbstractTiledMap {
         }
         this.setPixelX(Math.max(Math.min(this.getPixelX(), 0), ctx.canvas.width - this.getWidth()))
         // fix offset y
-        if (Level.PLAYER.getPixelBottom() + this.getPixelY() > ctx.canvas.height * 0.9) {
+        if (Level.PLAYER.getPixelBottom() + this.getPixelY() > ctx.canvas.height * 0.85) {
             this.setPixelY(this.getPixelY() - Math.floor(Level.PLAYER.getMovingSpeedY() * 1.5))
         } else if (Level.PLAYER.getPixelY() + this.getPixelY() < ctx.canvas.height * 0.1) {
             this.setPixelY(this.getPixelY() + Math.floor(Level.PLAYER.getMovingSpeedY() * 1.5))

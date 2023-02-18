@@ -29,6 +29,14 @@
         "destinationX": 24.5,
         "destinationY": 25.9,
         "type": "teleportation"
+      },
+      {
+        "x": 10.5,
+        "y": 8.5,
+        "width": 2,
+        "height": 2,
+        "linkToChest": "TradingBox",
+        "type": "chest"
       }
     ]
   },

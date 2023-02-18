@@ -1,4 +1,4 @@
-class ItemBar extends GameObjectsMapContainer {
+class ItemBarUI extends GameObjectsMapContainer {
     static #itemsBarTiledStaticImage = null
     static ITEMS_PER_ROW = 9
     #boxSize
@@ -8,7 +8,7 @@ class ItemBar extends GameObjectsMapContainer {
         super(characterRef.getItemBar())
         this.#boxSize = Math.floor(GAME_ENGINE.ctx.canvas.width / 20)
         this.#selected = -1
-        if (ItemBar.#itemsBarTiledStaticImage == null) ItemBar.#itemsBarTiledStaticImage = new TiledStaticImage("./ui/itemsBar.json")
+        if (ItemBarUI.#itemsBarTiledStaticImage == null) ItemBarUI.#itemsBarTiledStaticImage = new TiledStaticImage("./ui/itemsBar.json")
     }
 
     static getItemsBarTiledStaticImage() {
@@ -16,7 +16,7 @@ class ItemBar extends GameObjectsMapContainer {
     }
 
     noContainerIsHovering() {
-        return !ItemBar.#itemsBarTiledStaticImage.isHovering()
+        return !ItemBarUI.#itemsBarTiledStaticImage.isHovering()
     }
 
     getPadding() {
@@ -42,6 +42,16 @@ class ItemBar extends GameObjectsMapContainer {
         this.drawTool(ctx, "pot", size, size, size, size, 1)
         this.drawTool(ctx, "axe", size + this.#boxSize * 3 / 2, size, size, size, 1)
         this.drawTool(ctx, "hoe", size + this.#boxSize * 3, size, size, size, 1)
+    }
+
+    caseItemBeingHovered(currentIndex, key) {
+        // if player left-click this item
+        if (Controller.mouse.leftClick) {
+            // the item will be selected
+            this.#selected = currentIndex
+            return true
+        }
+        return false;
     }
 
     drawItem(ctx, key, value, index, pixelX, pixelY, width, height) {
@@ -77,21 +87,11 @@ class ItemBar extends GameObjectsMapContainer {
         }
         // if box is hovered
         if (pixelX <= Controller.mouse.x && Controller.mouse.x <= pixelX + this.#boxSize && pixelY <= Controller.mouse.y && Controller.mouse.y <= pixelY + this.#boxSize) {
-            // if player left-click this item
-            if (Controller.mouse.leftClick) {
-                // the item will be selected
-                this.#selected = index
-            } else if (key != null && !Controller.mouse_prev.rightClick && Controller.mouse.rightClick) {
-                if (index < ItemBar.ITEMS_PER_ROW) {
-                    Level.PLAYER.putItemIntoInventory(key)
-                } else if (this.getNumOfItems() < ItemBar.ITEMS_PER_ROW) {
-                    Level.PLAYER.takeItemOutOfInventory(key)
-                }
-            }
+            this.caseItemBeingHovered(index, key)
         }
         // render item number text
         if (value != null && value.amount > 1) {
-            Font.draw(ctx, value.amount, ItemBar.#itemsBarTiledStaticImage.getTileHeight() * 1.75, pixelX + this.#boxSize - ctx.measureText(value.amount).width, pixelY + this.#boxSize)
+            Font.draw(ctx, value.amount, ItemBarUI.#itemsBarTiledStaticImage.getTileHeight() * 1.75, pixelX + this.#boxSize - ctx.measureText(value.amount).width, pixelY + this.#boxSize)
         }
     }
 
@@ -103,23 +103,23 @@ class ItemBar extends GameObjectsMapContainer {
         // padding of the container
         const padding = this.getPadding()
         // update size
-        this.setWidth((this.#boxSize + padding) * ItemBar.ITEMS_PER_ROW + padding)
+        this.setWidth((this.#boxSize + padding) * ItemBarUI.ITEMS_PER_ROW + padding)
         this.setHeight(this.#boxSize + padding * 2)
         // update position
         this.setPixelY(ctx.canvas.height - padding - this.getHeight())
         this.setPixelX((ctx.canvas.width - this.getWidth()) / 2)
         // draw item bar background image
-        ItemBar.#itemsBarTiledStaticImage.setPixelX(this.getPixelX())
-        ItemBar.#itemsBarTiledStaticImage.setPixelY(this.getPixelY())
-        ItemBar.#itemsBarTiledStaticImage.setWidth(this.getWidth())
-        ItemBar.#itemsBarTiledStaticImage.setHeight(this.getHeight())
-        ItemBar.#itemsBarTiledStaticImage.draw(ctx)
+        ItemBarUI.#itemsBarTiledStaticImage.setPixelX(this.getPixelX())
+        ItemBarUI.#itemsBarTiledStaticImage.setPixelY(this.getPixelY())
+        ItemBarUI.#itemsBarTiledStaticImage.setWidth(this.getWidth())
+        ItemBarUI.#itemsBarTiledStaticImage.setHeight(this.getHeight())
+        ItemBarUI.#itemsBarTiledStaticImage.draw(ctx)
         // calculate pixel y of the box
         const _pixelY = Math.floor(this.getPixelY() + padding)
         // draw out all the item(s) in player quick access item bar
-        for (let i = 0; i < ItemBar.ITEMS_PER_ROW; i++) {
+        for (let i = 0; i < ItemBarUI.ITEMS_PER_ROW; i++) {
             // calculate pixel x of the box
-            const _pixelX = Math.floor(this.getPixelX() + i * 5 * ItemBar.#itemsBarTiledStaticImage.getTileWidth() + padding)
+            const _pixelX = Math.floor(this.getPixelX() + i * 5 * ItemBarUI.#itemsBarTiledStaticImage.getTileWidth() + padding)
             if (i < itemBarKeys.length) {
                 const key = itemBarKeys[i]
                 this.drawItem(ctx, key, this.get(key), i, _pixelX, _pixelY, this.#boxSize, this.#boxSize)

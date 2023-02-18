@@ -21,7 +21,7 @@ class Player extends Character {
             super.obtainItem(key, num)
         } else if (this.#itemBar[key] != null) {
             this.#itemBar[key]["amount"] += num
-        } else if (Object.keys(this.#itemBar).length < Inventory.ITEMS_PER_ROW) {
+        } else if (Object.keys(this.#itemBar).length < InventoryUI.ITEMS_PER_ROW) {
             this.#itemBar[key] = {"amount": num}
         } else {
             super.obtainItem(key, num)
@@ -39,6 +39,21 @@ class Player extends Character {
             return true
         }
         return false;
+    }
+
+    putItemIntoTargetInventory(key, targetRef) {
+        if (super.hasItemInInventory(key)) {
+            targetRef.obtainItem(key, this.getInventory()[key]["amount"])
+            super.tryUseItem(key, this.getInventory()[key]["amount"])
+        } else if (this.#itemBar[key] != null && this.#itemBar[key]["amount"] > 0) {
+            targetRef.obtainItem(key, this.#itemBar[key]["amount"])
+            delete this.#itemBar[key]
+        }
+    }
+
+    takeItemOutOfTargetInventory(key, targetRef) {
+        this.obtainItem(key, targetRef.getInventory()[key]["amount"])
+        targetRef.tryUseItem(key, targetRef.getInventory()[key]["amount"])
     }
 
     putItemIntoInventory(key) {
@@ -95,7 +110,7 @@ class Player extends Character {
             }
         }
         // check special action
-        if (this.#checkSpecialAction() && Transition.isNotActivated()) {
+        if (this.#checkSpecialAction() && Transition.isNotActivated() && GAME_ENGINE.getPlayerUi().isNotOpeningAnyChest()) {
             // move left or right
             if (Controller.left === true) {
                 this.setDirectionFacing("l")

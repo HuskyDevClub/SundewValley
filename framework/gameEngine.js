@@ -18,6 +18,10 @@ class GameEngine {
         return this.#levels[this.#currentLevelName]
     }
 
+    getPlayerUi() {
+        return this.#ui
+    }
+
     enterLevel(name) {
         this.#currentLevelName = name
         if (this.getCurrentLevel() == null) {

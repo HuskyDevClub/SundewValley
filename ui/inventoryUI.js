@@ -1,4 +1,4 @@
-class Inventory extends ItemBar {
+class InventoryUI extends ItemBarUI {
     #backpackTiledStaticImage = null
     ROWS_PER_PAGE = 6
     #currentInventoryPage = 0
@@ -12,13 +12,32 @@ class Inventory extends ItemBar {
         if (this.#backpackTiledStaticImage == null) this.#backpackTiledStaticImage = new TiledStaticImage(backpackTiledStaticImagePath == null ? "./ui/backpack.json" : backpackTiledStaticImagePath)
     }
 
+    caseItemBeingHovered(currentIndex, key) {
+        if (super.caseItemBeingHovered(currentIndex, key)) {
+            return true
+        } else if (key != null && !Controller.mouse_prev.rightClick && Controller.mouse.rightClick) {
+            this.moveStuffBetweenContainers(currentIndex, key)
+            return true
+        }
+        return false
+    }
+
+    moveStuffBetweenContainers(currentIndex, key) {
+        if (currentIndex < ItemBarUI.ITEMS_PER_ROW) {
+            Level.PLAYER.putItemIntoInventory(key)
+        } else if (this.getNumOfItems() < ItemBarUI.ITEMS_PER_ROW) {
+            Level.PLAYER.takeItemOutOfInventory(key)
+        }
+    }
+
     getBackpackTiledStaticImage() {
         return this.#backpackTiledStaticImage
     }
 
     noContainerIsHovering() {
-        return super.noContainerIsHovering() && !this.#backpackTiledStaticImage.isHovering()
+        return false
     }
+
 
     draw(ctx) {
         super.draw(ctx)
@@ -27,12 +46,12 @@ class Inventory extends ItemBar {
         // get keys
         const inventoryKeys = this.#inventoryContainer.keys()
         // draw inventory background image
-        this.#backpackTiledStaticImage.setTileWidth(ItemBar.getItemsBarTiledStaticImage().getTileWidth())
-        this.#backpackTiledStaticImage.setTileHeight(ItemBar.getItemsBarTiledStaticImage().getTileHeight())
-        this.#backpackTiledStaticImage.setPixelX(this.getPixelX() + ItemBar.getItemsBarTiledStaticImage().getTileWidth() * this.BLOCK_X_OFFSET)
-        this.#backpackTiledStaticImage.setPixelBottom(ItemBar.getItemsBarTiledStaticImage().getPixelY() - padding * 2)
+        this.#backpackTiledStaticImage.setTileWidth(ItemBarUI.getItemsBarTiledStaticImage().getTileWidth())
+        this.#backpackTiledStaticImage.setTileHeight(ItemBarUI.getItemsBarTiledStaticImage().getTileHeight())
+        this.#backpackTiledStaticImage.setPixelX(this.getPixelX() + ItemBarUI.getItemsBarTiledStaticImage().getTileWidth() * this.BLOCK_X_OFFSET)
+        this.#backpackTiledStaticImage.setPixelBottom(ItemBarUI.getItemsBarTiledStaticImage().getPixelY() - padding * 2)
         // calculate the maximum total numbers of items that can be displayed per page
-        const ITEM_PER_PAGE = ItemBar.ITEMS_PER_ROW * this.ROWS_PER_PAGE
+        const ITEM_PER_PAGE = ItemBarUI.ITEMS_PER_ROW * this.ROWS_PER_PAGE
         // calculate the maximum numbers of pages that is needed
         const MAX_NUM_OF_PAGES = Math.ceil(this.#inventoryContainer.getNumOfItems() / ITEM_PER_PAGE)
         // if more than one page
@@ -52,14 +71,14 @@ class Inventory extends ItemBar {
         // draw out all the item(s) in player's inventory
         for (let i = this.#currentInventoryPage * ITEM_PER_PAGE, n = i + ITEM_PER_PAGE; i < n; i++) {
             // calculate pixel x of the box
-            const _pixelX = Math.floor(this.getPixelX() + (i % ItemBar.ITEMS_PER_ROW) * 5 * this.#backpackTiledStaticImage.getTileWidth() + padding)
+            const _pixelX = Math.floor(this.getPixelX() + (i % ItemBarUI.ITEMS_PER_ROW) * 5 * this.#backpackTiledStaticImage.getTileWidth() + padding)
             // calculate pixel y of the box
-            const _pixelY = Math.floor(this.#backpackTiledStaticImage.getPixelY() + padding + 5 * this.#backpackTiledStaticImage.getTileHeight() * (Math.floor(i / ItemBar.ITEMS_PER_ROW) % this.ROWS_PER_PAGE))
+            const _pixelY = Math.floor(this.#backpackTiledStaticImage.getPixelY() + padding + 5 * this.#backpackTiledStaticImage.getTileHeight() * (Math.floor(i / ItemBarUI.ITEMS_PER_ROW) % this.ROWS_PER_PAGE))
             if (i < inventoryKeys.length) {
                 const key = inventoryKeys[i]
-                this.drawItem(ctx, key, this.#inventoryContainer.get(key), i + ItemBar.ITEMS_PER_ROW, _pixelX, _pixelY, this.getBoxSize(), this.getBoxSize())
+                this.drawItem(ctx, key, this.#inventoryContainer.get(key), i + ItemBarUI.ITEMS_PER_ROW, _pixelX, _pixelY, this.getBoxSize(), this.getBoxSize())
             } else {
-                this.drawItem(ctx, null, null, i + ItemBar.ITEMS_PER_ROW, _pixelX, _pixelY, this.getBoxSize(), this.getBoxSize())
+                this.drawItem(ctx, null, null, i + ItemBarUI.ITEMS_PER_ROW, _pixelX, _pixelY, this.getBoxSize(), this.getBoxSize())
             }
         }
     }

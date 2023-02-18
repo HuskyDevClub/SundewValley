@@ -1,8 +1,5 @@
 class Level extends AbstractTiledMap {
     static PLAYER
-    static CHESTS = {
-        "TradingBox": {}
-    }
     #entities = []
     #automapTilesFirstGid = -1
 
@@ -14,6 +11,9 @@ class Level extends AbstractTiledMap {
                 this.#automapTilesFirstGid = this.getTileSet(i)["firstgid"]
                 break;
             }
+        }
+        if (this.getParameter("triggers") == null) {
+            this.setParameter("triggers", [])
         }
     }
 
@@ -76,6 +76,14 @@ class Level extends AbstractTiledMap {
         }
         Level.PLAYER.setMapReference(this)
         this.addEntity(Level.PLAYER);
+        if (this.getParameter("entities") != null) {
+            this.getParameter("entities").forEach(_e => {
+                if (_e.type.localeCompare("chest") === 0) {
+                    this.addEntity(new Chest(_e.name, _e.x, _e.y, this));
+                }
+            })
+        }
+        this.addEntity(new Amely(13, 13, this));
         /*
         this.addEntity(new Chicken("black_chicken", 10, 10, this));
         this.addEntity(new Cow("strawberry_cow", 10, 10, this));
@@ -106,9 +114,11 @@ class Level extends AbstractTiledMap {
             if (entity instanceof Character) {
                 Debugger.pushInfo(`name: ${entity.getName()}`)
                 Debugger.pushInfo("inventory:")
-                Object.keys(entity.getItemBar()).forEach(key => {
-                    Debugger.pushInfo(`- ${key}: ${JSON.stringify(entity.getItemBar()[key])}`)
-                })
+                if (entity instanceof Player) {
+                    Object.keys(entity.getItemBar()).forEach(key => {
+                        Debugger.pushInfo(`- ${key}: ${JSON.stringify(entity.getItemBar()[key])}`)
+                    })
+                }
                 Object.keys(entity.getInventory()).forEach(key => {
                     Debugger.pushInfo(`-- ${key}: ${JSON.stringify(entity.getInventory()[key])}`)
                 })
@@ -123,9 +133,14 @@ class Level extends AbstractTiledMap {
             }
         });
         Debugger.pushInfo("--------------------")
+        Debugger.pushInfo("Triggers:")
+        this.getParameter("triggers").forEach(key => {
+            Debugger.pushInfo(`- ${JSON.stringify(key)}`)
+        })
+        Debugger.pushInfo("--------------------")
         Debugger.pushInfo("Item in trade chest:")
-        Object.keys(Level.CHESTS.TradingBox).forEach(key => {
-            Debugger.pushInfo(`- ${key}: ${JSON.stringify(Level.CHESTS.TradingBox[key])}`)
+        Object.keys(Chest.CHESTS.TradingBox).forEach(key => {
+            Debugger.pushInfo(`- ${key}: ${JSON.stringify(Chest.CHESTS.TradingBox[key])}`)
         })
         Debugger.pushInfo("--------------------")
         const entitiesThatCollideWithPlayer = this.getEntitiesThatCollideWith(Level.PLAYER)
@@ -171,10 +186,7 @@ class Level extends AbstractTiledMap {
                 Level.PLAYER.getMapReference().getPixelX() + Level.PLAYER.getPixelRight() - _fontSize / 3, Level.PLAYER.getMapReference().getPixelY() + Level.PLAYER.getPixelY() + _fontSize
             )) {
                 if (!Controller.mouse_prev.leftClick && Controller.mouse.leftClick) {
-                    if (Level.CHESTS[_data["linkToChest"]] == null) Level.CHESTS[_data["linkToChest"]] = {}
-                    const chest = new Chest(0, 0, GAME_ENGINE.getCurrentLevel())
-                    chest.setInventory(Level.CHESTS[_data["linkToChest"]])
-                    GAME_ENGINE.getPlayerUi().openChest(chest)
+                    GAME_ENGINE.getPlayerUi().openChest(_data["linkToChest"])
                 }
             }
         }
@@ -247,25 +259,33 @@ class Level extends AbstractTiledMap {
                 ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
             }
         }
+        const entitiesThatCollideWithPlayer = this.getEntitiesThatCollideWith(Level.PLAYER)
+        if (entitiesThatCollideWithPlayer.length > 0) {
+            if (entitiesThatCollideWithPlayer[0].getCategory().localeCompare("characters") === 0) {
+                const _fontSize = Level.PLAYER.getMapReference().getTileSize() / 2
+                if (MessageButton.draw(
+                    GAME_ENGINE.ctx, "Interact", _fontSize,
+                    Level.PLAYER.getMapReference().getPixelX() + Level.PLAYER.getPixelRight() - _fontSize / 3, Level.PLAYER.getMapReference().getPixelY() + Level.PLAYER.getPixelY() + _fontSize
+                )) {
+                }
+            }
+        }
         // Draw all the teleportation points
         if (Transition.isNotActivated()) {
-            const triggers = this.getParameter("triggers")
-            if (triggers != null) {
-                triggers.forEach(_pos => {
-                        const _trigger = new Trigger(
-                            this.getTilePixelX(_pos.x), this.getTilePixelY(_pos.y),
-                            this.getTileSize() * _pos.width, this.getTileSize() * _pos.height,
-                            _pos.x, _pos.y, _pos.width, _pos.height,
-                        )
-                        if (_trigger.collideWith(Level.PLAYER)) {
-                            this.processTriggers(_pos)
-                        } else if (Debugger.isDebugging) {
-                            ctx.strokeStyle = 'red';
-                            _trigger.draw(ctx)
-                        }
+            this.getParameter("triggers").forEach(_pos => {
+                    const _trigger = new Trigger(
+                        this.getTilePixelX(_pos.x), this.getTilePixelY(_pos.y),
+                        this.getTileSize() * _pos.width, this.getTileSize() * _pos.height,
+                        _pos.x, _pos.y, _pos.width, _pos.height,
+                    )
+                    if (_trigger.collideWith(Level.PLAYER)) {
+                        this.processTriggers(_pos)
+                    } else if (Debugger.isDebugging) {
+                        ctx.strokeStyle = 'red';
+                        _trigger.draw(ctx)
                     }
-                )
-            }
+                }
+            )
         }
     };
 }

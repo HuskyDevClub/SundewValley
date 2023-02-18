@@ -45,6 +45,10 @@ class AbstractTiledMap extends Abstract2dGameObject {
         return this.#levelParameters[key]
     }
 
+    setParameter(key, value) {
+        return this.#levelParameters[key] = value
+    }
+
     getTileWidth() {
         return this.#tileWidth
     }

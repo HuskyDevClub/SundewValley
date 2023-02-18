@@ -13,11 +13,11 @@ class Bedroom extends Level {
                 if (!Controller.mouse_prev.leftClick && Controller.mouse.leftClick) {
                     Transition.start(() => {
                         DateTimeSystem.toNextDay()
-                        const keys = Object.keys(Level.CHESTS.TradingBox)
+                        const keys = Object.keys(Chest.CHESTS.TradingBox)
                         keys.forEach(_key => {
                             if (PRICES[_key] != null) {
-                                Level.PLAYER.earnMoney(PRICES[_key] * Level.CHESTS.TradingBox[_key]["amount"])
-                                delete Level.CHESTS.TradingBox[_key]
+                                Level.PLAYER.earnMoney(PRICES[_key] * Chest.CHESTS.TradingBox[_key]["amount"])
+                                delete Chest.CHESTS.TradingBox[_key]
                             }
                         })
                     })

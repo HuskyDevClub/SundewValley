@@ -59,11 +59,19 @@ class ChestUI extends InventoryUI {
                 this.drawItem(ctx, null, null, -1 - i, _pixelX, _pixelY, this.getBoxSize(), this.getBoxSize())
             }
         }
+        GAME_ENGINE.ctx.drawImage(
+            ASSET_MANAGER.getImageByPath("./images/items/spring_and_summer_objects.png"),
+            160, 176, 16, 16,
+            this.getBackpackTiledStaticImage().getPixelX() + this.getBackpackTiledStaticImage().getTileWidth() * 1.05, this.getBackpackTiledStaticImage().getPixelY() + this.getBackpackTiledStaticImage().getTileHeight() * 6.75,
+            this.getBackpackTiledStaticImage().getTileWidth() * 3, this.getBackpackTiledStaticImage().getTileHeight() * 3
+        )
+        GAME_ENGINE.ctx.drawImage(
+            ASSET_MANAGER.getImageByPath("./images/portrait_cow_kigurumi.png"),
+            this.getBackpackTiledStaticImage().getPixelX() + this.getBackpackTiledStaticImage().getTileWidth() * 1.1, this.getBackpackTiledStaticImage().getPixelY() + this.getBackpackTiledStaticImage().getTileHeight() * 24.25,
+            this.getBackpackTiledStaticImage().getTileWidth() * 2.5, this.getBackpackTiledStaticImage().getTileHeight() * 2.5
+        )
         const _fontSize = Level.PLAYER.getMapReference().getTileSize() / 2
-        if (MessageButton.draw(
-            GAME_ENGINE.ctx, "Close", _fontSize,
-            GAME_ENGINE.ctx.canvas.width * 0.85, GAME_ENGINE.ctx.canvas.height * 0.7
-        )) {
+        if (MessageButton.draw(GAME_ENGINE.ctx, "Close", _fontSize, GAME_ENGINE.ctx.canvas.width * 0.85, GAME_ENGINE.ctx.canvas.height * 0.7)) {
             if (!Controller.mouse_prev.leftClick && Controller.mouse.leftClick) {
                 GAME_ENGINE.getPlayerUi().closeChest()
             }

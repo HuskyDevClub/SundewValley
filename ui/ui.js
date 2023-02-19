@@ -25,10 +25,13 @@ class UserInterfaces {
     update() {
         if (this.#UI.chest != null) {
             this.#CURRENT = this.#UI.chest
-        } else if (Controller.keys["KeyI"]) {
-            this.#CURRENT = this.#UI.inventory
-        } else {
-            this.#CURRENT = this.#UI.itemBar
+        } else if (!this.#UI.inventory.isOpening) {
+            if (Controller.keys["KeyI"]) {
+                this.#CURRENT = this.#UI.inventory
+                this.#UI.inventory.isOpening = true
+            } else {
+                this.#CURRENT = this.#UI.itemBar
+            }
         }
     }
 

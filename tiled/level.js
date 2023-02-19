@@ -83,7 +83,7 @@ class Level extends AbstractTiledMap {
                 }
             })
         }
-        this.addEntity(new Amely(13, 13, this));
+        // this.addEntity(new Amely(13, 13, this));
         /*
         this.addEntity(new Chicken("black_chicken", 10, 10, this));
         this.addEntity(new Cow("strawberry_cow", 10, 10, this));

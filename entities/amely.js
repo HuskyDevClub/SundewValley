@@ -7,8 +7,6 @@ class Amely extends Character {
     }
 
     interact() {
-        GAME_ENGINE.dialogContent = {
-            content: ["Hello my Name is Amely", "I can be used to test interaction", "What can I do for you?"]
-        }
+        Dialogues.update(this.getName() + "_interact1")
     }
 }

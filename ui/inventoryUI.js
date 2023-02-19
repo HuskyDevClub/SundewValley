@@ -10,6 +10,7 @@ class InventoryUI extends ItemBarUI {
         this.#inventoryContainer = new GameObjectsMapContainer(characterRef.getInventory())
         this.BLOCK_X_OFFSET = 0
         if (this.#backpackTiledStaticImage == null) this.#backpackTiledStaticImage = new TiledStaticImage(backpackTiledStaticImagePath == null ? "./ui/backpack.json" : backpackTiledStaticImagePath)
+        this.isOpening = false
     }
 
     caseItemBeingHovered(currentIndex, key) {
@@ -24,9 +25,9 @@ class InventoryUI extends ItemBarUI {
 
     moveStuffBetweenContainers(currentIndex, key) {
         if (currentIndex < ItemBarUI.ITEMS_PER_ROW) {
-            Level.PLAYER.putItemIntoInventory(key)
+            Level.PLAYER.putItemIntoInventory(key, Controller.keys["AltLeft"] ? null : 1)
         } else if (this.getNumOfItems() < ItemBarUI.ITEMS_PER_ROW) {
-            Level.PLAYER.takeItemOutOfInventory(key)
+            Level.PLAYER.takeItemOutOfInventory(key, Controller.keys["AltLeft"] ? null : 1)
         }
     }
 
@@ -36,6 +37,10 @@ class InventoryUI extends ItemBarUI {
 
     noContainerIsHovering() {
         return false
+    }
+
+    closeUI() {
+        this.isOpening = false
     }
 
 
@@ -79,6 +84,12 @@ class InventoryUI extends ItemBarUI {
                 this.drawItem(ctx, key, this.#inventoryContainer.get(key), i + ItemBarUI.ITEMS_PER_ROW, _pixelX, _pixelY, this.getBoxSize(), this.getBoxSize())
             } else {
                 this.drawItem(ctx, null, null, i + ItemBarUI.ITEMS_PER_ROW, _pixelX, _pixelY, this.getBoxSize(), this.getBoxSize())
+            }
+        }
+        const _fontSize = Level.PLAYER.getMapReference().getTileSize() / 2
+        if (MessageButton.draw(GAME_ENGINE.ctx, "Close", _fontSize, GAME_ENGINE.ctx.canvas.width * 0.85, GAME_ENGINE.ctx.canvas.height * 0.7)) {
+            if (!Controller.mouse_prev.leftClick && Controller.mouse.leftClick) {
+                this.closeUI()
             }
         }
     }

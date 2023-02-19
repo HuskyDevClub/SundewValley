@@ -62,7 +62,7 @@ class ItemBarUI extends GameObjectsMapContainer {
             GUI.draw(ctx, 15, 0, 2, 2, pixelX - this.#boxSize * 0.35, pixelY - this.#boxSize * 0.35, this.#boxSize * 1.75, this.#boxSize * 1.75)
             // draw item icon on mouse location
             if (key != null && InventoryItems.isUsable(key) && this.noContainerIsHovering()) {
-                if (GAME_ENGINE.getCurrentLevel() instanceof FarmLevel) {
+                if (GAME_ENGINE.getCurrentLevel() instanceof FarmLevel && Level.PLAYER.notDisablePlayerController()) {
                     const onBlock = GAME_ENGINE.getCurrentLevel().getCoordinate(Controller.mouse.x, Controller.mouse.y, GAME_ENGINE.getCurrentLevel().getTileSize())
                     if (onBlock != null) {
                         // if you can plant stuff on this tile

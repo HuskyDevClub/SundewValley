@@ -84,6 +84,10 @@ class Player extends Character {
             && !this.#checkNotLoopAnimation(Controller.keys["KeyC"], "cut")
     }
 
+    notDisablePlayerController() {
+        return Transition.isNotActivated() && GAME_ENGINE.getPlayerUi().isNotOpeningAnyChest() && GAME_ENGINE.dialogContent == null
+    }
+
     update() {
         this.#isIdle = true
         this.setCurrentMovingSpeedX(0)
@@ -110,7 +114,7 @@ class Player extends Character {
             }
         }
         // check special action
-        if (this.#checkSpecialAction() && Transition.isNotActivated() && GAME_ENGINE.getPlayerUi().isNotOpeningAnyChest()) {
+        if (this.#checkSpecialAction() && this.notDisablePlayerController()) {
             // move left or right
             if (Controller.left === true) {
                 this.setDirectionFacing("l")

@@ -263,15 +263,19 @@ class Level extends AbstractTiledMap {
         if (entitiesThatCollideWithPlayer.length > 0) {
             if (entitiesThatCollideWithPlayer[0].getCategory().localeCompare("characters") === 0) {
                 const _fontSize = Level.PLAYER.getMapReference().getTileSize() / 2
-                if (MessageButton.draw(
+                if (Level.PLAYER.notDisablePlayerController() && MessageButton.draw(
                     GAME_ENGINE.ctx, "Interact", _fontSize,
                     Level.PLAYER.getMapReference().getPixelX() + Level.PLAYER.getPixelRight() - _fontSize / 3, Level.PLAYER.getMapReference().getPixelY() + Level.PLAYER.getPixelY() + _fontSize
                 )) {
+                    if (!Controller.mouse_prev.leftClick && Controller.mouse.leftClick) {
+                        entitiesThatCollideWithPlayer[0].interact();
+                        Controller.mouse.leftClick = false
+                    }
                 }
             }
         }
         // Draw all the teleportation points
-        if (Transition.isNotActivated()) {
+        if (Level.PLAYER.notDisablePlayerController()) {
             this.getParameter("triggers").forEach(_pos => {
                     const _trigger = new Trigger(
                         this.getTilePixelX(_pos.x), this.getTilePixelY(_pos.y),

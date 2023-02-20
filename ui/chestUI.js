@@ -14,10 +14,15 @@ class ChestUI extends InventoryUI {
 
     moveStuffBetweenContainers(currentIndex, key) {
         if (currentIndex >= 0) {
-            Level.PLAYER.putItemIntoTargetInventory(key, this.#chestRef)
+            if (currentIndex < ItemBarUI.ITEMS_PER_ROW) Level.PLAYER.putItemFromItemBarIntoTargetInventory(key, this.#chestRef, Controller.keys["AltLeft"] ? null : 1)
+            else Level.PLAYER.putItemFromInventoryIntoTargetInventory(key, this.#chestRef, Controller.keys["AltLeft"] ? null : 1)
         } else {
-            Level.PLAYER.takeItemOutOfTargetInventory(key, this.#chestRef)
+            Level.PLAYER.takeItemOutOfTargetInventory(key, this.#chestRef, Controller.keys["AltLeft"] ? null : 1)
         }
+    }
+
+    closeUI() {
+        GAME_ENGINE.getPlayerUi().closeChest()
     }
 
     draw(ctx) {
@@ -70,11 +75,5 @@ class ChestUI extends InventoryUI {
             this.getBackpackTiledStaticImage().getPixelX() + this.getBackpackTiledStaticImage().getTileWidth() * 1.1, this.getBackpackTiledStaticImage().getPixelY() + this.getBackpackTiledStaticImage().getTileHeight() * 24.25,
             this.getBackpackTiledStaticImage().getTileWidth() * 2.5, this.getBackpackTiledStaticImage().getTileHeight() * 2.5
         )
-        const _fontSize = Level.PLAYER.getMapReference().getTileSize() / 2
-        if (MessageButton.draw(GAME_ENGINE.ctx, "Close", _fontSize, GAME_ENGINE.ctx.canvas.width * 0.85, GAME_ENGINE.ctx.canvas.height * 0.7)) {
-            if (!Controller.mouse_prev.leftClick && Controller.mouse.leftClick) {
-                GAME_ENGINE.getPlayerUi().closeChest()
-            }
-        }
     }
 }

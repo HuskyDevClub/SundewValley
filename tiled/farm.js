@@ -95,6 +95,8 @@ class FarmLevel extends Level {
     tryConvertTileToWateredDirt(x, y) {
         x = Math.floor(x)
         y = Math.floor(y)
+        // update dirt tile offset
+        DirtTiles.offset = this.getAbsMetaId("tilemaps", DateTimeSystem.getSeason(), 0)
         const layerIndex = this.getTileLayerIndexUsingFilter(x, y, DirtTiles.isDirt)
         if (layerIndex >= 0) {
             // update watered dirt tile offset

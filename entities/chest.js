@@ -7,14 +7,7 @@ class Chest extends Character {
     constructor(name, x, y, mapRef) {
         super(name, "nothing", x, y, mapRef)
         if (Chest.CHESTS[this.getName()] == null) Chest.CHESTS[this.getName()] = {}
-        mapRef.getParameter("triggers").push({
-            "x": x - 0.5,
-            "y": y - 0.5,
-            "width": 2,
-            "height": 2,
-            "linkToChest": this,
-            "type": "chest"
-        })
+        this.customHitBox = {x: -0.5, y: -0.5, width: 2, height: 2}
     }
 
     getInventory() {

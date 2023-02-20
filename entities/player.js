@@ -143,7 +143,7 @@ class Player extends Character {
             }
         }
         // check special action
-        if (this.#checkSpecialAction() && this.notDisablePlayerController()) {
+        if (this.notDisablePlayerController() && this.#checkSpecialAction()) {
             // move left or right
             if (Controller.left === true) {
                 this.setDirectionFacing("l")

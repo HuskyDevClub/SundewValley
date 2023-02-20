@@ -121,5 +121,6 @@
     "./ui/itemsBar.json",
     "./ui/trade.json",
     "./ui/ui.json"
-  ]
+  ],
+  "sounds": []
 }

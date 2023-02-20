@@ -80,10 +80,11 @@ class Level extends AbstractTiledMap {
             this.getParameter("entities").forEach(_e => {
                 if (_e.type.localeCompare("chest") === 0) {
                     this.addEntity(new Chest(_e.name, _e.x, _e.y, this));
+                } else if (_e.type.localeCompare("npc") === 0) {
+                    this.addEntity(new Npc(_e.name, _e.x, _e.y, this));
                 }
             })
         }
-        // this.addEntity(new Amely(13, 13, this));
         /*
         this.addEntity(new Chicken("black_chicken", 10, 10, this));
         this.addEntity(new Cow("strawberry_cow", 10, 10, this));
@@ -179,16 +180,6 @@ class Level extends AbstractTiledMap {
                 Level.PLAYER.setMapReference(GAME_ENGINE.getCurrentLevel())
                 Level.#setPlayerCoordinate(_data["destinationX"], _data["destinationY"])
             })
-        } else if (_data.type.localeCompare("chest") === 0) {
-            const _fontSize = Level.PLAYER.getMapReference().getTileSize() / 2
-            if (MessageButton.draw(
-                GAME_ENGINE.ctx, "Open", _fontSize,
-                Level.PLAYER.getMapReference().getPixelX() + Level.PLAYER.getPixelRight() - _fontSize / 3, Level.PLAYER.getMapReference().getPixelY() + Level.PLAYER.getPixelY() + _fontSize
-            )) {
-                if (!Controller.mouse_prev.leftClick && Controller.mouse.leftClick) {
-                    GAME_ENGINE.getPlayerUi().openChest(_data["linkToChest"])
-                }
-            }
         }
     }
 
@@ -233,7 +224,10 @@ class Level extends AbstractTiledMap {
         // Draw all the entities
         this.#entities.forEach(entity => {
             entity.display(ctx, this.getPixelX(), this.getPixelY())
-            if (Debugger.isDebugging) ctx.strokeRect(entity.getPixelX() + this.getPixelX(), entity.getPixelY() + this.getPixelY(), entity.getWidth(), entity.getHeight())
+            if (Debugger.isDebugging) {
+                const _hitBox = entity.getPixelHitBox()
+                ctx.strokeRect(_hitBox.x + this.getPixelX(), _hitBox.y + this.getPixelY(), _hitBox.width, _hitBox.height)
+            }
         });
         // If there is top layers on the top of ground layers
         const theGroupLevelEndAtIndex = this.getParameter("groupLevelEndAtIndex")
@@ -261,7 +255,7 @@ class Level extends AbstractTiledMap {
         }
         const entitiesThatCollideWithPlayer = this.getEntitiesThatCollideWith(Level.PLAYER)
         if (entitiesThatCollideWithPlayer.length > 0) {
-            if (entitiesThatCollideWithPlayer[0].getCategory().localeCompare("characters") === 0) {
+            if (entitiesThatCollideWithPlayer[0] instanceof Npc) {
                 const _fontSize = Level.PLAYER.getMapReference().getTileSize() / 2
                 if (Level.PLAYER.notDisablePlayerController() && MessageButton.draw(
                     GAME_ENGINE.ctx, "Interact", _fontSize,
@@ -270,6 +264,16 @@ class Level extends AbstractTiledMap {
                     if (!Controller.mouse_prev.leftClick && Controller.mouse.leftClick) {
                         entitiesThatCollideWithPlayer[0].interact();
                         Controller.mouse.leftClick = false
+                    }
+                }
+            } else if (entitiesThatCollideWithPlayer[0] instanceof Chest) {
+                const _fontSize = Level.PLAYER.getMapReference().getTileSize() / 2
+                if (MessageButton.draw(
+                    GAME_ENGINE.ctx, "Open", _fontSize,
+                    Level.PLAYER.getMapReference().getPixelX() + Level.PLAYER.getPixelRight() - _fontSize / 3, Level.PLAYER.getMapReference().getPixelY() + Level.PLAYER.getPixelY() + _fontSize
+                )) {
+                    if (!Controller.mouse_prev.leftClick && Controller.mouse.leftClick) {
+                        GAME_ENGINE.getPlayerUi().openChest(entitiesThatCollideWithPlayer[0])
                     }
                 }
             }

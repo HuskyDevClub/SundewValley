@@ -16,6 +16,14 @@
         "destinationY": 39,
         "type": "teleportation"
       }
+    ],
+    "entities": [
+      {
+        "x": 44,
+        "y": 57,
+        "name": "Amely",
+        "type": "npc"
+      }
     ]
   },
   "farm_spring": {

@@ -7,6 +7,7 @@ class Controller {
 
     // Information on the input
     static mouse = {x: 0, y: 0, radius: 0, leftClick: false, rightClick: false};
+    static mouse_prev = structuredClone(this.mouse);
     static wheel = null;
     static keys = {};
 

@@ -21,7 +21,7 @@ class Player extends Character {
             super.obtainItem(key, num)
         } else if (this.#itemBar[key] != null) {
             this.#itemBar[key]["amount"] += num
-        } else if (Object.keys(this.#itemBar).length < Inventory.ITEMS_PER_ROW) {
+        } else if (Object.keys(this.#itemBar).length < InventoryUI.ITEMS_PER_ROW) {
             this.#itemBar[key] = {"amount": num}
         } else {
             super.obtainItem(key, num)
@@ -41,14 +41,58 @@ class Player extends Character {
         return false;
     }
 
-    putItemIntoInventory(key) {
-        super.obtainItem(key, this.#itemBar[key]["amount"])
-        delete this.#itemBar[key]
+    putItemFromItemBarIntoTargetInventory(key, targetRef, amount = null) {
+        if (amount == null || amount > this.#itemBar[key]["amount"]) {
+            amount = this.#itemBar[key]["amount"]
+        }
+        targetRef.obtainItem(key, amount)
+        this.#itemBar[key]["amount"] -= amount
+        if (this.#itemBar[key]["amount"] === 0) {
+            delete this.#itemBar[key]
+        }
     }
 
-    takeItemOutOfInventory(key) {
-        this.#itemBar[key] = {"amount": this.getInventory()[key]["amount"]}
-        delete this.getInventory()[key]
+    putItemFromInventoryIntoTargetInventory(key, targetRef, amount = null) {
+        if (amount == null || amount > this.getInventory()[key]["amount"]) {
+            amount = this.getInventory()[key]["amount"]
+        }
+        targetRef.obtainItem(key, amount)
+        super.tryUseItem(key, amount)
+    }
+
+    takeItemOutOfTargetInventory(key, targetRef, amount = null) {
+        if (amount == null || amount > targetRef.getInventory()[key]["amount"]) {
+            amount = targetRef.getInventory()[key]["amount"]
+        }
+        targetRef.tryUseItem(key, amount)
+        this.obtainItem(key, amount)
+
+    }
+
+    putItemIntoInventory(key, amount = null) {
+        if (amount == null || amount > this.#itemBar[key]["amount"]) {
+            amount = this.#itemBar[key]["amount"]
+        }
+        super.obtainItem(key, amount)
+        this.#itemBar[key]["amount"] -= amount
+        if (this.#itemBar[key]["amount"] === 0) {
+            delete this.#itemBar[key]
+        }
+    }
+
+    takeItemOutOfInventory(key, amount = null) {
+        if (amount == null || amount > this.getInventory()[key]["amount"]) {
+            amount = this.getInventory()[key]["amount"]
+        }
+        this.getInventory()[key]["amount"] -= amount
+        if (this.getInventory()[key]["amount"] === 0) {
+            delete this.getInventory()[key]
+        }
+        if (this.#itemBar[key] == null) {
+            this.#itemBar[key] = {"amount": amount}
+        } else {
+            this.#itemBar[key]["amount"] += amount
+        }
     }
 
     #checkNotLoopAnimation(key, action) {
@@ -67,6 +111,10 @@ class Player extends Character {
         return !this.#checkNotLoopAnimation(Controller.keys["KeyQ"], "water")
             && !this.#checkNotLoopAnimation(Controller.keys["KeyE"], "dig")
             && !this.#checkNotLoopAnimation(Controller.keys["KeyC"], "cut")
+    }
+
+    notDisablePlayerController() {
+        return Transition.isNotActivated() && GAME_ENGINE.getPlayerUi().isNotOpeningAnyChest() && !Dialogues.isAnyDialoguePlaying()
     }
 
     update() {
@@ -95,7 +143,7 @@ class Player extends Character {
             }
         }
         // check special action
-        if (this.#checkSpecialAction() && Transition.isNotActivated()) {
+        if (this.notDisablePlayerController() && this.#checkSpecialAction()) {
             // move left or right
             if (Controller.left === true) {
                 this.setDirectionFacing("l")

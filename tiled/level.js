@@ -12,6 +12,9 @@ class Level extends AbstractTiledMap {
                 break;
             }
         }
+        if (this.getParameter("triggers") == null) {
+            this.setParameter("triggers", [])
+        }
     }
 
     static #setPlayerCoordinate(x, y) {
@@ -73,6 +76,15 @@ class Level extends AbstractTiledMap {
         }
         Level.PLAYER.setMapReference(this)
         this.addEntity(Level.PLAYER);
+        if (this.getParameter("entities") != null) {
+            this.getParameter("entities").forEach(_e => {
+                if (_e.type.localeCompare("chest") === 0) {
+                    this.addEntity(new Chest(_e.name, _e.x, _e.y, this));
+                } else if (_e.type.localeCompare("npc") === 0) {
+                    this.addEntity(new Npc(_e.name, _e.x, _e.y, this));
+                }
+            })
+        }
         /*
         this.addEntity(new Chicken("black_chicken", 10, 10, this));
         this.addEntity(new Cow("strawberry_cow", 10, 10, this));
@@ -103,12 +115,15 @@ class Level extends AbstractTiledMap {
             if (entity instanceof Character) {
                 Debugger.pushInfo(`name: ${entity.getName()}`)
                 Debugger.pushInfo("inventory:")
-                Object.keys(entity.getItemBar()).forEach(key => {
-                    Debugger.pushInfo(`- ${key}: ${JSON.stringify(entity.getItemBar()[key])}`)
-                })
+                if (entity instanceof Player) {
+                    Object.keys(entity.getItemBar()).forEach(key => {
+                        Debugger.pushInfo(`- ${key}: ${JSON.stringify(entity.getItemBar()[key])}`)
+                    })
+                }
                 Object.keys(entity.getInventory()).forEach(key => {
                     Debugger.pushInfo(`-- ${key}: ${JSON.stringify(entity.getInventory()[key])}`)
                 })
+                Debugger.pushInfo(`money: ${entity.getMoney()}`)
             }
             Debugger.pushInfo(`type: ${entity.getType()}; size: [${entity.getWidth()}, ${entity.getHeight()}]`)
             Debugger.pushInfo(`pixel pos: [${entity.getPixelX()}, ${entity.getPixelY()}]; block pos: [${Math.round(entity.getBlockX() * 100) / 100}, ${Math.round(entity.getBlockY() * 100) / 100}]`)
@@ -118,6 +133,16 @@ class Level extends AbstractTiledMap {
                 Debugger.pushInfo(`current stage: ${entity.getStage()}; time until stage: ${entity.getTimeUntilNextStageInMs()}`)
             }
         });
+        Debugger.pushInfo("--------------------")
+        Debugger.pushInfo("Triggers:")
+        this.getParameter("triggers").forEach(key => {
+            Debugger.pushInfo(`- ${JSON.stringify(key)}`)
+        })
+        Debugger.pushInfo("--------------------")
+        Debugger.pushInfo("Item in trade chest:")
+        Object.keys(Chest.CHESTS.TradingBox).forEach(key => {
+            Debugger.pushInfo(`- ${key}: ${JSON.stringify(Chest.CHESTS.TradingBox[key])}`)
+        })
         Debugger.pushInfo("--------------------")
         const entitiesThatCollideWithPlayer = this.getEntitiesThatCollideWith(Level.PLAYER)
         Debugger.pushInfo(`Total entities that collide with the player: ${entitiesThatCollideWithPlayer.length}`)
@@ -167,7 +192,7 @@ class Level extends AbstractTiledMap {
         }
         this.setPixelX(Math.max(Math.min(this.getPixelX(), 0), ctx.canvas.width - this.getWidth()))
         // fix offset y
-        if (Level.PLAYER.getPixelBottom() + this.getPixelY() > ctx.canvas.height * 0.9) {
+        if (Level.PLAYER.getPixelBottom() + this.getPixelY() > ctx.canvas.height * 0.85) {
             this.setPixelY(this.getPixelY() - Math.floor(Level.PLAYER.getMovingSpeedY() * 1.5))
         } else if (Level.PLAYER.getPixelY() + this.getPixelY() < ctx.canvas.height * 0.1) {
             this.setPixelY(this.getPixelY() + Math.floor(Level.PLAYER.getMovingSpeedY() * 1.5))
@@ -199,7 +224,10 @@ class Level extends AbstractTiledMap {
         // Draw all the entities
         this.#entities.forEach(entity => {
             entity.display(ctx, this.getPixelX(), this.getPixelY())
-            if (Debugger.isDebugging) ctx.strokeRect(entity.getPixelX() + this.getPixelX(), entity.getPixelY() + this.getPixelY(), entity.getWidth(), entity.getHeight())
+            if (Debugger.isDebugging) {
+                const _hitBox = entity.getPixelHitBox()
+                ctx.strokeRect(_hitBox.x + this.getPixelX(), _hitBox.y + this.getPixelY(), _hitBox.width, _hitBox.height)
+            }
         });
         // If there is top layers on the top of ground layers
         const theGroupLevelEndAtIndex = this.getParameter("groupLevelEndAtIndex")
@@ -225,25 +253,47 @@ class Level extends AbstractTiledMap {
                 ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
             }
         }
-        // Draw all the teleportation points
-        if (Transition.isNotActivated()) {
-            const triggers = this.getParameter("triggers")
-            if (triggers != null) {
-                triggers.forEach(_pos => {
-                        const _trigger = new Trigger(
-                            this.getTilePixelX(_pos.x), this.getTilePixelY(_pos.y),
-                            this.getTileSize() * _pos.width, this.getTileSize() * _pos.height,
-                            _pos.x, _pos.y, _pos.width, _pos.height,
-                        )
-                        if (_trigger.collideWith(Level.PLAYER)) {
-                            this.processTriggers(_pos)
-                        } else if (Debugger.isDebugging) {
-                            ctx.strokeStyle = 'red';
-                            _trigger.draw(ctx)
-                        }
+        const entitiesThatCollideWithPlayer = this.getEntitiesThatCollideWith(Level.PLAYER)
+        if (entitiesThatCollideWithPlayer.length > 0) {
+            if (entitiesThatCollideWithPlayer[0] instanceof Npc) {
+                const _fontSize = Level.PLAYER.getMapReference().getTileSize() / 2
+                if (Level.PLAYER.notDisablePlayerController() && MessageButton.draw(
+                    GAME_ENGINE.ctx, "Interact", _fontSize,
+                    Level.PLAYER.getMapReference().getPixelX() + Level.PLAYER.getPixelRight() - _fontSize / 3, Level.PLAYER.getMapReference().getPixelY() + Level.PLAYER.getPixelY() + _fontSize
+                )) {
+                    if (!Controller.mouse_prev.leftClick && Controller.mouse.leftClick) {
+                        entitiesThatCollideWithPlayer[0].interact();
+                        Controller.mouse.leftClick = false
                     }
-                )
+                }
+            } else if (entitiesThatCollideWithPlayer[0] instanceof Chest) {
+                const _fontSize = Level.PLAYER.getMapReference().getTileSize() / 2
+                if (MessageButton.draw(
+                    GAME_ENGINE.ctx, "Open", _fontSize,
+                    Level.PLAYER.getMapReference().getPixelX() + Level.PLAYER.getPixelRight() - _fontSize / 3, Level.PLAYER.getMapReference().getPixelY() + Level.PLAYER.getPixelY() + _fontSize
+                )) {
+                    if (!Controller.mouse_prev.leftClick && Controller.mouse.leftClick) {
+                        GAME_ENGINE.getPlayerUi().openChest(entitiesThatCollideWithPlayer[0])
+                    }
+                }
             }
+        }
+        // Draw all the teleportation points
+        if (Level.PLAYER.notDisablePlayerController()) {
+            this.getParameter("triggers").forEach(_pos => {
+                    const _trigger = new Trigger(
+                        this.getTilePixelX(_pos.x), this.getTilePixelY(_pos.y),
+                        this.getTileSize() * _pos.width, this.getTileSize() * _pos.height,
+                        _pos.x, _pos.y, _pos.width, _pos.height,
+                    )
+                    if (_trigger.collideWith(Level.PLAYER)) {
+                        this.processTriggers(_pos)
+                    } else if (Debugger.isDebugging) {
+                        ctx.strokeStyle = 'red';
+                        _trigger.draw(ctx)
+                    }
+                }
+            )
         }
     };
 }

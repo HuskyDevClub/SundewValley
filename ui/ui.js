@@ -1,16 +1,41 @@
 class UserInterfaces {
-    #inventory = null
+    #UI = {}
+    #CURRENT
 
     constructor() {
         GUI.init()
-        this.#inventory = new Inventory(Level.PLAYER)
+        this.#UI.chest = null
+        this.#UI.itemBar = new ItemBarUI(Level.PLAYER)
+        this.#UI.inventory = new InventoryUI(Level.PLAYER)
+        this.#CURRENT = this.#UI.itemBar
+    }
+
+    openChest(chestRef) {
+        this.#UI.chest = new ChestUI(Level.PLAYER, chestRef)
+    }
+
+    isNotOpeningAnyChest() {
+        return this.#UI.chest == null
+    }
+
+    closeChest() {
+        this.#UI.chest = null
     }
 
     update() {
-        this.#inventory.isInventoryUIVisible = Controller.keys["KeyI"]
+        if (this.#UI.chest != null) {
+            this.#CURRENT = this.#UI.chest
+        } else if (!this.#UI.inventory.isOpening) {
+            if (Controller.keys["KeyI"]) {
+                this.#CURRENT = this.#UI.inventory
+                this.#UI.inventory.isOpening = true
+            } else {
+                this.#CURRENT = this.#UI.itemBar
+            }
+        }
     }
 
     draw(ctx) {
-        this.#inventory.draw(ctx)
+        this.#CURRENT.draw(ctx)
     }
 }

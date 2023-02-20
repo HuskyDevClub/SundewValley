@@ -1,34 +1,67 @@
 {
   "town": {
-    "groupLevelEndAtIndex": 3,
+    "groupLevelEndAtIndex": 6,
     "spawn": [
       14,
       16
-    ]
-  },
-  "farm_spring": {
-    "groupLevelEndAtIndex": 5,
-    "spawn": [
-      30,
-      40
-    ]
-  },
-  "farm_test_level": {
-    "groupLevelEndAtIndex": 3,
-    "spawn": [
-      15,
-      10
     ],
     "triggers": [
       {
-        "x": 5.5,
-        "y": 8.5,
+        "x": 43,
+        "y": 83,
+        "width": 4,
+        "height": 1,
+        "destinationLevel": "farm",
+        "destinationX": 48,
+        "destinationY": 39,
+        "type": "teleportation"
+      }
+    ],
+    "entities": [
+      {
+        "x": 44,
+        "y": 57,
+        "name": "Amely",
+        "type": "npc"
+      }
+    ]
+  },
+  "farm_spring": {
+    "groupLevelEndAtIndex": 8,
+    "spawn": [
+      15,
+      40
+    ],
+    "triggers": [
+      {
+        "x": 14.5,
+        "y": 38,
         "width": 1,
         "height": 1,
         "destinationLevel": "bedroom",
         "destinationX": 24.5,
         "destinationY": 25.9,
         "type": "teleportation"
+      },
+      {
+        "x": 49,
+        "y": 37,
+        "width": 1,
+        "height": 3,
+        "destinationLevel": "town",
+        "destinationX": 45,
+        "destinationY": 82,
+        "type": "teleportation"
+      }
+    ],
+    "entities": [
+      {
+        "x": 26,
+        "y": 38,
+        "width": 2,
+        "height": 2,
+        "name": "TradingBox",
+        "type": "chest"
       }
     ]
   },
@@ -41,9 +74,9 @@
         "y": 26,
         "width": 1,
         "height": 1,
-        "destinationLevel": "farm_test_level",
-        "destinationX": 5.5,
-        "destinationY": 10,
+        "destinationLevel": "farm",
+        "destinationX": 15,
+        "destinationY": 40,
         "type": "teleportation"
       },
       {

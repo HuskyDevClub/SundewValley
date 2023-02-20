@@ -19,27 +19,31 @@ class Character extends Creature {
         return this.#money
     }
 
+    earnMoney(value) {
+        this.#money += value
+    }
+
     getInventory() {
         return this.#inventory
     }
 
     hasItemInInventory(key) {
-        return this.#inventory[key] != null
+        return this.getInventory()[key] != null
     }
 
     obtainItem(key, num = 1) {
         if (this.hasItemInInventory(key)) {
-            this.#inventory[key]["amount"] += num
+            this.getInventory()[key]["amount"] += num
         } else {
-            this.#inventory[key] = {"amount": num}
+            this.getInventory()[key] = {"amount": num}
         }
     }
 
     tryUseItem(key, num = 1) {
-        if (this.hasItemInInventory(key) != null && this.#inventory[key]["amount"] >= num) {
-            this.#inventory[key]["amount"] -= num
-            if (this.#inventory[key]["amount"] === 0) {
-                delete this.#inventory[key]
+        if (this.hasItemInInventory(key) != null && this.getInventory()[key]["amount"] >= num) {
+            this.getInventory()[key]["amount"] -= num
+            if (this.getInventory()[key]["amount"] === 0) {
+                delete this.getInventory()[key]
             }
             return true
         }

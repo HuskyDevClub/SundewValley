@@ -26,6 +26,9 @@
     "./images/animals/sheep/baby_white_sheep.png",
     "./images/animals/sheep/fluffy_white_sheep_sheet.png",
     "./images/animals/sheep/white_sheep_sheet.png",
+    "./images/background.png",
+    "./images/characters/amely.png",
+    "./images/characters/nothing.png",
     "./images/characters/player.png",
     "./images/crops/cabbage.png",
     "./images/crops/carrot.png",
@@ -70,6 +73,8 @@
     "./images/animals/goat/goat.json",
     "./images/animals/pig/pig.json",
     "./images/animals/sheep/sheep.json",
+    "./images/characters/amely.json",
+    "./images/characters/nothing.json",
     "./images/characters/player.json",
     "./images/crops/cabbage.json",
     "./images/crops/carrot.json",
@@ -108,11 +113,14 @@
     "./images/ui/gui.json",
     "./levels/bedroom.json",
     "./levels/farm_spring.json",
-    "./levels/farm_test_level.json",
+    "./levels/farm_summer.json",
     "./levels/levels.json",
     "./levels/town.json",
     "./ui/backpack.json",
+    "./ui/chest.json",
     "./ui/itemsBar.json",
+    "./ui/trade.json",
     "./ui/ui.json"
-  ]
+  ],
+  "sounds": []
 }

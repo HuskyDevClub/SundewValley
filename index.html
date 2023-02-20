@@ -19,6 +19,8 @@
     <script src="./entities/character.js" type="text/javascript"></script>
     <script src="./entities/player.js" type="text/javascript"></script>
     <script src="./entities/crop.js" type="text/javascript"></script>
+    <script src="./entities/chest.js" type="text/javascript"></script>
+    <script src="entities/npc.js" type="text/javascript"></script>
     <!-- Tiled map editor support js files -->
     <script src="./tiled/trigger.js" type="text/javascript"></script>
     <script src="./tiled/levelData.js" type="text/javascript"></script>
@@ -35,9 +37,13 @@
     <script src="./ui/items.js" type="text/javascript"></script>
     <script src="./ui/messagebox.js" type="text/javascript"></script>
     <script src="./ui/container.js" type="text/javascript"></script>
-    <script src="./ui/inventory.js" type="text/javascript"></script>
+    <script src="ui/itemBarUI.js" type="text/javascript"></script>
+    <script src="ui/inventoryUI.js" type="text/javascript"></script>
+    <script src="ui/chestUI.js" type="text/javascript"></script>
     <script src="./ui/ui.js" type="text/javascript"></script>
     <!-- framework js files -->
+    <script src="ui/dialogues.js" type="text/javascript"></script>
+    <script src="./framework/price.js" type="text/javascript"></script>
     <script src="./framework/font.js" type="text/javascript"></script>
     <script src="./framework/controller.js" type="text/javascript"></script>
     <script src="./framework/dateTimeSystem.js" type="text/javascript"></script>
@@ -50,14 +56,13 @@
     <!-- main -->
     <script src="./main.js" type="text/javascript"></script>
 </head>
-<body>
-<ul id="debugDashboard"></ul>
+<body style="background: url('./images/background.png');background-size: cover">
+<ul id="debugDashboard" style="background-color: white; width: 20%"></ul>
 <div style="display: inline-block; left: 25%;
     position: absolute;
     top: 0;">
-    <p>Move: WASD; Water: Q; Dig: E; Harvest: C</p>
-    <p>Inventory: I, and while Inventory is open, right click item to move the item between item bar and inventory</p>
-    <p>The chicken suppose to have random action and movement</p>
+    <p>Move: WASD; Water: Q; Dig: E; Harvest: C; Inventory: I</p>
+    <p>while Inventory is open, press left alt and right click allow you to move the entire item</p>
     <canvas autofocus height="768" id="gameWorld" oncontextmenu="return false;"
             style="background: black; border: 1px solid black"
             tabindex="0" width="960"></canvas>

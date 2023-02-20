@@ -18,11 +18,18 @@ class GameEngine {
         return this.#levels[this.#currentLevelName]
     }
 
+    getPlayerUi() {
+        return this.#ui
+    }
+
     enterLevel(name) {
         this.#currentLevelName = name
+        if (this.#currentLevelName.localeCompare("farm") === 0) {
+            this.#currentLevelName += `_${DateTimeSystem.getSeason()}`
+        }
         if (this.getCurrentLevel() == null) {
-            const levelPath = `./levels/${name}.json`
-            this.#levels[this.#currentLevelName] = name.startsWith("farm_") ? new FarmLevel(levelPath) : name.startsWith("bedroom") ? new Bedroom(levelPath) : new Level(levelPath)
+            const levelPath = `./levels/${this.#currentLevelName}.json`
+            this.#levels[this.#currentLevelName] = this.#currentLevelName.startsWith("farm_") ? new FarmLevel(levelPath) : this.#currentLevelName.startsWith("bedroom") ? new Bedroom(levelPath) : new Level(levelPath)
             this.getCurrentLevel().initEntities()
         }
         this.#ui = new UserInterfaces();
@@ -33,7 +40,7 @@ class GameEngine {
         DateTimeSystem.init(2023);
         InventoryItems.init()
         LevelData.init()
-        this.enterLevel("farm_test_level") // "town" `farm_${DateTimeSystem.getSeason()}`
+        this.enterLevel("farm") // "town" `farm_${DateTimeSystem.getSeason()}`
         Controller.startInput(this.ctx)
         this.timer = new Timer();
         Debugger.switchDebugMode();
@@ -55,6 +62,8 @@ class GameEngine {
         this.getCurrentLevel().draw(this.ctx)
         // Draw all the ui onto screen
         this.#ui.draw(this.ctx)
+        // draw dialogue ui
+        Dialogues.draw(this.ctx)
         // Draw transition animation is it is activated
         Transition.draw(this.ctx)
     };

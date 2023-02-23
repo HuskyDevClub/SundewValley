@@ -25,5 +25,7 @@ preprocess("images", _data)
 preprocess("levels", _data)
 # document all images and json in levels folder
 preprocess("ui", _data)
+# document all sounds
+preprocess("sounds", _data)
 
 linpg.config.save("./additional.json", _data)

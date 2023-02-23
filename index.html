@@ -40,9 +40,9 @@
     <script src="ui/itemBarUI.js" type="text/javascript"></script>
     <script src="ui/inventoryUI.js" type="text/javascript"></script>
     <script src="ui/chestUI.js" type="text/javascript"></script>
+    <script src="ui/dialogues.js" type="text/javascript"></script>
     <script src="./ui/ui.js" type="text/javascript"></script>
     <!-- framework js files -->
-    <script src="ui/dialogues.js" type="text/javascript"></script>
     <script src="./framework/price.js" type="text/javascript"></script>
     <script src="./framework/font.js" type="text/javascript"></script>
     <script src="./framework/controller.js" type="text/javascript"></script>
@@ -71,10 +71,11 @@
         <input id="debug" onclick="Debugger.switchDebugMode()" type="checkbox"> Debug
     </label>
     <label for="mute">
-        <input id="mute" type="checkbox"> Mute
+        <input checked id="mute" onclick="ASSET_MANAGER.getMusic('sounds', 'prototype_song.m4a').play()"
+               type="checkbox"> Mute
     </label>
     <label for="volume">
-        <input id="volume" max="1" min="0" step="0.05" type="range" value="0.1"> Volume
+        <input id="volume" max="1" min="0" step="0.1" type="range" value="0.1"> Volume
     </label>
     <button onclick="Controller.clearMovement(); Controller.up = true" type="button">Up</button>
     <button onclick="Controller.clearMovement(); Controller.down = true" type="button">Down</button>

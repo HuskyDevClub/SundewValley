@@ -115,6 +115,7 @@
     "./levels/farm_spring.json",
     "./levels/farm_summer.json",
     "./levels/levels.json",
+    "./levels/shop.json",
     "./levels/town.json",
     "./ui/backpack.json",
     "./ui/chest.json",
@@ -122,5 +123,7 @@
     "./ui/trade.json",
     "./ui/ui.json"
   ],
-  "sounds": []
+  "sounds": [
+    "./sounds/prototype_song.m4a"
+  ]
 }

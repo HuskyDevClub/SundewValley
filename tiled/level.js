@@ -48,6 +48,12 @@ class Level extends AbstractTiledMap {
         this.#entities.push(entity);
     };
 
+    goToSpawn() {
+        let _spawn = this.getParameter("spawn")
+        if (_spawn == null) _spawn = [0, 0]
+        Level.#setPlayerCoordinate(_spawn[0], _spawn[1])
+    }
+
     initEntities() {
         this.#entities = []
         if (Level.PLAYER == null) {
@@ -56,9 +62,7 @@ class Level extends AbstractTiledMap {
                 playerName = prompt("Please enter player name", "Cody");
             }*/
             Level.PLAYER = new Player(playerName, 0, 0, this)
-            let _spawn = this.getParameter("spawn")
-            if (_spawn == null) _spawn = [0, 0]
-            Level.#setPlayerCoordinate(_spawn[0], _spawn[1])
+            this.goToSpawn()
             Level.PLAYER.obtainItem("potato_seed")
             Level.PLAYER.obtainItem("potato", 2)
             Level.PLAYER.obtainItem("corn", 2)
@@ -76,12 +80,27 @@ class Level extends AbstractTiledMap {
         }
         Level.PLAYER.setMapReference(this)
         this.addEntity(Level.PLAYER);
+        Level.PLAYER.ishidden = this.getParameter("hide_player") === true;
         if (this.getParameter("entities") != null) {
             this.getParameter("entities").forEach(_e => {
                 if (_e.type.localeCompare("chest") === 0) {
                     this.addEntity(new Chest(_e.name, _e.x, _e.y, this));
                 } else if (_e.type.localeCompare("npc") === 0) {
-                    this.addEntity(new Npc(_e.name, _e.x, _e.y, this));
+                    const _entity = new Npc(_e.name, _e.x, _e.y, this)
+                    if (_e["money"] != null) {
+                        _entity.setMoney(_e["money"])
+                    }
+                    this.addEntity(_entity);
+                } else if (_e.type.localeCompare("chicken") === 0) {
+                    this.addEntity(new Chicken(_e.name, _e.x, _e.y, this));
+                } else if (_e.type.localeCompare("cow") === 0) {
+                    this.addEntity(new Cow(_e.name, _e.x, _e.y, this));
+                } else if (_e.type.localeCompare("goat") === 0) {
+                    this.addEntity(new Goat(_e.name, _e.x, _e.y, this));
+                } else if (_e.type.localeCompare("pig") === 0) {
+                    this.addEntity(new Pig(_e.name, _e.x, _e.y, this));
+                } else if (_e.type.localeCompare("sheep") === 0) {
+                    this.addEntity(new Sheep(_e.name, _e.x, _e.y, this));
                 }
             })
         }
@@ -290,8 +309,8 @@ class Level extends AbstractTiledMap {
                         this.processTriggers(_pos)
                     } else if (Debugger.isDebugging) {
                         ctx.strokeStyle = 'red';
-                        _trigger.draw(ctx)
                     }
+                    _trigger.draw(ctx)
                 }
             )
         }

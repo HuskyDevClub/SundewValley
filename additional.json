@@ -65,7 +65,8 @@
     "./images/tilemaps/summer.png",
     "./images/tilemaps/walls_and_floors.png",
     "./images/tilemaps/winter.png",
-    "./images/ui/gui.png"
+    "./images/ui/gui.png",
+    "./images/ui/title.png"
   ],
   "jsons": [
     "./images/animals/chicken/chicken.json",
@@ -112,9 +113,12 @@
     "./images/tilemaps/winter.json",
     "./images/ui/gui.json",
     "./levels/bedroom.json",
+    "./levels/farm_autumn.json",
     "./levels/farm_spring.json",
     "./levels/farm_summer.json",
+    "./levels/farm_winter.json",
     "./levels/levels.json",
+    "./levels/main_menu.json",
     "./levels/shop.json",
     "./levels/town.json",
     "./ui/backpack.json",

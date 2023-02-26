@@ -1,10 +1,52 @@
 {
+  "main_menu": {
+    "groupLevelEndAtIndex": 8,
+    "hide_player": true,
+    "spawn": [
+      15,
+      9
+    ],
+    "entities": [
+      {
+        "x": 20,
+        "y": 17,
+        "name": "black_cow",
+        "type": "cow"
+      },
+      {
+        "x": 10,
+        "y": 5,
+        "name": "white_chicken",
+        "type": "chicken"
+      },
+      {
+        "x": 11,
+        "y": 7,
+        "name": "brown_chicken",
+        "type": "chicken"
+      },
+      {
+        "x": 11,
+        "y": 17,
+        "name": "black_goat",
+        "type": "goat"
+      },
+      {
+        "x": 8,
+        "y": 14,
+        "name": "pink_pig",
+        "type": "pig"
+      },
+      {
+        "x": 25,
+        "y": 2,
+        "name": "fluffy_white_sheep_sheet",
+        "type": "sheep"
+      }
+    ]
+  },
   "town": {
     "groupLevelEndAtIndex": 6,
-    "spawn": [
-      14,
-      16
-    ],
     "triggers": [
       {
         "x": 43,
@@ -67,7 +109,8 @@
         "x": 26,
         "y": 45,
         "name": "Amely",
-        "type": "npc"
+        "type": "npc",
+        "money": 2000
       }
     ]
   },

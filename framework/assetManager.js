@@ -135,7 +135,17 @@ class AssetManager {
     };
 
     getMusic(...args) {
-        return this.#getMusicByPath(["."].concat(args).join("/"))
+        return this.#getMusicByPath([".", "sounds"].concat(args).join("/"))
+    }
+
+    playMusic(...args) {
+        const music = this.#getMusicByPath([".", "sounds"].concat(args).join("/"))
+        if (document.getElementById("mute").checked) {
+            music.volume = 0
+        } else {
+            music.volume = document.getElementById("volume").value
+        }
+        music.play()
     }
 }
 

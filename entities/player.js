@@ -9,6 +9,7 @@ class Player extends Character {
         this.setMovingSpeedY(5)
         this.setSize(this.getMapReference().getTileSize() * 1.5, this.getMapReference().getTileSize() * 1.5)
         this.#isIdle = true
+        this.ishidden = false
         this.#itemBar = {}
     }
 
@@ -98,10 +99,11 @@ class Player extends Character {
     }
 
     notDisablePlayerController() {
-        return Transition.isNotActivated() && GAME_ENGINE.getPlayerUi().noUiIsOpening() && !Dialogues.isAnyDialoguePlaying()
+        return Transition.isNotActivated() && GAME_ENGINE.getPlayerUi().noUiIsOpening() && !Dialogues.isAnyDialoguePlaying() && !this.ishidden
     }
 
     update() {
+        if (this.ishidden) return
         this.#isIdle = true
         this.setCurrentMovingSpeedX(0)
         this.setCurrentMovingSpeedY(0)
@@ -156,4 +158,8 @@ class Player extends Character {
         }
         super.update()
     };
+
+    display(ctx, offsetX, offsetY) {
+        if (!this.ishidden) super.display(ctx, offsetX, offsetY);
+    }
 }

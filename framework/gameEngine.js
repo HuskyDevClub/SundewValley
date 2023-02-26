@@ -40,7 +40,7 @@ class GameEngine {
         DateTimeSystem.init(2023);
         InventoryItems.init()
         LevelData.init()
-        this.enterLevel("farm") // "town" `farm_${DateTimeSystem.getSeason()}`
+        this.enterLevel("main_menu") // "town" `farm_${DateTimeSystem.getSeason()}`
         Controller.startInput(this.ctx)
         this.timer = new Timer();
         Debugger.switchDebugMode();
@@ -84,6 +84,7 @@ class GameEngine {
         this.clockTick = this.timer.tick();
         this.update();
         this.draw();
+        if (!UserInterfaces.displayTitle) ASSET_MANAGER.playMusic("prototype_song.m4a")
         //Controller needs to be updated at the very end!
         Controller.update();
     };

@@ -39,6 +39,22 @@ class Character extends Creature {
         }
     }
 
+    takeItemOutOfTargetInventory(key, targetRef, amount = null) {
+        if (amount == null || amount > targetRef.getInventory()[key]["amount"]) {
+            amount = targetRef.getInventory()[key]["amount"]
+        }
+        targetRef.tryUseItem(key, amount)
+        this.obtainItem(key, amount)
+    }
+
+    putItemFromInventoryIntoTargetInventory(key, targetRef, amount = null) {
+        if (amount == null || amount > this.getInventory()[key]["amount"]) {
+            amount = this.getInventory()[key]["amount"]
+        }
+        targetRef.obtainItem(key, amount)
+        this.tryUseItem(key, amount)
+    }
+
     tryUseItem(key, num = 1) {
         if (this.hasItemInInventory(key) != null && this.getInventory()[key]["amount"] >= num) {
             this.getInventory()[key]["amount"] -= num

@@ -52,22 +52,6 @@ class Player extends Character {
         }
     }
 
-    putItemFromInventoryIntoTargetInventory(key, targetRef, amount = null) {
-        if (amount == null || amount > this.getInventory()[key]["amount"]) {
-            amount = this.getInventory()[key]["amount"]
-        }
-        targetRef.obtainItem(key, amount)
-        super.tryUseItem(key, amount)
-    }
-
-    takeItemOutOfTargetInventory(key, targetRef, amount = null) {
-        if (amount == null || amount > targetRef.getInventory()[key]["amount"]) {
-            amount = targetRef.getInventory()[key]["amount"]
-        }
-        targetRef.tryUseItem(key, amount)
-        this.obtainItem(key, amount)
-
-    }
 
     putItemIntoInventory(key, amount = null) {
         if (amount == null || amount > this.#itemBar[key]["amount"]) {
@@ -114,7 +98,7 @@ class Player extends Character {
     }
 
     notDisablePlayerController() {
-        return Transition.isNotActivated() && GAME_ENGINE.getPlayerUi().isNotOpeningAnyChest() && !Dialogues.isAnyDialoguePlaying()
+        return Transition.isNotActivated() && GAME_ENGINE.getPlayerUi().noUiIsOpening() && !Dialogues.isAnyDialoguePlaying()
     }
 
     update() {

@@ -8,6 +8,6 @@ class Npc extends Character {
     }
 
     interact() {
-        Dialogues.update(this.getName() + "_interact1")
+        Dialogues.update(this.getName() + "_interact1", this)
     }
 }

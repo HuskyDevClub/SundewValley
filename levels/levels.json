@@ -62,6 +62,12 @@
         "height": 2,
         "name": "TradingBox",
         "type": "chest"
+      },
+      {
+        "x": 26,
+        "y": 45,
+        "name": "Amely",
+        "type": "npc"
       }
     ]
   },

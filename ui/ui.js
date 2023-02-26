@@ -14,8 +14,12 @@ class UserInterfaces {
         this.#UI.chest = new ChestUI(Level.PLAYER, chestRef)
     }
 
-    isNotOpeningAnyChest() {
-        return this.#UI.chest == null
+    startATrade(targetUI) {
+        this.#UI.trade = new TradeUI(Level.PLAYER, targetUI)
+    }
+
+    noUiIsOpening() {
+        return this.#UI.chest == null && this.#UI.trade == null
     }
 
     closeChest() {
@@ -25,6 +29,12 @@ class UserInterfaces {
     update() {
         if (this.#UI.chest != null) {
             this.#CURRENT = this.#UI.chest
+        } else if (this.#UI.trade != null) {
+            if (this.#UI.trade.isOpening) {
+                this.#CURRENT = this.#UI.trade
+            } else {
+                this.#UI.trade = null
+            }
         } else if (!this.#UI.inventory.isOpening) {
             if (Controller.keys["KeyI"]) {
                 this.#CURRENT = this.#UI.inventory

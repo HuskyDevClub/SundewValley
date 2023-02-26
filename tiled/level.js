@@ -268,7 +268,7 @@ class Level extends AbstractTiledMap {
                 }
             } else if (entitiesThatCollideWithPlayer[0] instanceof Chest) {
                 const _fontSize = Level.PLAYER.getMapReference().getTileSize() / 2
-                if (MessageButton.draw(
+                if (Level.PLAYER.notDisablePlayerController() && MessageButton.draw(
                     GAME_ENGINE.ctx, "Open", _fontSize,
                     Level.PLAYER.getMapReference().getPixelX() + Level.PLAYER.getPixelRight() - _fontSize / 3, Level.PLAYER.getMapReference().getPixelY() + Level.PLAYER.getPixelY() + _fontSize
                 )) {

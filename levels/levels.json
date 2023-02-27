@@ -64,7 +64,8 @@
         "x": 44,
         "y": 57,
         "name": "Amely",
-        "type": "npc"
+        "type": "npc",
+        "money": 2000
       }
     ]
   },
@@ -99,18 +100,11 @@
     "entities": [
       {
         "x": 26,
-        "y": 38,
+        "y": 37,
         "width": 2,
         "height": 2,
         "name": "TradingBox",
         "type": "chest"
-      },
-      {
-        "x": 26,
-        "y": 45,
-        "name": "Amely",
-        "type": "npc",
-        "money": 2000
       }
     ]
   },

@@ -6,11 +6,11 @@ class Dialogues {
         Amely_interact1: {
             contents: ["Hello my Name is Amely", "I can be used to test interaction", "What can I do for you?"],
             options: [{
-                text: "nothing",
-                act: "$close"
-            }, {
-                text: "open",
+                text: "I want to Trade",
                 act: "$trade"
+            }, {
+                text: "Nothing, have a nice day",
+                act: "$close"
             }]
         }
     }

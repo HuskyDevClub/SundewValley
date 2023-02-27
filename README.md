@@ -6,8 +6,11 @@
 ## Overview
 
 * Untitled Farm is a fun and relaxing 2d pixel farming game
-* Player will have their comfortable home to take nap and relax.
+* You can have your own comfortable home to take nap and relax!
 ![HOME IMAGE](images/readmeImage/Screenshot_home.png)
+* You can also have a nice talk with the villagers!
+![NPC Image](images/readmeImage/Screenshot_NPC.png)
+
 
 ---
 

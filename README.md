@@ -1,10 +1,13 @@
-# Untitled Farm![Image](https://raw.githubusercontent.com/TeamTakes4/TheUntitledFarm/master/images/portrait_cow_kigurumi.png?token=GHSAT0AAAAAAB5GHOK2OUYTQ3QPE43JQXW4Y7AEBNA)
+# Untitled Farm 
+![Player](images/portrait_cow_kigurumi.png)
 
 ---
 
 ## Overview
 
 * Untitled Farm is a fun and relaxing 2d pixel farming game
+* Player will have their comfortable home to take nap and relax.
+![HOME IMAGE](images/readmeImage/Screenshot_home.png)
 
 ---
 

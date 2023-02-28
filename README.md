@@ -1,4 +1,5 @@
 # Untitled Farm
+
 ![Player](images/portrait_cow_kigurumi.png)
 
 ---
@@ -10,7 +11,6 @@
   ![HOME IMAGE](images/readmeImage/Screenshot_home.png)
 * You can also have a nice talk with the villagers!
   ![NPC Image](images/readmeImage/Screenshot_NPC.png)
-
 
 ---
 

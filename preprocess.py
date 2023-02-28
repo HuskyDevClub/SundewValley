@@ -14,10 +14,10 @@ def preprocess(pathIn: str, dataIn: dict[str, list[str]]):
         elif _path.endswith(".png") or _path.endswith(".jpg"):
             dataIn["images"].append("./" + _path.replace("\\", "/"))
         elif _path.endswith(".mp3") or _path.endswith(".ogg") or _path.endswith(".m4a"):
-            dataIn["sounds"].append("./" + _path.replace("\\", "/"))
+            dataIn["audios"].append("./" + _path.replace("\\", "/"))
 
 
-_data: dict[str, list[str]] = {"jsons": [], "images": [], "sounds":[]}
+_data: dict[str, list[str]] = {"jsons": [], "images": [], "audios":[]}
 
 # document all images and json in images folder
 preprocess("images", _data)
@@ -26,6 +26,6 @@ preprocess("levels", _data)
 # document all images and json in levels folder
 preprocess("ui", _data)
 # document all sounds
-preprocess("sounds", _data)
+preprocess("audios", _data)
 
 linpg.config.save("./additional.json", _data)

@@ -81,7 +81,7 @@ class Player extends Character {
     }
 
     #checkNotLoopAnimation(key, action) {
-        if (key === true) {
+        if (Controller.keys[key] === true) {
             this.setCurrentAction(action)
             this.#isIdle = false
             return true
@@ -93,9 +93,9 @@ class Player extends Character {
     }
 
     #checkSpecialAction() {
-        return !this.#checkNotLoopAnimation(Controller.keys["KeyQ"], "water")
-            && !this.#checkNotLoopAnimation(Controller.keys["KeyE"], "dig")
-            && !this.#checkNotLoopAnimation(Controller.keys["KeyC"], "cut")
+        return !this.#checkNotLoopAnimation("KeyQ", "water")
+            && !this.#checkNotLoopAnimation("KeyE", "dig")
+            && !this.#checkNotLoopAnimation("KeyC", "cut")
     }
 
     notDisablePlayerController() {
@@ -109,14 +109,17 @@ class Player extends Character {
         this.setCurrentMovingSpeedY(0)
         // for dig action, try to convert grass to dirt
         if (this.isCurrentAction("dig") && this.getCurrentAnimation().currentFrame() === 1) {
+            ASSET_MANAGER.playSounds(`Gravel_hit${getRandomIntInclusive(1, 4)}.ogg`)
             if (this.getMapReference() instanceof FarmLevel) this.getMapReference().tryConvertTileToDirt(this.getBlockX(), this.getBlockY())
         }
         // for water action, try to water the ground
         else if (this.isCurrentAction("water") && this.getCurrentAnimation().currentFrame() === 1) {
+            ASSET_MANAGER.playSounds(`Empty_water_bucket${getRandomIntInclusive(1, 3)}.ogg`)
             if (this.getMapReference() instanceof FarmLevel) this.getMapReference().tryConvertTileToWateredDirt(this.getBlockX(), this.getBlockY())
         }
         // for cut action, try to harvest the crop
         else if (this.isCurrentAction("cut") && this.getCurrentAnimation().currentFrame() === 1) {
+            ASSET_MANAGER.playSounds(`Gravel_hit${getRandomIntInclusive(1, 4)}.ogg`)
             if (this.getMapReference() instanceof FarmLevel) {
                 const _crop = this.getMapReference().getCrop(this.getBlockX(), this.getBlockY())
                 if (_crop != null && _crop.isMatured()) {

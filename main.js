@@ -11,7 +11,7 @@ fetch("./additional.json")
         Array.from(data["images"]).forEach(_path => {
             ASSET_MANAGER.queueDownloadImage(_path);
         });
-        Array.from(data["sounds"]).forEach(_path => {
+        Array.from(data["audios"]).forEach(_path => {
             ASSET_MANAGER.queueDownloadMusic(_path);
         });
         ASSET_MANAGER.downloadAll(() => {

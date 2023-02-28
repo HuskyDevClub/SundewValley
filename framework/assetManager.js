@@ -126,20 +126,22 @@ class AssetManager {
         return this.#getJsonByPath(["."].concat(args).join("/"))
     }
 
-    #getMusicByPath(path) {
+    #getAudioByPath(path) {
         return this.musicCache[path];
     };
 
-    getMusicByPath(path) {
-        return this.#getMusicByPath(path.replace("\/", "/"));
-    };
-
-    getMusic(...args) {
-        return this.#getMusicByPath([".", "sounds"].concat(args).join("/"))
+    playMusic(...args) {
+        const music = this.#getAudioByPath([".", "audios", "music"].concat(args).join("/"))
+        if (document.getElementById("mute").checked) {
+            music.volume = 0
+        } else {
+            music.volume = document.getElementById("volume").value
+        }
+        music.play()
     }
 
-    playMusic(...args) {
-        const music = this.#getMusicByPath([".", "sounds"].concat(args).join("/"))
+    playSounds(...args) {
+        const music = this.#getAudioByPath([".", "audios", "sound"].concat(args).join("/"))
         if (document.getElementById("mute").checked) {
             music.volume = 0
         } else {

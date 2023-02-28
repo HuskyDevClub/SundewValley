@@ -1,4 +1,14 @@
 {
+  "audios": [
+    "./audios/music/prototype_song.m4a",
+    "./audios/sound/Empty_water_bucket1.ogg",
+    "./audios/sound/Empty_water_bucket2.ogg",
+    "./audios/sound/Empty_water_bucket3.ogg",
+    "./audios/sound/Gravel_hit1.ogg",
+    "./audios/sound/Gravel_hit2.ogg",
+    "./audios/sound/Gravel_hit3.ogg",
+    "./audios/sound/Gravel_hit4.ogg"
+  ],
   "images": [
     "./images/animals/chicken/baby_chicken.png",
     "./images/animals/chicken/black_chicken.png",
@@ -58,6 +68,8 @@
     "./images/items/wall_decorations.png",
     "./images/items/winter_objects.png",
     "./images/portrait_cow_kigurumi.png",
+    "./images/readmeImage/Screenshot_home.png",
+    "./images/readmeImage/Screenshot_NPC.png",
     "./images/tilemaps/autumn.png",
     "./images/tilemaps/inside.png",
     "./images/tilemaps/Marketplace_autotile_A2.png",
@@ -126,8 +138,5 @@
     "./ui/itemsBar.json",
     "./ui/trade.json",
     "./ui/ui.json"
-  ],
-  "sounds": [
-    "./sounds/prototype_song.m4a"
   ]
 }

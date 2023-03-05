@@ -77,6 +77,7 @@ class AssetManager {
             const path = this.musicDownloadQueue[i];
             audio.addEventListener("loadeddata", () => {
                 this.successCount++;
+                audio.recentelyEnded = false
                 if (Debugger.isDebugging) console.log(`${path} loaded`)
                 if (this.isDone()) callback();
             });
@@ -87,6 +88,7 @@ class AssetManager {
             });
             audio.addEventListener("ended", () => {
                 audio.pause()
+                audio.recentelyEnded = true
                 audio.currentTime = 0
             });
             audio.src = path;
@@ -138,9 +140,21 @@ class AssetManager {
             music.volume = document.getElementById("volume").value
         }
         music.play()
+        if (music.recentelyEnded) {
+            music.recentelyEnded = false
+            return true
+        } else {
+            return false
+        }
     }
 
-    playSounds(...args) {
+    stopMusic(...args) {
+        const music = this.#getAudioByPath([".", "audios", "music"].concat(args).join("/"))
+        music.pause()
+        music.currentTime = 0
+    }
+
+    playSound(...args) {
         const music = this.#getAudioByPath([".", "audios", "sound"].concat(args).join("/"))
         if (document.getElementById("mute").checked) {
             music.volume = 0

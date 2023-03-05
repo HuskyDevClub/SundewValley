@@ -32,6 +32,7 @@ class GameEngine {
             this.#levels[this.#currentLevelName] = this.#currentLevelName.startsWith("farm_") ? new FarmLevel(levelPath) : this.#currentLevelName.startsWith("bedroom") ? new Bedroom(levelPath) : new Level(levelPath)
             this.getCurrentLevel().initEntities()
         }
+        this.getCurrentLevel().updateLevelMusic()
         this.#ui = new UserInterfaces();
     }
 
@@ -84,7 +85,6 @@ class GameEngine {
         this.clockTick = this.timer.tick();
         this.update();
         this.draw();
-        if (!UserInterfaces.displayTitle) ASSET_MANAGER.playMusic("prototype_song.m4a")
         //Controller needs to be updated at the very end!
         Controller.update();
     };

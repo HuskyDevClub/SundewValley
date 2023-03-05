@@ -1,6 +1,10 @@
 {
   "audios": [
-    "./audios/music/prototype_song.m4a",
+    "./audios/music/OST 1 - Good Morning.ogg",
+    "./audios/music/OST 2 - Fate.ogg",
+    "./audios/music/OST 3 - Village.ogg",
+    "./audios/music/OST 4 - Dragonfly.ogg",
+    "./audios/music/OST 5 - Seaside Promenade (Loopable).ogg",
     "./audios/sound/Empty_water_bucket1.ogg",
     "./audios/sound/Empty_water_bucket2.ogg",
     "./audios/sound/Empty_water_bucket3.ogg",

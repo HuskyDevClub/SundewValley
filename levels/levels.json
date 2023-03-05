@@ -46,6 +46,8 @@
     ]
   },
   "town": {
+    "morning_music": "OST 1 - Good Morning.ogg",
+    "night_music": "OST 3 - Village.ogg",
     "groupLevelEndAtIndex": 6,
     "triggers": [
       {
@@ -69,7 +71,9 @@
       }
     ]
   },
-  "farm_spring": {
+  "farm": {
+    "morning_music": "OST 5 - Seaside Promenade (Loopable).ogg",
+    "night_music": "OST 2 - Fate.ogg",
     "groupLevelEndAtIndex": 8,
     "spawn": [
       15,
@@ -106,10 +110,29 @@
         "name": "TradingBox",
         "type": "chest"
       }
+    ],
+    "light_sources": [
+      [
+        15,
+        35.95,
+        1
+      ],
+      [
+        13.95,
+        37.7,
+        0.75
+      ],
+      [
+        16.1,
+        37.7,
+        0.75
+      ]
     ]
   },
   "bedroom": {
     "interior": true,
+    "morning_music": "OST 5 - Seaside Promenade (Loopable).ogg",
+    "night_music": "OST 2 - Fate.ogg",
     "groupLevelEndAtIndex": 3,
     "triggers": [
       {

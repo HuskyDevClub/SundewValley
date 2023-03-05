@@ -2,6 +2,14 @@ class Font {
 
     static DEFAULT_TYPE = "arial"
 
+    /*
+    static {
+        new FontFace(this.DEFAULT_TYPE, `url(./font/${this.DEFAULT_TYPE}.ttf)`).load().then(function(font){
+            document.fonts.add(font);
+            console.log('Font loaded');
+        });
+    }*/
+
     static update(ctx, fontSize, fontColor = "white", outlineColor = "black", fontType = this.DEFAULT_TYPE, additionalStyle = "bold") {
         ctx.font = `${additionalStyle} ${Math.floor(fontSize)}px ${fontType}`
         ctx.fillStyle = fontColor;

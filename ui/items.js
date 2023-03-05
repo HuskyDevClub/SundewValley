@@ -31,8 +31,8 @@ class InventoryItems {
     }
 
     static init() {
-        this.#ITEMS_SPRITE_SHEET = ASSET_MANAGER.getImageByPath("./images/items/items.png")
-        this.#PIXEL_SIZE = ASSET_MANAGER.getJsonByPath("./images/items/items.json")["tilewidth"]
+        this.#ITEMS_SPRITE_SHEET = ASSET_MANAGER.getImage("items", "items.png")
+        this.#PIXEL_SIZE = ASSET_MANAGER.getJson("images", "items", "items.json")["tilewidth"]
     }
 
     // if an item can be used

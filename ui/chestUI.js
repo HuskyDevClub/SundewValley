@@ -65,13 +65,13 @@ class ChestUI extends InventoryUI {
             }
         }
         GAME_ENGINE.ctx.drawImage(
-            ASSET_MANAGER.getImageByPath("./images/items/spring_and_summer_objects.png"),
+            ASSET_MANAGER.getImage("items", "spring_and_summer_objects.png"),
             160, 176, 16, 16,
             this.getBackpackTiledStaticImage().getPixelX() + this.getBackpackTiledStaticImage().getTileWidth() * 1.05, this.getBackpackTiledStaticImage().getPixelY() + this.getBackpackTiledStaticImage().getTileHeight() * 6.75,
             this.getBackpackTiledStaticImage().getTileWidth() * 3, this.getBackpackTiledStaticImage().getTileHeight() * 3
         )
         GAME_ENGINE.ctx.drawImage(
-            ASSET_MANAGER.getImageByPath("./images/portrait_cow_kigurumi.png"),
+            ASSET_MANAGER.getImage("portrait_cow_kigurumi.png"),
             this.getBackpackTiledStaticImage().getPixelX() + this.getBackpackTiledStaticImage().getTileWidth() * 1.1, this.getBackpackTiledStaticImage().getPixelY() + this.getBackpackTiledStaticImage().getTileHeight() * 24.25,
             this.getBackpackTiledStaticImage().getTileWidth() * 2.5, this.getBackpackTiledStaticImage().getTileHeight() * 2.5
         )

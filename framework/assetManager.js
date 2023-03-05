@@ -6,10 +6,8 @@ class AssetManager {
         this.imageDownloadQueue = [];
         this.jsonCache = {};
         this.jsonDownloadQueue = [];
-    };
-
-    queueDownload(path) {
-        path.endsWith(".json") ? this.queueDownloadJson(path) : this.queueDownloadImage(path);
+        this.musicCache = {};
+        this.musicDownloadQueue = [];
     };
 
     queueDownloadJson(path) {
@@ -22,12 +20,16 @@ class AssetManager {
         this.imageDownloadQueue.push(path);
     }
 
+    queueDownloadMusic(path) {
+        if (Debugger.isDebugging) console.log("Queueing Music " + path);
+        this.musicDownloadQueue.push(path);
+    }
+
     isDone() {
-        return this.imageDownloadQueue.length + this.jsonDownloadQueue.length === this.successCount + this.errorCount;
+        return this.imageDownloadQueue.length + this.jsonDownloadQueue.length + this.musicDownloadQueue.length === this.successCount + this.errorCount;
     };
 
     #downloadAllImages(callback) {
-        if (this.imageDownloadQueue.length === 0) setTimeout(callback, 10);
         for (let i = 0; i < this.imageDownloadQueue.length; i++) {
             const img = new Image();
 
@@ -51,7 +53,6 @@ class AssetManager {
     };
 
     #downloadAllJson(callback) {
-        if (this.jsonDownloadQueue.length === 0) setTimeout(callback, 10);
         for (let i = 0; i < this.jsonDownloadQueue.length; i++) {
             const path = this.jsonDownloadQueue[i];
             fetch(path)
@@ -70,9 +71,37 @@ class AssetManager {
         }
     };
 
+    #downloadAllMusic(callback) {
+        for (let i = 0; i < this.musicDownloadQueue.length; i++) {
+            const audio = new Audio();
+            const path = this.musicDownloadQueue[i];
+            audio.addEventListener("loadeddata", () => {
+                this.successCount++;
+                audio.recentelyEnded = false
+                if (Debugger.isDebugging) console.log(`${path} loaded`)
+                if (this.isDone()) callback();
+            });
+            audio.addEventListener("error", () => {
+                this.errorCount++;
+                if (Debugger.isDebugging) console.log("Error loading " + path);
+                if (this.isDone()) callback();
+            });
+            audio.addEventListener("ended", () => {
+                audio.pause()
+                audio.recentelyEnded = true
+                audio.currentTime = 0
+            });
+            audio.src = path;
+            audio.load()
+            this.musicCache[path] = audio;
+        }
+    };
+
     downloadAll(callback) {
+        if (this.imageDownloadQueue.length + this.jsonDownloadQueue.length + this.musicDownloadQueue.length === 0) setTimeout(callback, 10);
         this.#downloadAllImages(callback)
         this.#downloadAllJson(callback)
+        this.#downloadAllMusic(callback)
     };
 
     #getImageByPath(path) {
@@ -97,6 +126,42 @@ class AssetManager {
 
     getJson(...args) {
         return this.#getJsonByPath(["."].concat(args).join("/"))
+    }
+
+    #getAudioByPath(path) {
+        return this.musicCache[path];
+    };
+
+    playMusic(...args) {
+        const music = this.#getAudioByPath([".", "audios", "music"].concat(args).join("/"))
+        if (document.getElementById("mute").checked) {
+            music.volume = 0
+        } else {
+            music.volume = document.getElementById("volume").value
+        }
+        music.play()
+        if (music.recentelyEnded) {
+            music.recentelyEnded = false
+            return true
+        } else {
+            return false
+        }
+    }
+
+    stopMusic(...args) {
+        const music = this.#getAudioByPath([".", "audios", "music"].concat(args).join("/"))
+        music.pause()
+        music.currentTime = 0
+    }
+
+    playSound(...args) {
+        const music = this.#getAudioByPath([".", "audios", "sound"].concat(args).join("/"))
+        if (document.getElementById("mute").checked) {
+            music.volume = 0
+        } else {
+            music.volume = document.getElementById("volume").value
+        }
+        music.play()
     }
 }
 

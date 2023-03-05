@@ -5,8 +5,8 @@ class GUI {
 
     static init() {
         if (this.#SPRITE_SHEET == null) {
-            this.#SPRITE_SHEET = ASSET_MANAGER.getImageByPath("./images/ui/gui.png")
-            this.#PIXEL_SIZE = ASSET_MANAGER.getJsonByPath("./images/ui/gui.json")["tilewidth"]
+            this.#SPRITE_SHEET = ASSET_MANAGER.getImage("ui", "gui.png")
+            this.#PIXEL_SIZE = ASSET_MANAGER.getJson("images", "ui", "gui.json")["tilewidth"]
         }
     }
 

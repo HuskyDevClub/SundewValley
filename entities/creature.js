@@ -93,8 +93,8 @@ class Creature extends Entity {
     }
 
     update() {
-        // X coordinate collision detection
-        if (this.getCurrentMovingSpeedX() !== 0) {
+        if (this.getCurrentMovingSpeedX() !== 0 || this.getCurrentMovingSpeedY() !== 0) {
+            // X coordinate collision detection
             // moving right
             if (this.getCurrentMovingSpeedX() > 0) {
                 for (let i = 0; i < Math.floor(this.getCurrentMovingSpeedX() / this.getMapReference().getTileSize()); i++) {
@@ -109,7 +109,7 @@ class Creature extends Entity {
                 }
             }
             // moving left
-            else {
+            else if (this.getCurrentMovingSpeedX() < 0) {
                 for (let i = 0; i < Math.floor((-this.getCurrentMovingSpeedX()) / this.getMapReference().getTileSize()); i++) {
                     this.setPixelX(this.getPixelX() - this.getMapReference().getTileSize())
                     if (!this.getMapReference().canEnterTile(this.getBlockX() - Creature.#COLLISION_RADIUS, this.getBlockY())) {
@@ -121,9 +121,7 @@ class Creature extends Entity {
                     this.setBlockX(Math.floor(this.getBlockX()) + Creature.#COLLISION_RADIUS)
                 }
             }
-        }
-        // Y coordinate collision detection
-        if (this.getCurrentMovingSpeedY() !== 0) {
+            // Y coordinate collision detection
             // moving down
             if (this.getCurrentMovingSpeedY() > 0) {
                 for (let i = 0; i < Math.floor(this.getCurrentMovingSpeedY() / this.getMapReference().getTileSize()); i++) {
@@ -138,7 +136,7 @@ class Creature extends Entity {
                 }
             }
             // moving up
-            else {
+            else if (this.getCurrentMovingSpeedY() < 0) {
                 for (let i = 0; i < Math.floor((-this.getCurrentMovingSpeedY()) / this.getMapReference().getTileSize()); i++) {
                     this.setPixelY(this.getPixelY() - this.getMapReference().getTileSize())
                     if (!this.getMapReference().canEnterTile(this.getBlockX(), this.getBlockY() - Creature.#COLLISION_RADIUS)) {

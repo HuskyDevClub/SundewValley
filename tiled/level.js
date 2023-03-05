@@ -1,5 +1,6 @@
 class Level extends AbstractTiledMap {
     static PLAYER
+    static BGM = "$NO_MUSIC$"
     #entities = []
     #automapTilesFirstGid = -1
 
@@ -15,6 +16,7 @@ class Level extends AbstractTiledMap {
         if (this.getParameter("triggers") == null) {
             this.setParameter("triggers", [])
         }
+        this.updateLevelMusic()
     }
 
     static #setPlayerCoordinate(x, y) {
@@ -23,6 +25,22 @@ class Level extends AbstractTiledMap {
         const theCurrentLevel = this.PLAYER.getMapReference()
         theCurrentLevel.setPixelX(-this.PLAYER.getBlockX() * theCurrentLevel.getTileSize() + GAME_ENGINE.ctx.canvas.width / 2)
         theCurrentLevel.setPixelY(-this.PLAYER.getBlockY() * theCurrentLevel.getTileSize() + GAME_ENGINE.ctx.canvas.height / 2)
+    }
+
+    #getBgm() {
+        const theBgm = (6 < DateTimeSystem.getHour() && DateTimeSystem.getHour() < 18) ? this.getParameter("morning_music") : this.getParameter("night_music")
+        return theBgm != null ? theBgm : "$NO_MUSIC$"
+    }
+
+    #updateLevelMusicTo(theBgm) {
+        if (theBgm.localeCompare(Level.BGM) !== 0) {
+            if (Level.BGM.localeCompare("$NO_MUSIC$") !== 0) ASSET_MANAGER.stopMusic(Level.BGM)
+            Level.BGM = theBgm
+        }
+    }
+
+    updateLevelMusic() {
+        this.#updateLevelMusicTo(this.#getBgm())
     }
 
     getTileSize() {
@@ -48,6 +66,12 @@ class Level extends AbstractTiledMap {
         this.#entities.push(entity);
     };
 
+    goToSpawn() {
+        let _spawn = this.getParameter("spawn")
+        if (_spawn == null) _spawn = [0, 0]
+        Level.#setPlayerCoordinate(_spawn[0], _spawn[1])
+    }
+
     initEntities() {
         this.#entities = []
         if (Level.PLAYER == null) {
@@ -56,9 +80,7 @@ class Level extends AbstractTiledMap {
                 playerName = prompt("Please enter player name", "Cody");
             }*/
             Level.PLAYER = new Player(playerName, 0, 0, this)
-            let _spawn = this.getParameter("spawn")
-            if (_spawn == null) _spawn = [0, 0]
-            Level.#setPlayerCoordinate(_spawn[0], _spawn[1])
+            this.goToSpawn()
             Level.PLAYER.obtainItem("potato_seed")
             Level.PLAYER.obtainItem("potato", 2)
             Level.PLAYER.obtainItem("corn", 2)
@@ -76,14 +98,30 @@ class Level extends AbstractTiledMap {
         }
         Level.PLAYER.setMapReference(this)
         this.addEntity(Level.PLAYER);
+        Level.PLAYER.ishidden = this.getParameter("hide_player") === true;
         if (this.getParameter("entities") != null) {
             this.getParameter("entities").forEach(_e => {
                 if (_e.type.localeCompare("chest") === 0) {
                     this.addEntity(new Chest(_e.name, _e.x, _e.y, this));
+                } else if (_e.type.localeCompare("npc") === 0) {
+                    const _entity = new Npc(_e.name, _e.x, _e.y, this)
+                    if (_e["money"] != null) {
+                        _entity.setMoney(_e["money"])
+                    }
+                    this.addEntity(_entity);
+                } else if (_e.type.localeCompare("chicken") === 0) {
+                    this.addEntity(new Chicken(_e.name, _e.x, _e.y, this));
+                } else if (_e.type.localeCompare("cow") === 0) {
+                    this.addEntity(new Cow(_e.name, _e.x, _e.y, this));
+                } else if (_e.type.localeCompare("goat") === 0) {
+                    this.addEntity(new Goat(_e.name, _e.x, _e.y, this));
+                } else if (_e.type.localeCompare("pig") === 0) {
+                    this.addEntity(new Pig(_e.name, _e.x, _e.y, this));
+                } else if (_e.type.localeCompare("sheep") === 0) {
+                    this.addEntity(new Sheep(_e.name, _e.x, _e.y, this));
                 }
             })
         }
-        // this.addEntity(new Amely(13, 13, this));
         /*
         this.addEntity(new Chicken("black_chicken", 10, 10, this));
         this.addEntity(new Cow("strawberry_cow", 10, 10, this));
@@ -179,16 +217,6 @@ class Level extends AbstractTiledMap {
                 Level.PLAYER.setMapReference(GAME_ENGINE.getCurrentLevel())
                 Level.#setPlayerCoordinate(_data["destinationX"], _data["destinationY"])
             })
-        } else if (_data.type.localeCompare("chest") === 0) {
-            const _fontSize = Level.PLAYER.getMapReference().getTileSize() / 2
-            if (MessageButton.draw(
-                GAME_ENGINE.ctx, "Open", _fontSize,
-                Level.PLAYER.getMapReference().getPixelX() + Level.PLAYER.getPixelRight() - _fontSize / 3, Level.PLAYER.getMapReference().getPixelY() + Level.PLAYER.getPixelY() + _fontSize
-            )) {
-                if (!Controller.mouse_prev.leftClick && Controller.mouse.leftClick) {
-                    GAME_ENGINE.getPlayerUi().openChest(_data["linkToChest"])
-                }
-            }
         }
     }
 
@@ -233,7 +261,10 @@ class Level extends AbstractTiledMap {
         // Draw all the entities
         this.#entities.forEach(entity => {
             entity.display(ctx, this.getPixelX(), this.getPixelY())
-            if (Debugger.isDebugging) ctx.strokeRect(entity.getPixelX() + this.getPixelX(), entity.getPixelY() + this.getPixelY(), entity.getWidth(), entity.getHeight())
+            if (Debugger.isDebugging) {
+                const _hitBox = entity.getPixelHitBox()
+                ctx.strokeRect(_hitBox.x + this.getPixelX(), _hitBox.y + this.getPixelY(), _hitBox.width, _hitBox.height)
+            }
         });
         // If there is top layers on the top of ground layers
         const theGroupLevelEndAtIndex = this.getParameter("groupLevelEndAtIndex")
@@ -249,19 +280,41 @@ class Level extends AbstractTiledMap {
         if (this.getParameter("interior") == null || this.getParameter("interior") === false) {
             // adding affect for day night cycle
             if (!(DateTimeSystem.getHour() > 6 && DateTimeSystem.getHour() < 17)) {
+                ctx.beginPath();
+                if (this.getParameter("light_sources") != null) {
+                    this.getParameter("light_sources").forEach(_spot => {
+                        ctx.arc(Math.ceil(this.getTilePixelX(_spot[0]) - 0.1), Math.ceil(this.getTilePixelY(_spot[1] - 0.1)), Math.ceil(_spot[2] * this.getTileSize() * 0.8), 0, Math.PI * 2)
+                        ctx.closePath()
+                    })
+                }
                 if (DateTimeSystem.getHour() >= 17 && DateTimeSystem.getHour() <= 21) {
                     ctx.fillStyle = `rgba(5,18,45, ${(DateTimeSystem.getHour() - 17) * 0.225})`;
                 } else if (DateTimeSystem.getHour() >= 4 && DateTimeSystem.getHour() <= 6) {
                     ctx.fillStyle = `rgba(5,18,45, ${0.9 - (DateTimeSystem.getHour() - 4) * 0.45})`;
                 } else {
-                    ctx.fillStyle = "rgba(5,18,45, 0.9)";
+                    ctx.fillStyle = "rgba(5,18,45, 0.8)";
                 }
-                ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                ctx.rect(ctx.canvas.width, 0, -ctx.canvas.width, ctx.canvas.height);
+                ctx.fill();
+            }
+            if (this.getParameter("light_sources") != null) {
+
+                this.getParameter("light_sources").forEach(_spot => {
+                    ctx.beginPath();
+                    const [thePixelX, thePixelY, theRadius] = [this.getTilePixelX(_spot[0]), this.getTilePixelY(_spot[1] - 0.1), Math.ceil(_spot[2] * this.getTileSize())]
+                    let radialGradient = ctx.createRadialGradient(thePixelX, thePixelY, 1, thePixelX, thePixelY, theRadius);
+                    radialGradient.addColorStop(0, 'rgba(255,153,51,0.5)');
+                    radialGradient.addColorStop(0.65, 'rgba(255,178,102,0.3)');
+                    radialGradient.addColorStop(1, 'rgba(255,204,153,0)');
+                    ctx.arc(thePixelX, thePixelY, theRadius, 0, Math.PI * 2);
+                    ctx.fillStyle = radialGradient;
+                    ctx.fill();
+                })
             }
         }
         const entitiesThatCollideWithPlayer = this.getEntitiesThatCollideWith(Level.PLAYER)
         if (entitiesThatCollideWithPlayer.length > 0) {
-            if (entitiesThatCollideWithPlayer[0].getCategory().localeCompare("characters") === 0) {
+            if (entitiesThatCollideWithPlayer[0] instanceof Npc) {
                 const _fontSize = Level.PLAYER.getMapReference().getTileSize() / 2
                 if (Level.PLAYER.notDisablePlayerController() && MessageButton.draw(
                     GAME_ENGINE.ctx, "Interact", _fontSize,
@@ -270,6 +323,16 @@ class Level extends AbstractTiledMap {
                     if (!Controller.mouse_prev.leftClick && Controller.mouse.leftClick) {
                         entitiesThatCollideWithPlayer[0].interact();
                         Controller.mouse.leftClick = false
+                    }
+                }
+            } else if (entitiesThatCollideWithPlayer[0] instanceof Chest) {
+                const _fontSize = Level.PLAYER.getMapReference().getTileSize() / 2
+                if (Level.PLAYER.notDisablePlayerController() && MessageButton.draw(
+                    GAME_ENGINE.ctx, "Open", _fontSize,
+                    Level.PLAYER.getMapReference().getPixelX() + Level.PLAYER.getPixelRight() - _fontSize / 3, Level.PLAYER.getMapReference().getPixelY() + Level.PLAYER.getPixelY() + _fontSize
+                )) {
+                    if (!Controller.mouse_prev.leftClick && Controller.mouse.leftClick) {
+                        GAME_ENGINE.getPlayerUi().openChest(entitiesThatCollideWithPlayer[0])
                     }
                 }
             }
@@ -286,10 +349,14 @@ class Level extends AbstractTiledMap {
                         this.processTriggers(_pos)
                     } else if (Debugger.isDebugging) {
                         ctx.strokeStyle = 'red';
-                        _trigger.draw(ctx)
                     }
+                    if (Debugger.isDebugging) _trigger.draw(ctx)
                 }
             )
+        }
+        // play bgm
+        if (Level.BGM.localeCompare("$NO_MUSIC$") !== 0) {
+            if (ASSET_MANAGER.playMusic(Level.BGM)) this.updateLevelMusic()
         }
     };
 }

@@ -1,4 +1,18 @@
 {
+  "audios": [
+    "./audios/music/OST 1 - Good Morning.ogg",
+    "./audios/music/OST 2 - Fate.ogg",
+    "./audios/music/OST 3 - Village.ogg",
+    "./audios/music/OST 4 - Dragonfly.ogg",
+    "./audios/music/OST 5 - Seaside Promenade (Loopable).ogg",
+    "./audios/sound/Empty_water_bucket1.ogg",
+    "./audios/sound/Empty_water_bucket2.ogg",
+    "./audios/sound/Empty_water_bucket3.ogg",
+    "./audios/sound/Gravel_hit1.ogg",
+    "./audios/sound/Gravel_hit2.ogg",
+    "./audios/sound/Gravel_hit3.ogg",
+    "./audios/sound/Gravel_hit4.ogg"
+  ],
   "images": [
     "./images/animals/chicken/baby_chicken.png",
     "./images/animals/chicken/black_chicken.png",
@@ -58,6 +72,8 @@
     "./images/items/wall_decorations.png",
     "./images/items/winter_objects.png",
     "./images/portrait_cow_kigurumi.png",
+    "./images/readmeImage/Screenshot_home.png",
+    "./images/readmeImage/Screenshot_NPC.png",
     "./images/tilemaps/autumn.png",
     "./images/tilemaps/inside.png",
     "./images/tilemaps/Marketplace_autotile_A2.png",
@@ -65,7 +81,8 @@
     "./images/tilemaps/summer.png",
     "./images/tilemaps/walls_and_floors.png",
     "./images/tilemaps/winter.png",
-    "./images/ui/gui.png"
+    "./images/ui/gui.png",
+    "./images/ui/title.png"
   ],
   "jsons": [
     "./images/animals/chicken/chicken.json",
@@ -112,9 +129,13 @@
     "./images/tilemaps/winter.json",
     "./images/ui/gui.json",
     "./levels/bedroom.json",
+    "./levels/farm_autumn.json",
     "./levels/farm_spring.json",
     "./levels/farm_summer.json",
+    "./levels/farm_winter.json",
     "./levels/levels.json",
+    "./levels/main_menu.json",
+    "./levels/shop.json",
     "./levels/town.json",
     "./ui/backpack.json",
     "./ui/chest.json",

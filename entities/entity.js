@@ -20,6 +20,7 @@ class Entity extends GameObject2d {
         this.#tile_h = this.getJson()["tileheight"]
         this.#uid = ++Entity.#uid_counter
         this.#mapRef = mapRef
+        this.customHitBox = null
         console.assert(this.#mapRef != null)
         this.setSize(this.#tile_w, this.#tile_h)
         this.setBlockX(blockX)
@@ -88,7 +89,28 @@ class Entity extends GameObject2d {
         return this.#tile_h
     }
 
+    getPixelHitBox() {
+        if (this.customHitBox != null) {
+            return {
+                x: this.getPixelX() + this.customHitBox.x * this.getMapReference().getTileSize(),
+                y: this.getPixelY() + this.customHitBox.y * this.getMapReference().getTileSize(),
+                width: this.customHitBox.width * this.getMapReference().getTileSize(),
+                height: this.customHitBox.height * this.getMapReference().getTileSize()
+            };
+        } else {
+            return {
+                x: this.getPixelX(),
+                y: this.getPixelY(),
+                width: this.getWidth(),
+                height: this.getHeight()
+            };
+        }
+    }
+
     collideWith(o) {
-        return Math.max(this.getPixelX(), o.getPixelX()) < Math.min(this.getPixelRight(), o.getPixelRight()) && Math.max(this.getPixelY(), o.getPixelY()) < Math.min(this.getPixelBottom(), o.getPixelBottom())
+        const thisPixelHitBox = this.getPixelHitBox();
+        const thatPixelHitBox = o.getPixelHitBox();
+        return Math.max(thisPixelHitBox.x, thatPixelHitBox.x) <= Math.min(thisPixelHitBox.x + thisPixelHitBox.width, thatPixelHitBox.x + thatPixelHitBox.width)
+            && Math.max(thisPixelHitBox.y, thatPixelHitBox.y) <= Math.min(thisPixelHitBox.y + thisPixelHitBox.height, thatPixelHitBox.y + thatPixelHitBox.height)
     }
 }

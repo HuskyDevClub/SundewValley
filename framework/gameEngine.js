@@ -32,6 +32,7 @@ class GameEngine {
             this.#levels[this.#currentLevelName] = this.#currentLevelName.startsWith("farm_") ? new FarmLevel(levelPath) : this.#currentLevelName.startsWith("bedroom") ? new Bedroom(levelPath) : new Level(levelPath)
             this.getCurrentLevel().initEntities()
         }
+        this.getCurrentLevel().updateLevelMusic()
         this.#ui = new UserInterfaces();
     }
 
@@ -40,7 +41,7 @@ class GameEngine {
         DateTimeSystem.init(2023);
         InventoryItems.init()
         LevelData.init()
-        this.enterLevel("farm") // "town" `farm_${DateTimeSystem.getSeason()}`
+        this.enterLevel("main_menu") // "town" `farm_${DateTimeSystem.getSeason()}`
         Controller.startInput(this.ctx)
         this.timer = new Timer();
         Debugger.switchDebugMode();

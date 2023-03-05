@@ -9,6 +9,7 @@ class Player extends Character {
         this.setMovingSpeedY(5)
         this.setSize(this.getMapReference().getTileSize() * 1.5, this.getMapReference().getTileSize() * 1.5)
         this.#isIdle = true
+        this.ishidden = false
         this.#itemBar = {}
     }
 
@@ -52,22 +53,6 @@ class Player extends Character {
         }
     }
 
-    putItemFromInventoryIntoTargetInventory(key, targetRef, amount = null) {
-        if (amount == null || amount > this.getInventory()[key]["amount"]) {
-            amount = this.getInventory()[key]["amount"]
-        }
-        targetRef.obtainItem(key, amount)
-        super.tryUseItem(key, amount)
-    }
-
-    takeItemOutOfTargetInventory(key, targetRef, amount = null) {
-        if (amount == null || amount > targetRef.getInventory()[key]["amount"]) {
-            amount = targetRef.getInventory()[key]["amount"]
-        }
-        targetRef.tryUseItem(key, amount)
-        this.obtainItem(key, amount)
-
-    }
 
     putItemIntoInventory(key, amount = null) {
         if (amount == null || amount > this.#itemBar[key]["amount"]) {
@@ -96,7 +81,7 @@ class Player extends Character {
     }
 
     #checkNotLoopAnimation(key, action) {
-        if (key === true) {
+        if (Controller.keys[key] === true) {
             this.setCurrentAction(action)
             this.#isIdle = false
             return true
@@ -108,29 +93,33 @@ class Player extends Character {
     }
 
     #checkSpecialAction() {
-        return !this.#checkNotLoopAnimation(Controller.keys["KeyQ"], "water")
-            && !this.#checkNotLoopAnimation(Controller.keys["KeyE"], "dig")
-            && !this.#checkNotLoopAnimation(Controller.keys["KeyC"], "cut")
+        return !this.#checkNotLoopAnimation("KeyQ", "water")
+            && !this.#checkNotLoopAnimation("KeyE", "dig")
+            && !this.#checkNotLoopAnimation("KeyC", "cut")
     }
 
     notDisablePlayerController() {
-        return Transition.isNotActivated() && GAME_ENGINE.getPlayerUi().isNotOpeningAnyChest() && !Dialogues.isAnyDialoguePlaying()
+        return Transition.isNotActivated() && GAME_ENGINE.getPlayerUi().noUiIsOpening() && !Dialogues.isAnyDialoguePlaying() && !this.ishidden
     }
 
     update() {
+        if (this.ishidden) return
         this.#isIdle = true
         this.setCurrentMovingSpeedX(0)
         this.setCurrentMovingSpeedY(0)
         // for dig action, try to convert grass to dirt
         if (this.isCurrentAction("dig") && this.getCurrentAnimation().currentFrame() === 1) {
+            ASSET_MANAGER.playSound(`Gravel_hit${getRandomIntInclusive(1, 4)}.ogg`)
             if (this.getMapReference() instanceof FarmLevel) this.getMapReference().tryConvertTileToDirt(this.getBlockX(), this.getBlockY())
         }
         // for water action, try to water the ground
         else if (this.isCurrentAction("water") && this.getCurrentAnimation().currentFrame() === 1) {
+            ASSET_MANAGER.playSound(`Empty_water_bucket${getRandomIntInclusive(1, 3)}.ogg`)
             if (this.getMapReference() instanceof FarmLevel) this.getMapReference().tryConvertTileToWateredDirt(this.getBlockX(), this.getBlockY())
         }
         // for cut action, try to harvest the crop
         else if (this.isCurrentAction("cut") && this.getCurrentAnimation().currentFrame() === 1) {
+            ASSET_MANAGER.playSound(`Gravel_hit${getRandomIntInclusive(1, 4)}.ogg`)
             if (this.getMapReference() instanceof FarmLevel) {
                 const _crop = this.getMapReference().getCrop(this.getBlockX(), this.getBlockY())
                 if (_crop != null && _crop.isMatured()) {
@@ -143,7 +132,7 @@ class Player extends Character {
             }
         }
         // check special action
-        if (this.#checkSpecialAction() && this.notDisablePlayerController()) {
+        if (this.notDisablePlayerController() && this.#checkSpecialAction()) {
             // move left or right
             if (Controller.left === true) {
                 this.setDirectionFacing("l")
@@ -172,4 +161,8 @@ class Player extends Character {
         }
         super.update()
     };
+
+    display(ctx, offsetX, offsetY) {
+        if (!this.ishidden) super.display(ctx, offsetX, offsetY);
+    }
 }

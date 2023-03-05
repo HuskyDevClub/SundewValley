@@ -34,7 +34,8 @@ class AbstractTiledMap extends Abstract2dGameObject {
             }
         })
         this.#tileSets = Array.from(_data["tilesets"])
-        this.#levelParameters = LevelData.get(_path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, ""));
+        const nameOfLevel = _path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "")
+        this.#levelParameters = LevelData.get(nameOfLevel.startsWith("farm_") ? "farm" : nameOfLevel);
         if (this.#levelParameters == null) this.#levelParameters = {}
         const defaultSize = GAME_ENGINE.ctx.canvas.width / 20
         this.setTileWidth(defaultSize)

@@ -1,5 +1,6 @@
 class DateTimeSystem {
     static #data
+    static #SCALE = 60000
 
     static init(yearStarted) {
         this.#data = new Date(yearStarted, 2, 1, 6, 0, 1, 0)
@@ -18,7 +19,7 @@ class DateTimeSystem {
     }
 
     static update(time_in_seconds) {
-        this.#data.setTime(this.#data.getTime() + time_in_seconds * 60000)
+        this.#data.setTime(this.#data.getTime() + time_in_seconds * this.#SCALE)
     }
 
     static getHour() {

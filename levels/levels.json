@@ -1,10 +1,54 @@
 {
-  "town": {
-    "groupLevelEndAtIndex": 6,
+  "main_menu": {
+    "groupLevelEndAtIndex": 8,
+    "hide_player": true,
     "spawn": [
-      14,
-      16
+      15,
+      9
     ],
+    "entities": [
+      {
+        "x": 20,
+        "y": 17,
+        "name": "black_cow",
+        "type": "cow"
+      },
+      {
+        "x": 10,
+        "y": 5,
+        "name": "white_chicken",
+        "type": "chicken"
+      },
+      {
+        "x": 11,
+        "y": 7,
+        "name": "brown_chicken",
+        "type": "chicken"
+      },
+      {
+        "x": 11,
+        "y": 17,
+        "name": "black_goat",
+        "type": "goat"
+      },
+      {
+        "x": 8,
+        "y": 14,
+        "name": "pink_pig",
+        "type": "pig"
+      },
+      {
+        "x": 25,
+        "y": 2,
+        "name": "fluffy_white_sheep_sheet",
+        "type": "sheep"
+      }
+    ]
+  },
+  "town": {
+    "morning_music": "OST 1 - Good Morning.ogg",
+    "night_music": "OST 3 - Village.ogg",
+    "groupLevelEndAtIndex": 6,
     "triggers": [
       {
         "x": 43,
@@ -16,9 +60,20 @@
         "destinationY": 39,
         "type": "teleportation"
       }
+    ],
+    "entities": [
+      {
+        "x": 44,
+        "y": 57,
+        "name": "Amely",
+        "type": "npc",
+        "money": 2000
+      }
     ]
   },
-  "farm_spring": {
+  "farm": {
+    "morning_music": "OST 5 - Seaside Promenade (Loopable).ogg",
+    "night_music": "OST 2 - Fate.ogg",
     "groupLevelEndAtIndex": 8,
     "spawn": [
       15,
@@ -49,16 +104,35 @@
     "entities": [
       {
         "x": 26,
-        "y": 38,
+        "y": 37,
         "width": 2,
         "height": 2,
         "name": "TradingBox",
         "type": "chest"
       }
+    ],
+    "light_sources": [
+      [
+        15,
+        35.95,
+        1
+      ],
+      [
+        13.95,
+        37.7,
+        0.75
+      ],
+      [
+        16.1,
+        37.7,
+        0.75
+      ]
     ]
   },
   "bedroom": {
     "interior": true,
+    "morning_music": "OST 5 - Seaside Promenade (Loopable).ogg",
+    "night_music": "OST 2 - Fate.ogg",
     "groupLevelEndAtIndex": 3,
     "triggers": [
       {

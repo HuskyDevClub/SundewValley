@@ -27,6 +27,10 @@ class Character extends Creature {
         return this.#inventory
     }
 
+    clearInventory() {
+        this.#inventory = {}
+    }
+
     hasItemInInventory(key) {
         return this.getInventory()[key] != null
     }

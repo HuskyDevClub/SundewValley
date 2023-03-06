@@ -1,5 +1,6 @@
 class Level extends AbstractTiledMap {
     static PLAYER
+    static #ALL_ENTITIES = []
     static BGM = "$NO_MUSIC$"
     #entities = []
     #automapTilesFirstGid = -1
@@ -25,6 +26,10 @@ class Level extends AbstractTiledMap {
         const theCurrentLevel = this.PLAYER.getMapReference()
         theCurrentLevel.setPixelX(-this.PLAYER.getBlockX() * theCurrentLevel.getTileSize() + GAME_ENGINE.ctx.canvas.width / 2)
         theCurrentLevel.setPixelY(-this.PLAYER.getBlockY() * theCurrentLevel.getTileSize() + GAME_ENGINE.ctx.canvas.height / 2)
+    }
+
+    static findEntityGlobally(_filter) {
+        return Level.#ALL_ENTITIES.find(_filter)
     }
 
     #getBgm() {
@@ -63,6 +68,7 @@ class Level extends AbstractTiledMap {
     }
 
     addEntity(entity) {
+        Level.#ALL_ENTITIES.push(entity)
         this.#entities.push(entity);
     };
 
@@ -296,20 +302,19 @@ class Level extends AbstractTiledMap {
                 }
                 ctx.rect(ctx.canvas.width, 0, -ctx.canvas.width, ctx.canvas.height);
                 ctx.fill();
-            }
-            if (this.getParameter("light_sources") != null) {
-
-                this.getParameter("light_sources").forEach(_spot => {
-                    ctx.beginPath();
-                    const [thePixelX, thePixelY, theRadius] = [this.getTilePixelX(_spot[0]), this.getTilePixelY(_spot[1] - 0.1), Math.ceil(_spot[2] * this.getTileSize())]
-                    let radialGradient = ctx.createRadialGradient(thePixelX, thePixelY, 1, thePixelX, thePixelY, theRadius);
-                    radialGradient.addColorStop(0, 'rgba(255,153,51,0.5)');
-                    radialGradient.addColorStop(0.65, 'rgba(255,178,102,0.3)');
-                    radialGradient.addColorStop(1, 'rgba(255,204,153,0)');
-                    ctx.arc(thePixelX, thePixelY, theRadius, 0, Math.PI * 2);
-                    ctx.fillStyle = radialGradient;
-                    ctx.fill();
-                })
+                if (this.getParameter("light_sources") != null) {
+                    this.getParameter("light_sources").forEach(_spot => {
+                        ctx.beginPath();
+                        const [thePixelX, thePixelY, theRadius] = [this.getTilePixelX(_spot[0]), this.getTilePixelY(_spot[1] - 0.1), Math.ceil(_spot[2] * this.getTileSize())]
+                        let radialGradient = ctx.createRadialGradient(thePixelX, thePixelY, 1, thePixelX, thePixelY, theRadius);
+                        radialGradient.addColorStop(0, 'rgba(255,153,51,0.5)');
+                        radialGradient.addColorStop(0.65, 'rgba(255,178,102,0.3)');
+                        radialGradient.addColorStop(1, 'rgba(255,204,153,0)');
+                        ctx.arc(thePixelX, thePixelY, theRadius, 0, Math.PI * 2);
+                        ctx.fillStyle = radialGradient;
+                        ctx.fill();
+                    })
+                }
             }
         }
         const entitiesThatCollideWithPlayer = this.getEntitiesThatCollideWith(Level.PLAYER)

@@ -1,21 +1,20 @@
-body
-{
+body {
     background-color: #DEF5E5;
 }
-h2
-{
+
+h2 {
     margin: auto;
     text-align: center;
     font-family: "Gill Sans", sans-serif;
     font-size: 30px;
 }
-img.animated-gif
-{
+
+img.animated-gif {
     width: 200px;
     height: auto;
 }
-#tips
-{
+
+#tips {
     margin: auto;
     width: 35%;
     padding: 10px;

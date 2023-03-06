@@ -133,7 +133,7 @@
     "interior": true,
     "morning_music": "OST 5 - Seaside Promenade (Loopable).ogg",
     "night_music": "OST 2 - Fate.ogg",
-    "groupLevelEndAtIndex": 3,
+    "groupLevelEndAtIndex": 6,
     "triggers": [
       {
         "x": 24,

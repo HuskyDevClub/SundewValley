@@ -25,14 +25,15 @@ class AbstractTiledMap extends Abstract2dGameObject {
             this.#minY = _layer["starty"] != null ? Math.min(this.#minY, _layer["starty"]) : Math.min(this.#minX, _layer["y"])
         })
         // pre-allocated space for map
-        this.#map = new Array(this.#row).fill(undefined).map(() => new Array(this.#column).fill(undefined).map(() => []))
-        layers.forEach(_layer => {
+        this.#map = new Array(this.#row).fill(undefined).map(() => new Array(this.#column).fill(undefined).map(() => new Array(layers.length)))
+        for (let i = 0; i < layers.length; i++) {
+            const _layer = layers[i]
             if (_layer["chunks"] != null) {
-                _layer["chunks"].forEach(_chunk => this.#processChunk(_chunk))
+                _layer["chunks"].forEach(_chunk => this.#processChunk(_chunk, i))
             } else {
-                this.#processChunk(_layer)
+                this.#processChunk(_layer, i)
             }
-        })
+        }
         this.#tileSets = Array.from(_data["tilesets"])
         const nameOfLevel = _path.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "")
         this.#levelParameters = LevelData.get(nameOfLevel.startsWith("farm_") ? "farm" : nameOfLevel);
@@ -78,13 +79,13 @@ class AbstractTiledMap extends Abstract2dGameObject {
         return this.getTilePixelX(xStart) <= Controller.mouse.x && Controller.mouse.x <= this.getTilePixelX(xEndExclude) && this.getTilePixelY(yStart) <= Controller.mouse.y && Controller.mouse.y <= this.getTilePixelY(yEndExclude)
     }
 
-    #processChunk(_chunk) {
+    #processChunk(_chunk, index) {
         const chunk_width = parseInt(_chunk.width)
         console.assert(_chunk["data"].length === chunk_width * parseInt(_chunk.height))
         for (let i = 0; i < _chunk["data"].length; i++) {
             let x = _chunk["x"] - this.#minX + i % chunk_width
             let y = _chunk["y"] - this.#minY + Math.floor(i / chunk_width)
-            this.getTile(x, y).push(_chunk["data"][i])
+            this.getTile(x, y)[index] = _chunk["data"][i]
         }
     }
 

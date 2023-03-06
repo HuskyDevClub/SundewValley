@@ -93,9 +93,9 @@ class Player extends Character {
     }
 
     #checkSpecialAction() {
-        return !this.#checkNotLoopAnimation("KeyQ", "water")
+        return this.getMapReference() instanceof FarmLevel ? (!this.#checkNotLoopAnimation("KeyQ", "water")
             && !this.#checkNotLoopAnimation("KeyE", "dig")
-            && !this.#checkNotLoopAnimation("KeyC", "cut")
+            && !this.#checkNotLoopAnimation("KeyC", "cut")) : true
     }
 
     notDisablePlayerController() {

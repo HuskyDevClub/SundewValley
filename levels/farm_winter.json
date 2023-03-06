@@ -14354,11 +14354,11 @@
       "id": 3,
       "name": "Fence, Path, rocks in river, Bridge",
       "opacity": 1,
-      "startx": -16,
+      "startx": 0,
       "starty": 0,
       "type": "tilelayer",
       "visible": true,
-      "width": 64,
+      "width": 48,
       "x": 0,
       "y": 0
     },
@@ -21858,19 +21858,19 @@
     },
     {
       "firstgid": 707,
-      "source": "..\/..\/TheUntitledFarm-dev\/images\/items\/autumn_objects.json"
+      "source": "..\/images\/items\/autumn_objects.json"
     },
     {
       "firstgid": 811,
-      "source": "..\/..\/TheUntitledFarm-dev\/images\/tilemaps\/autumn.json"
+      "source": "..\/images\/tilemaps\/autumn.json"
     },
     {
       "firstgid": 982,
-      "source": "..\/..\/TheUntitledFarm-dev\/images\/tilemaps\/winter.json"
+      "source": "..\/images\/tilemaps\/winter.json"
     },
     {
       "firstgid": 1153,
-      "source": "..\/..\/TheUntitledFarm-dev\/images\/items\/winter_objects.json"
+      "source": "..\/images\/items\/winter_objects.json"
     }
   ],
   "tilewidth": 16,

@@ -3,6 +3,21 @@ class FarmLevel extends Level {
         super(_path)
     }
 
+    static dailyClosing() {
+        const keys = Object.keys(Chest.CHESTS.TradingBox)
+        keys.forEach(_key => {
+            if (PRICES[_key] != null) {
+                Level.PLAYER.earnMoney(PRICES[_key] * Chest.CHESTS.TradingBox[_key]["amount"])
+                delete Chest.CHESTS.TradingBox[_key]
+            }
+        })
+        const amelyPtr = this.findEntityGlobally(_e => _e instanceof Npc && _e.getName().localeCompare("Amely") === 0)
+        if (amelyPtr != null) {
+            amelyPtr.setMoney(2000)
+            amelyPtr.clearInventory()
+        }
+    }
+
     getCropOnCoordinate(x, y) {
         return this.findEntity(_entity => Math.floor(_entity.getBlockX()) === x && Math.floor(_entity.getBlockY()) === y && _entity instanceof Crop)
     }

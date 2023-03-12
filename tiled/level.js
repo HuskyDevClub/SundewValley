@@ -223,6 +223,17 @@ class Level extends AbstractTiledMap {
                 Level.PLAYER.setMapReference(GAME_ENGINE.getCurrentLevel())
                 Level.#setPlayerCoordinate(_data["destinationX"], _data["destinationY"])
             })
+        } else if (_data.type.localeCompare("dialog") === 0) {
+            const _fontSize = Level.PLAYER.getMapReference().getTileSize() / 2
+            if (MessageButton.draw(
+                GAME_ENGINE.ctx, "Interact", _fontSize,
+                Level.PLAYER.getMapReference().getPixelX() + Level.PLAYER.getPixelRight() - _fontSize / 3, Level.PLAYER.getMapReference().getPixelY() + Level.PLAYER.getPixelY() + _fontSize
+            )) {
+                if (!Controller.mouse_prev.leftClick && Controller.mouse.leftClick) {
+                    Dialogues.update(_data.key)
+                    Controller.mouse.leftClick = false
+                }
+            }
         }
     }
 

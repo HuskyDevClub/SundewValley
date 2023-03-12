@@ -1,6 +1,6 @@
 class DateTimeSystem {
     static #data
-    static #SCALE = 60000
+    static #SCALE = 60000 * 2
 
     static init(yearStarted) {
         this.#data = new Date(yearStarted, 2, 1, 6, 0, 1, 0)

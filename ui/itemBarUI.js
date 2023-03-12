@@ -18,7 +18,7 @@ class ItemBarUI extends GameObjectsMapContainer {
     }
 
     noContainerIsHovering() {
-        return !ItemBarUI.#itemsBarTiledStaticImage.isHovering()
+        return !Dialogues.isAnyDialoguePlaying() && !ItemBarUI.#itemsBarTiledStaticImage.isHovering()
     }
 
     getPadding() {

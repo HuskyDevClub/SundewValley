@@ -21,7 +21,7 @@ class Dialogues {
             }]
         },
         Yu_interact1: {
-            contents: ["Hey, want something to drink?"],
+            contents: ["Greeting, want something to drink?"],
             options: [{
                 text: "Sure, what do you have",
                 act: "Yu_interact2"
@@ -55,7 +55,62 @@ class Dialogues {
             }]
         },
         Yu_interact5: {
-            contents: ["Here you go, have a nice dat"],
+            contents: ["Here you go, have a nice day"],
+        },
+        Adian_interact1: {
+            contents: ["Hey you, yeah I am talking to you", "Come here"],
+            next: "Adian_interact2"
+        },
+        Adian_interact2: {
+            contents: ["This is so stupid", "Have you ever see a bar that only serves water?"],
+            options: [{
+                text: "Well, water is good for your health",
+                act: "Adian_interact2_disagree"
+            }, {
+                text: "It is kind of strange",
+                act: "Adian_interact2_agree"
+            }]
+        },
+        Adian_interact2_agree: {
+            contents: ["Finally, there are still smart people on this plant", "I thought I am the one one left"],
+        },
+        Adian_interact2_disagree: {
+            contents: ["Well go away then", "There is no reason for me to talk to someone like you"],
+        },
+        Marx_interact1: {
+            contents: ["Hello stranger", "Never see you here before", "Where do you come from?"],
+            next: "Marx_interact2"
+        },
+        Marx_interact2: {
+            contents: ["Hmm interesting", "Just move here and inherit a farm from a recent died relative?", "Sounds like something that will only come out of a video game"],
+            next: "Marx_interact3"
+        },
+        Marx_interact3: {
+            contents: ["You see, I think it is great that there is a bar out here", "that only serves water", "Alcohol will only cause problem"],
+            next: "Marx_interact4"
+        },
+        Marx_interact4: {
+            contents: ["Young people these days do not understand the importance", "of taking care of their bodies", "You are not someone like that, aren't you?"],
+        },
+        Bar_TV1_1: {
+            contents: ["The TV is airing the latest weather report"],
+            next: "Bar_TV1_2"
+        },
+        Bar_TV1_2: {
+            contents: ["It seems like tomorrow will be another sunny day"],
+        },
+        Bar_TV2_1: {
+            contents: ["An old TV", "Do you want to turn it on?"],
+            options: [{
+                text: "Yes",
+                act: "Bar_TV2_2"
+            }, {
+                text: "No",
+                act: "$close"
+            }]
+        },
+        Bar_TV2_2: {
+            contents: ["The screen is still black", "The TV seems to be broken"],
         }
     }
 
@@ -106,6 +161,8 @@ class Dialogues {
                 if (hasNoOption) {
                     if (this.#CURRENT.next == null) {
                         this.#CURRENT = null;
+                    } else {
+                        this.update(this.#CURRENT.next, this.#CURRENT_INIT_BY)
                     }
                 } else if (currentHover >= 0) {
                     if (this.#CURRENT["options"][currentHover].act.startsWith("$")) {

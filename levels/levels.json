@@ -176,6 +176,7 @@
     ]
   },
   "crop_shop": {
+    "interior": true,
     "morning_music": "OST 1 - Good Morning.ogg",
     "night_music": "OST 3 - Village.ogg",
     "triggers": [
@@ -200,6 +201,7 @@
     ]
   },
   "animal_shop": {
+    "interior": true,
     "morning_music": "OST 1 - Good Morning.ogg",
     "night_music": "OST 3 - Village.ogg",
     "triggers": [
@@ -254,6 +256,7 @@
     ]
   },
   "bar": {
+    "interior": true,
     "morning_music": "OST 1 - Good Morning.ogg",
     "night_music": "OST 3 - Village.ogg",
     "triggers": [
@@ -266,6 +269,22 @@
         "destinationX": 29.5,
         "destinationY": 41,
         "type": "teleportation"
+      },
+      {
+        "x": 10,
+        "y": 15,
+        "width": 3,
+        "height": 3,
+        "type": "dialog",
+        "key": "Bar_TV1_1"
+      },
+      {
+        "x": 29,
+        "y": 15,
+        "width": 3,
+        "height": 3,
+        "type": "dialog",
+        "key": "Bar_TV2_1"
       }
     ],
     "entities": [
@@ -273,6 +292,18 @@
         "x": 20,
         "y": 17,
         "name": "Yu",
+        "type": "npc"
+      },
+      {
+        "x": 10,
+        "y": 21,
+        "name": "Adian",
+        "type": "npc"
+      },
+      {
+        "x": 26.25,
+        "y": 18,
+        "name": "Marx",
         "type": "npc"
       }
     ]

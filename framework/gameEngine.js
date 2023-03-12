@@ -41,7 +41,7 @@ class GameEngine {
         DateTimeSystem.init(2023);
         InventoryItems.init()
         LevelData.init()
-        this.enterLevel("main_menu") // "town" `farm_${DateTimeSystem.getSeason()}`
+        this.enterLevel("main_menu")
         Controller.startInput(this.ctx)
         this.timer = new Timer();
         Debugger.switchDebugMode();

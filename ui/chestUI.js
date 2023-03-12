@@ -26,7 +26,7 @@ class ChestUI extends InventoryUI {
     }
 
     draw(ctx) {
-        super.draw(ctx)
+        super.drawInventory(ctx)
         // padding of the container
         const padding = this.getPadding()
         // get keys
@@ -75,5 +75,6 @@ class ChestUI extends InventoryUI {
             this.getBackpackTiledStaticImage().getPixelX() + this.getBackpackTiledStaticImage().getTileWidth() * 1.1, this.getBackpackTiledStaticImage().getPixelY() + this.getBackpackTiledStaticImage().getTileHeight() * 24.25,
             this.getBackpackTiledStaticImage().getTileWidth() * 2.5, this.getBackpackTiledStaticImage().getTileHeight() * 2.5
         )
+        this.drawInfo(ctx)
     }
 }

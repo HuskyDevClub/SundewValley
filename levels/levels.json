@@ -59,15 +59,36 @@
         "destinationX": 48,
         "destinationY": 39,
         "type": "teleportation"
-      }
-    ],
-    "entities": [
+      },
       {
-        "x": 44,
-        "y": 57,
-        "name": "Amely",
-        "type": "npc",
-        "money": 2000
+        "x": 37,
+        "y": 39,
+        "width": 1,
+        "height": 1,
+        "destinationLevel": "crop_shop",
+        "destinationX": 21.5,
+        "destinationY": 20.5,
+        "type": "teleportation"
+      },
+      {
+        "x": 33,
+        "y": 39,
+        "width": 1,
+        "height": 1,
+        "destinationLevel": "animal_shop",
+        "destinationX": 16.5,
+        "destinationY": 21.5,
+        "type": "teleportation"
+      },
+      {
+        "x": 29,
+        "y": 39,
+        "width": 1,
+        "height": 1,
+        "destinationLevel": "bar",
+        "destinationX": 19.5,
+        "destinationY": 25.9,
+        "type": "teleportation"
       }
     ]
   },
@@ -151,6 +172,108 @@
         "width": 3,
         "height": 3,
         "type": "bed"
+      }
+    ]
+  },
+  "crop_shop": {
+    "morning_music": "OST 1 - Good Morning.ogg",
+    "night_music": "OST 3 - Village.ogg",
+    "triggers": [
+      {
+        "x": 21,
+        "y": 21,
+        "width": 1,
+        "height": 1,
+        "destinationLevel": "town",
+        "destinationX": 37.5,
+        "destinationY": 40.5,
+        "type": "teleportation"
+      }
+    ],
+    "entities": [
+      {
+        "x": 22,
+        "y": 12,
+        "name": "Amely",
+        "type": "npc"
+      }
+    ]
+  },
+  "animal_shop": {
+    "morning_music": "OST 1 - Good Morning.ogg",
+    "night_music": "OST 3 - Village.ogg",
+    "triggers": [
+      {
+        "x": 16,
+        "y": 22,
+        "width": 1,
+        "height": 1,
+        "destinationLevel": "town",
+        "destinationX": 33.5,
+        "destinationY": 40.5,
+        "type": "teleportation"
+      }
+    ],
+    "entities": [
+      {
+        "x": 9,
+        "y": 13,
+        "name": "Mark",
+        "type": "npc"
+      },
+      {
+        "x": 19,
+        "y": 14,
+        "name": "pink_pig",
+        "type": "pig"
+      },
+      {
+        "x": 19,
+        "y": 15,
+        "name": "spotted_pig",
+        "type": "pig"
+      },
+      {
+        "x": 23,
+        "y": 16,
+        "name": "black_goat",
+        "type": "goat"
+      },
+      {
+        "x": 26,
+        "y": 13,
+        "name": "strawberry_cow",
+        "type": "cow"
+      },
+      {
+        "x": 28,
+        "y": 14,
+        "name": "brown_and_white_chicken",
+        "type": "chicken"
+      }
+    ]
+  },
+  "bar": {
+    "morning_music": "OST 1 - Good Morning.ogg",
+    "night_music": "OST 3 - Village.ogg",
+    "triggers": [
+      {
+        "x": 19,
+        "y": 26,
+        "width": 1,
+        "height": 1,
+        "destinationLevel": "town",
+        "destinationX": 29.5,
+        "destinationY": 41,
+        "type": "teleportation"
+      }
+    ],
+    "entities": [
+      {
+        "x": 20,
+        "y": 17,
+        "name": "Yu",
+        "type": "npc"
       }
     ]
   }

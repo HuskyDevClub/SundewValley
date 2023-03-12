@@ -3,11 +3,13 @@ class ItemBarUI extends GameObjectsMapContainer {
     static ITEMS_PER_ROW = 9
     #boxSize
     #selected
+    #latestHovered
 
     constructor(characterRef) {
         super(characterRef.getItemBar())
         this.#boxSize = Math.floor(GAME_ENGINE.ctx.canvas.width / 20)
         this.#selected = -1
+        this.#latestHovered = null
         if (ItemBarUI.#itemsBarTiledStaticImage == null) ItemBarUI.#itemsBarTiledStaticImage = new TiledStaticImage("./ui/itemsBar.json")
     }
 
@@ -87,15 +89,24 @@ class ItemBarUI extends GameObjectsMapContainer {
         }
         // if box is hovered
         if (pixelX <= Controller.mouse.x && Controller.mouse.x <= pixelX + this.#boxSize && pixelY <= Controller.mouse.y && Controller.mouse.y <= pixelY + this.#boxSize) {
+            this.#latestHovered = {key, value}
             this.caseItemBeingHovered(index, key)
         }
         // render item number text
         if (value != null && value.amount > 1) {
-            Font.draw(ctx, value.amount, ItemBarUI.#itemsBarTiledStaticImage.getTileHeight() * 1.75, pixelX + this.#boxSize - ctx.measureText(value.amount).width, pixelY + this.#boxSize)
+            Font.update(ctx, Math.ceil(ItemBarUI.#itemsBarTiledStaticImage.getTileHeight() * 1.75))
+            Font.render(ctx, value.amount, pixelX + this.#boxSize - ctx.measureText(value.amount).width, pixelY + this.#boxSize)
         }
     }
 
-    draw(ctx) {
+    drawInfo(ctx) {
+        if (this.#latestHovered != null && this.#latestHovered.value != null) {
+            const itemPrice = PRICES[this.#latestHovered.key] != null ? PRICES[this.#latestHovered.key] : 0
+            MessageBox.drawLines(ctx, [`amount: ${this.#latestHovered.value.amount}`, `Price: ${itemPrice}`, `Total Value: ${itemPrice * this.#latestHovered.value.amount}`], 30, Controller.mouse.x, Controller.mouse.y, undefined, undefined, undefined, 0.5)
+        }
+    }
+
+    drawItemBar(ctx) {
         super.draw(ctx)
         this.drawTools(ctx)
         // get keys
@@ -116,6 +127,7 @@ class ItemBarUI extends GameObjectsMapContainer {
         ItemBarUI.#itemsBarTiledStaticImage.draw(ctx)
         // calculate pixel y of the box
         const _pixelY = Math.floor(this.getPixelY() + padding)
+        this.#latestHovered = null
         // draw out all the item(s) in player quick access item bar
         for (let i = 0; i < ItemBarUI.ITEMS_PER_ROW; i++) {
             // calculate pixel x of the box
@@ -131,5 +143,10 @@ class ItemBarUI extends GameObjectsMapContainer {
         if (Controller.keys["Escape"]) {
             this.#selected = -1
         }
+    }
+
+    draw(ctx) {
+        this.drawItemBar(ctx)
+        this.drawInfo(ctx)
     }
 }

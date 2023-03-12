@@ -74,7 +74,7 @@ class TradeUI extends ItemBarUI {
     }
 
     draw(ctx) {
-        super.draw(ctx)
+        this.drawItemBar(ctx)
         // draw inventory background image
         this.#tradeTiledStaticImage.setTileWidth(ItemBarUI.getItemsBarTiledStaticImage().getTileWidth())
         this.#tradeTiledStaticImage.setTileHeight(ItemBarUI.getItemsBarTiledStaticImage().getTileHeight())
@@ -165,5 +165,6 @@ class TradeUI extends ItemBarUI {
             this.#tradeTiledStaticImage.getTileWidth() * 59.25, this.#tradeTiledStaticImage.getTileHeight() * 6.5,
             this.#tradeTiledStaticImage.getTileWidth() * 2, this.#tradeTiledStaticImage.getTileHeight() * 2
         )
+        this.drawInfo(ctx)
     }
 }

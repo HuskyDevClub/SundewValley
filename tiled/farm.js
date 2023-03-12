@@ -12,10 +12,7 @@ class FarmLevel extends Level {
             }
         })
         const amelyPtr = this.findEntityGlobally(_e => _e instanceof Npc && _e.getName().localeCompare("Amely") === 0)
-        if (amelyPtr != null) {
-            amelyPtr.setMoney(2000)
-            amelyPtr.clearInventory()
-        }
+        if (amelyPtr != null) amelyPtr.dailyClosing()
     }
 
     getCropOnCoordinate(x, y) {

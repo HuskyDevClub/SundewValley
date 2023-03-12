@@ -4,14 +4,58 @@ class Dialogues {
 
     static #SCRIPTS = {
         Amely_interact1: {
-            contents: ["Hello my Name is Amely", "I can be used to test interaction", "What can I do for you?"],
+            contents: ["Hello my Name is Amely", "What can I do for you, my dear customer?"],
             options: [{
-                text: "I want to Trade",
+                text: "I want to see what you have",
                 act: "$trade"
             }, {
                 text: "Nothing, have a nice day",
                 act: "$close"
             }]
+        },
+        Mark_interact1: {
+            contents: ["Hey, I am not in the mood of doing business right now", "Go away"],
+            options: [{
+                text: "Sorry",
+                act: "$close"
+            }]
+        },
+        Yu_interact1: {
+            contents: ["Hey, want something to drink?"],
+            options: [{
+                text: "Sure, what do you have",
+                act: "Yu_interact2"
+            }, {
+                text: "No, thanks",
+                act: "$close"
+            }]
+        },
+        Yu_interact2: {
+            contents: ["We have... water."],
+            options: [{
+                text: "And...??",
+                act: "Yu_interact3"
+            }]
+        },
+        Yu_interact3: {
+            contents: ["And that is it"],
+            options: [{
+                text: "What kinds of bar only serves water?",
+                act: "Yu_interact4"
+            }]
+        },
+        Yu_interact4: {
+            contents: ["Well... we do."],
+            options: [{
+                text: "Never mind, have a nice day",
+                act: "%close"
+            }, {
+                text: "Ok, I will have some water",
+                act: "Yu_interact5"
+            }]
+        },
+        Yu_interact5: {
+            contents: ["Here you go, have a nice dat"],
         }
     }
 
@@ -64,11 +108,15 @@ class Dialogues {
                         this.#CURRENT = null;
                     }
                 } else if (currentHover >= 0) {
-                    if (this.#CURRENT["options"][currentHover].act.localeCompare("$close") === 0) {
-                        this.#CURRENT = null;
-                    } else if (this.#CURRENT["options"][currentHover].act.localeCompare("$trade") === 0) {
-                        this.#CURRENT = null;
-                        GAME_ENGINE.getPlayerUi().startATrade(this.#CURRENT_INIT_BY);
+                    if (this.#CURRENT["options"][currentHover].act.startsWith("$")) {
+                        if (this.#CURRENT["options"][currentHover].act.localeCompare("$close") === 0) {
+                            this.#CURRENT = null;
+                        } else if (this.#CURRENT["options"][currentHover].act.localeCompare("$trade") === 0) {
+                            this.#CURRENT = null;
+                            GAME_ENGINE.getPlayerUi().startATrade(this.#CURRENT_INIT_BY);
+                        }
+                    } else {
+                        this.update(this.#CURRENT["options"][currentHover].act, this.#CURRENT_INIT_BY)
                     }
                 }
             }

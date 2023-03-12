@@ -44,8 +44,8 @@ class InventoryUI extends ItemBarUI {
     }
 
 
-    draw(ctx) {
-        super.draw(ctx)
+    drawInventory(ctx) {
+        this.drawItemBar(ctx)
         // padding of the container
         const padding = this.getPadding()
         // get keys
@@ -92,5 +92,10 @@ class InventoryUI extends ItemBarUI {
                 this.closeUI()
             }
         }
+    }
+
+    draw(ctx) {
+        this.drawInventory(ctx)
+        this.drawInfo(ctx)
     }
 }

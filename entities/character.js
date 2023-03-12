@@ -36,10 +36,12 @@ class Character extends Creature {
     }
 
     obtainItem(key, num = 1) {
-        if (this.hasItemInInventory(key)) {
-            this.getInventory()[key]["amount"] += num
-        } else {
-            this.getInventory()[key] = {"amount": num}
+        if (num > 0) {
+            if (this.hasItemInInventory(key)) {
+                this.getInventory()[key]["amount"] += num
+            } else {
+                this.getInventory()[key] = {"amount": num}
+            }
         }
     }
 

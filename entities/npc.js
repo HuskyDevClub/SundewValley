@@ -17,7 +17,7 @@ class Npc extends Character {
             this.clearInventory()
             this.setMoney(getRandomIntInclusive(2000, 5000))
             for (let i = 0; i < 50; i++) {
-                const _keys = Object.keys(PRICES)
+                const _keys = Object.keys(InventoryItems.PRICES)
                 this.obtainItem(_keys[_keys.length * Math.random() << 0], getRandomIntInclusive(1, 3))
             }
         }

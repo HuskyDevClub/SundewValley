@@ -25,7 +25,7 @@ class AbstractTiledMap extends Abstract2dGameObject {
             this.#minY = _layer["starty"] != null ? Math.min(this.#minY, _layer["starty"]) : Math.min(this.#minX, _layer["y"])
         })
         // pre-allocated space for map
-        this.#map = new Array(this.#row).fill(undefined).map(() => new Array(this.#column).fill(undefined).map(() => new Array(layers.length)))
+        this.#map = new Array(this.#row).fill(undefined).map(() => new Array(this.#column).fill(undefined).map(() => new Array(layers.length).fill(0)))
         for (let i = 0; i < layers.length; i++) {
             const _layer = layers[i]
             if (_layer["chunks"] != null) {

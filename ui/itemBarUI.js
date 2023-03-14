@@ -101,8 +101,19 @@ class ItemBarUI extends GameObjectsMapContainer {
 
     drawInfo(ctx) {
         if (this.#latestHovered != null && this.#latestHovered.value != null) {
-            const itemPrice = PRICES[this.#latestHovered.key] != null ? PRICES[this.#latestHovered.key] : 0
-            MessageBox.drawLines(ctx, [`amount: ${this.#latestHovered.value.amount}`, `Price: ${itemPrice}`, `Total Value: ${itemPrice * this.#latestHovered.value.amount}`], 30, Controller.mouse.x, Controller.mouse.y, undefined, undefined, undefined, 0.5)
+            const itemPrice = InventoryItems.PRICES[this.#latestHovered.key] != null ? InventoryItems.PRICES[this.#latestHovered.key] : 0
+            MessageBox.drawLines(
+                ctx,
+                [
+                    `${InventoryItems.NAMES[this.#latestHovered.key] != null ? InventoryItems.NAMES[this.#latestHovered.key] : "?"}:`,
+                    `- Amount: ${this.#latestHovered.value.amount}`,
+                    `- Price: ${itemPrice}`,
+                    `- Total Value: ${itemPrice * this.#latestHovered.value.amount}`
+                ],
+                Math.ceil(ItemBarUI.#itemsBarTiledStaticImage.getTileHeight() * 1.75),
+                Controller.mouse.x, Controller.mouse.y,
+                undefined, undefined, undefined, 0.5
+            )
         }
     }
 

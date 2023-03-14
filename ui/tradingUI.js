@@ -33,10 +33,10 @@ class TradeUI extends ItemBarUI {
 
     moveStuffBetweenContainers(currentIndex, key) {
         if (currentIndex >= 0) {
-            if (PRICES[key] != null) {
+            if (InventoryItems.PRICES[key] != null) {
                 if (currentIndex < ItemBarUI.ITEMS_PER_ROW) {
                     const numOfItem = Controller.keys["AltLeft"] ? this.#fromCharacterRef.getItemBar()[key]["amount"] : 1
-                    const moneyRequired = numOfItem * PRICES[key]
+                    const moneyRequired = numOfItem * InventoryItems.PRICES[key]
                     if (this.#toCharacterRef.getMoney() >= moneyRequired) {
                         this.#fromCharacterRef.earnMoney(moneyRequired)
                         this.#toCharacterRef.earnMoney(-moneyRequired)
@@ -44,7 +44,7 @@ class TradeUI extends ItemBarUI {
                     }
                 } else {
                     const numOfItem = Controller.keys["AltLeft"] ? this.#fromCharacterRef.getInventory()[key]["amount"] : 1
-                    const moneyRequired = numOfItem * PRICES[key]
+                    const moneyRequired = numOfItem * InventoryItems.PRICES[key]
                     if (this.#toCharacterRef.getMoney() >= moneyRequired) {
                         this.#fromCharacterRef.earnMoney(moneyRequired)
                         this.#toCharacterRef.earnMoney(-moneyRequired)
@@ -53,9 +53,9 @@ class TradeUI extends ItemBarUI {
                 }
             }
         } else {
-            if (PRICES[key] != null) {
+            if (InventoryItems.PRICES[key] != null) {
                 const numOfItem = Controller.keys["AltLeft"] ? this.#toCharacterRef.getInventory()[key]["amount"] : 1
-                const moneyRequired = numOfItem * PRICES[key]
+                const moneyRequired = numOfItem * InventoryItems.PRICES[key]
                 if (this.#fromCharacterRef.getMoney() >= moneyRequired) {
                     this.#fromCharacterRef.earnMoney(-moneyRequired)
                     this.#toCharacterRef.earnMoney(moneyRequired)

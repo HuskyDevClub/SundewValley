@@ -6,8 +6,8 @@ class FarmLevel extends Level {
     static dailyClosing() {
         const keys = Object.keys(Chest.CHESTS.TradingBox)
         keys.forEach(_key => {
-            if (PRICES[_key] != null) {
-                Level.PLAYER.earnMoney(PRICES[_key] * Chest.CHESTS.TradingBox[_key]["amount"])
+            if (!_key.endsWith("_seed") && InventoryItems.PRICES[_key] != null) {
+                Level.PLAYER.earnMoney(InventoryItems.PRICES[_key] * Chest.CHESTS.TradingBox[_key]["amount"])
                 delete Chest.CHESTS.TradingBox[_key]
             }
         })
